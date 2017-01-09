@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>anttt-SD3-SDK4-efwm-01/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>395</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1875</ColumnWidth1><ColumnWidth2>500</ColumnWidth2><ColumnWidth3>125</ColumnWidth3></Build>
+      <Find-in-Files>
+        <ColumnWidth0>761</ColumnWidth0>
+        <ColumnWidth1>126</ColumnWidth1>
+        <ColumnWidth2>1142</ColumnWidth2>
+        <ColumnWidth3>507</ColumnWidth3>
+      </Find-in-Files>
+      <Debug-Log>
+        
+        
+      <ColumnWidth0>19</ColumnWidth0><ColumnWidth1>1102</ColumnWidth1></Debug-Log>
+      <TerminalIO/>
+    </Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-16004-28298</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>anttt-SD3-SDK4-efwm-01</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/Application</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/Application/Include</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/Application/Source</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/_BSP</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/_BSP/Include</ExpandedNode><ExpandedNode>anttt-SD3-SDK4-efwm-01/_BSP/Source</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-25184-28331</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-32275-11118</Identity>
+            <TabName>Find in Files</TabName>
+            <Factory>Find-in-Files</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-27802-21232</Identity>
+            <TabName>Debug Log</TabName>
+            <Factory>Debug-Log</Factory>
+            <Session/>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2></Windows>
+    <Editor>
+      
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\application\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>8</YPos2><SelStart2>2834</SelStart2><SelEnd2>2849</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\nordic_sdk4_2_2\Include\nrf51_bitfields.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>2329</YPos2><SelStart2>128102</SelStart2><SelEnd2>128124</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\bsp\leds_anttt.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>256</YPos2><SelStart2>11883</SelStart2><SelEnd2>11883</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\bsp\configuration.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>21</YPos2><SelStart2>2414</SelStart2><SelEnd2>2414</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\application\anttt.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>27</YPos2><SelStart2>3245</SelStart2><SelEnd2>3245</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\nordic_sdk4_2_2\Source\iar_startup_nrf51.s</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>74</YPos2><SelStart2>3269</SelStart2><SelEnd2>3269</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\nordic_sdk4_2_2\Source\nRF51422_QFAA.icf</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>203</SelStart2><SelEnd2>203</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\bsp\anttt-ehdw-04.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>126</YPos2><SelStart2>6512</SelStart2><SelEnd2>6512</SelEnd2></Tab><ActiveTab>7</ActiveTab></Pane><ActivePane>0</ActivePane><Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\bsp\anttt-ehdw-04.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>479</SelStart2><SelEnd2>479</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\bsp\leds_anttt.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>1036</SelStart2><SelEnd2>1036</SelEnd2></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\application\anttt.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>0</YPos2><SelStart2>932</SelStart2><SelEnd2>932</SelEnd2></Tab><ActiveTab>2</ActiveTab></Pane><Sizes><Pane><X>607549</X><Y>1000000</Y></Pane><Pane><X>392450</X><Y>1000000</Y></Pane></Sizes><SplitMode>4</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00224378><key>iaridepm.enu1</key></Toolbar-00224378></Sizes></Row0><Row1><Sizes/></Row1></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>1000</Bottom><Right>469</Right><x>-2</x><y>-2</y><xscreen>134</xscreen><yscreen>195</yscreen><sizeHorzCX>52344</sizeHorzCX><sizeHorzCY>149540</sizeHorzCY><sizeVertCX>183984</sizeVertCX><sizeVertCY>768405</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>259</Bottom><Right>2562</Right><x>-2</x><y>-2</y><xscreen>2564</xscreen><yscreen>261</yscreen><sizeHorzCX>1001562</sizeHorzCX><sizeHorzCY>200153</sizeHorzCY><sizeVertCX>52344</sizeVertCX><sizeVertCY>149540</sizeVertCY></Rect></Wnd2></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
