@@ -128,8 +128,6 @@ void PowerSetup(void)
   /* Set the sub power mode to constant latency (pg. 42 in the ref manual) */
   NRF_POWER->TASKS_LOWPWR   = 0;
   NRF_POWER->TASKS_CONSTLAT = 1;
-
-  
 } /* end PowerSetup() */
 
 
@@ -138,14 +136,14 @@ Function: ClockSetup
 
 Description:
 Loads all registers required to set up the processor clocks.  The main clock, HFCLK is sourced from the
-16MHz crystal.  The slow clock, LFCLK, will be synthesized from the 16MHz and configured to provide
-a 1ms system tick.
+16MHz crystal.  The slow clock, LFCLK, will be synthesized from the 16MHz.
 
 Requires:
-  - 
+  - None.
 
 Promises:
-  - 
+  - HFCLK is running.
+  - LFCLK is running.
 */
 void ClockSetup(void)
 {
@@ -172,20 +170,7 @@ void ClockSetup(void)
   
   /* No need for timeout as an HFCLK of some sort is guaranteed to be running so LFCLK has to start */
   while (NRF_CLOCK->EVENTS_LFCLKSTARTED == 0);
-  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;
- 
-#if 0  /* Can't use RTC because we synthesize LFCLK and therefore RTC would not be clocked when HFCLK is sleeping */  
-  /* Configure the RTC to give a 1ms tick */
-  NRF_RTC1->STOP = 1;
-  NRF_RTC1->PRESCALER = RTC_PRESCALE_INIT;
-  NRF_RTC1->EVTENSET = (1 << RTC_EVTEN_TICK_Pos);
-  NRF_RTC1->INTENSET = (1 << RTC_INTENSET_TICK_Pos);
-  
-  /* Clear then start the RTC */
-  NRF_RTC1->CLEAR = 1;
-  NRF_RTC1->START = 1;
-#endif
-  
+  NRF_CLOCK->EVENTS_LFCLKSTARTED = 0;  
 } /* end ClockSetup */
 
 
@@ -212,37 +197,29 @@ void InterruptSetup(void)
 Function: SysTickSetup
 
 Description:
-Initializes the 1ms and 1s System Ticks from the TIMER1 peripheral.
-Since this application is not concerned about power, we can keep the 16MHz clock
-on and power TIMER1 all the time.  
+Initializes the 1ms System Ticks from the RTC1 peripheral.
 
 Requires:
-  -
+  - ClockSetup() to be called prior to ensure that HFCLK and LFCLK are already running.
+  - SoftDevice has been enabled.
 
 Promises:
-  - Both system timers are zeroed and the Timer is configured to produce 1ms interrupts
+  - RTC1 is active and providing a 1ms interrupt.
 */
-void SysTickSetup(void)
+u32 SysTickSetup(void)
 {
-  G_u32SystemTime1ms = 0;      
-  G_u32SystemTime1s  = 0;   
+  /* Configure the RTC to give a 1ms tick */
+  NRF_RTC1->TASKS_STOP = 1;
+  NRF_RTC1->PRESCALER = RTC_PRESCALE_INIT;
+  NRF_RTC1->EVTENSET = (1 << RTC_EVTEN_TICK_Pos);
+  NRF_RTC1->INTENSET = (1 << RTC_INTENSET_TICK_Pos);
   
-  /* Load the SysTick Timer */
-  NRF_TIMER1->MODE      = TIMER_MODE_MODE_Timer << TIMER_MODE_MODE_Pos;
-  NRF_TIMER1->BITMODE   = TIMER_BITMODE_BITMODE_16Bit << TIMER_BITMODE_BITMODE_Pos;
-  NRF_TIMER1->PRESCALER = 0;
-  NRF_TIMER1->SHORTS    = TIMER_SHORTS_COMPARE0_CLEAR_Enabled << TIMER_SHORTS_COMPARE0_CLEAR_Pos;
-  NRF_TIMER1->CC[0]     = TIMER_COUNT_1MS;
-  NRF_TIMER1->INTENSET  = TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENSET_COMPARE0_Pos;
+  /* Clear then start the RTC */
+  NRF_RTC1->TASKS_CLEAR = 1;
+  NRF_RTC1->TASKS_START = 1;
   
-  /* Enable TIMER1 interrupt */
-  NVIC_SetPriority(TIMER1_IRQn, 0);
-  //NVIC_EnableIRQ(TIMER1_IRQn);
-  
-  /* Start timer */
-  NRF_TIMER1->TASKS_START = 1;
-
-  
+  // Enable the interrupt.
+  return sd_nvic_EnableIRQ(RTC1_IRQn);
 } /* end SysTickSetup() */
 
 
@@ -252,10 +229,8 @@ Function: SystemSleep
 Description:
 Puts the system into sleep mode. 
 
-TBD
-
 Requires:
-  - TBD
+  - SoftDevice is enabled.
 
 Promises:
   - Configures processor for maximum sleep while still allowing any required
@@ -263,58 +238,8 @@ Promises:
 */
 void SystemSleep(void)
 {    
-  /* Set the system control register for Sleep (but not Deep Sleep) */
-   
-   /* Set the sleep flag (cleared only in SysTick ISR */
-   G_u32SystemFlags |= _SYSTEM_SLEEPING;
-
-   while(NRF_TIMER1->EVENTS_COMPARE[0] == 0);
-   NRF_TIMER1->EVENTS_COMPARE[0] = 0;
-   
-  /* Now sleep until an event wakes us up */
-   //while(G_u32SystemFlags & _SYSTEM_SLEEPING)
-   {
-   }
-
-  /* Clear the sleep mode status flags */
-    
+    sd_app_evt_wait();
 } /* end SystemSleep(void) */
-
-#if 0
-/*----------------------------------------------------------------------------------------------------------------------
-Function: SystemSleep
-
-Description:
-Puts the system into sleep mode. 
-
-TBD
-
-Requires:
-  - TBD
-
-Promises:
-  - Configures processor for maximum sleep while still allowing any required
-    interrupt to wake it up.
-*/
-void SystemSleep(void)
-{    
-  /* Set the system control register for Sleep (but not Deep Sleep) */
-   
-   /* Set the sleep flag (cleared only in SysTick ISR */
-   G_u32SystemFlags |= _SYSTEM_SLEEPING;
-
-   while(NRF_TIMER1->EVENTS_COMPARE[0] == 0);
-   NRF_TIMER1->EVENTS_COMPARE[0] = 0;
-   
-  /* Now sleep until an event wakes us up */
-   //while(G_u32SystemFlags & _SYSTEM_SLEEPING)
-   {
-   }
-
-  /* Clear the sleep mode status flags */
-    
-} /* end SystemSleep(void) */
-#endif
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File */

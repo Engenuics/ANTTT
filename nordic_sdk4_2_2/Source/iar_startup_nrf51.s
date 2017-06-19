@@ -104,8 +104,8 @@ Reset_Handler
         MOVS    R1, #NRF_POWER_RAMON_RAMxON_ONMODE_Msk
         ORRS    R2, R2, R1
         STR     R2, [R0]
- //       LDR     R0, =SystemInit
- //       BLX     R0
+        LDR     R0, =SystemInit
+        BLX     R0
         LDR     R0, =__iar_program_start
         BX      R0
 

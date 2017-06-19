@@ -78,6 +78,32 @@ void TIMER1_IRQHandler(void)
   while(1);
 }
 
+void RTC1_IRQHandler(void)
+{
+  // Clear the Tick Event
+  NRF_RTC1->EVENTS_TICK = 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------
+Interrupt handler: SD_EVT_IRQHandler
+
+Description:
+Processes soft device events.
+
+Requires:
+  -
+
+Promises:
+  -  Sets global system flags indicating that BLE and ANT events are pending.
+     It is possible that either ANT or BLE events OR ANT & BLE events are pending.
+     The application shall handle all the cases. 
+--------------------------------------------------------------------------------------------------------------------*/
+void SD_EVT_IRQHandler(void)
+{
+  /* Set Flag that ANT and BLE Events pending. */
+  G_u32SystemFlags |= (_SYSTEM_PROTOCOL_EVENT); 
+}
+
 
 
 

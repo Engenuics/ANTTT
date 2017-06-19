@@ -19,6 +19,22 @@
 @REM 
 
 
-"C:\Program Files\IAR Systems\EWARM_7_20_1\common\bin\cspybat" "C:\Program Files\IAR Systems\EWARM_7_20_1\arm\bin\armproc.dll" "C:\Program Files\IAR Systems\EWARM_7_20_1\arm\bin\armjlink.dll"  %1 --plugin "C:\Program Files\IAR Systems\EWARM_7_20_1\arm\bin\armbat.dll" --flash_loader "C:\Program Files\IAR Systems\EWARM_7_20_1\arm\config\flashloader\NordicSemi\FlashNRF51822.board" --backend -B "--endian=little" "--cpu=Cortex-M0" "--fpu=None" "-p" "C:\Program Files\IAR Systems\EWARM_7_20_1\arm\CONFIG\debugger\NordicSemi\nRF51422-QFAA.ddf" "--semihosting" "--device=nRF51422-QFAA" "--drv_communication=USB0" "--jlink_speed=auto" "--jlink_initial_speed=1000" "--jlink_reset_strategy=0,0" "--jlink_interface=SWD" "--drv_catch_exceptions=0x000" "--drv_swo_clock_setup=16000000,0,2000000" 
+@echo off 
 
+if not "%~1" == "" goto debugFile 
 
+@echo on 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\settings\anttt-SD3-SDK4-efwm-01.Debug.general.xcl" --backend -f "C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\settings\anttt-SD3-SDK4-efwm-01.Debug.driver.xcl" 
+
+@echo off 
+goto end 
+
+:debugFile 
+
+@echo on 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\settings\anttt-SD3-SDK4-efwm-01.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\settings\anttt-SD3-SDK4-efwm-01.Debug.driver.xcl" 
+
+@echo off 
+:end

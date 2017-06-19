@@ -23,7 +23,7 @@ Header file for main.c.
 /* G_u32SystemFlags */
 #define _SYSTEM_HFCLK_NO_START          0x00000001        /* Set if the main oscilator does not start as expected */
 
-#define _SYSTEM_ANT_EVENT               0x00010000        /* Set when at least one Soft Device event needs to be processed */
+#define _SYSTEM_PROTOCOL_EVENT          0x00010000        /* Set when at least one Soft Device event needs to be processed */
 
 #define _SYSTEM_SLEEPING                0x40000000        /* Set into sleep mode to go back to sleep if woken before 1ms period */
 #define _SYSTEM_INITIALIZING            0x80000000        /* Set when system is in initialization phase */

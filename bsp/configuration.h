@@ -52,7 +52,7 @@ Includes
 #include "ant_interface.h"
 #include "ant_parameters.h"
 #include "ant_error.h"
-#include "app_error.h"
+//#include "app_error.h"
 //#include "appconfig.h"
 //#include "boardconfig.h"
 //#include "command.h"
@@ -60,7 +60,15 @@ Includes
 //#include "serial.h"
 //#include "system.h"
 //#include "ant_boot_settings_api.h"
-//#include "soc_integration.h"
+#include "soc_integration.h"
+#include "ant_integration.h"
+#include "ble_integration.h"
+#include "bleperipheral.h"
+#include "ble.h"
+#include "ble_gap.h"
+#include "ble_advdata.h"
+#include "ble_srv_common.h"
+
 
 /* MPG nRF51422 implementation headers */
 #include "interrupts.h"

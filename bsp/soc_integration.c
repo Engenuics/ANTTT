@@ -30,10 +30,15 @@ Variable names shall start with "SocInt_" and be declared as static.
 static u32 SocInt_u32Timeout;                      /* Timeout counter used across states */
 
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* Private Function Declarations.                                                                                                   */
+/*--------------------------------------------------------------------------------------------------------------------*/
+static void softdevice_assert_callback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName);
+
+
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -42,45 +47,40 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-/*--------------------------------------------------------------------------------------------------------------------
-Interrupt handler: SD_EVT_IRQHandler
-
-Description:
-Processes soft device events.
-
-Requires:
-  -
-
-Promises:
-  - 
-*/
-void SD_EVT_IRQHandler(void)
+bool SocIntegrationInitialize(void)
 {
-   u32 u32Event;
+  uint32_t result = 0;
+  
+  result |= sd_softdevice_enable(NRF_CLOCK_LFCLKSRC_SYNTH_250_PPM, softdevice_assert_callback);
+  result |= sd_nvic_SetPriority(SD_EVT_IRQn, NRF_APP_PRIORITY_LOW);
+  result |= sd_nvic_EnableIRQ(SD_EVT_IRQn);
+  
+  return result == 0;
+}
 
-  /* Read out all current SOC events */
-  while (sd_ant_event_get(&u32Event) != NRF_ERROR_NOT_FOUND)
+void SocIntegrationHandler(void)
+{
+  // Check if pending event.
+  if (G_u32SystemFlags & _SYSTEM_PROTOCOL_EVENT)
   {
-    /* Flag if there are any ANT events */
-    G_u32SystemFlags |= _SYSTEM_ANT_EVENT; 
+    // Clear pending event and process protocol events.
+    G_u32SystemFlags &= ~_SYSTEM_PROTOCOL_EVENT;
+    ANTIntegrationHandler();
+    BLEIntegrationHandler();
   }
 }
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* Private functions                                                                                                  */
+/*--------------------------------------------------------------------------------------------------------------------*/
 /**
  * @brief Handler for softdevice asserts
  */
 void softdevice_assert_callback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName)
 {
-   UNUSED_PARAMETER(ulPC);
-   assert_nrf_callback(usLineNum, pucFileName);
+   while (1);
+   NVIC_SystemReset();
 }
-
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-/* Private functions                                                                                                  */
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 
 
 
