@@ -66,8 +66,6 @@ Then we can count up to 33 to get a 1.0071ms tick.  That gives 993 for the value
 #define LFCLK_FREQ               (u32)32768
 #define HFCLK_FREQ               (u32)16000000
 
-#define RTC_COMPARE_PERIOD       (u32)33
-#define RTC_TICK_PER_SECOND      (u32)993
 #define RTC_PRESCALE_INIT        (u32)5         // 2^5 = 32, 32768 / 32 = 1024Hz = 0.0009765625s period ~= 1ms
 
 /* Watch Dog Values */

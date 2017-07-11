@@ -2375,9 +2375,6 @@
                 <name>$PROJ_DIR$\..\bsp\soc_integration.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\system_nrf51422.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\bsp\utilities.c</name>
             </file>
         </group>
@@ -2409,6 +2406,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\application\main.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\system_nrf51422.c</name>
             </file>
         </group>
     </group>

@@ -48,14 +48,24 @@ Description:
 Initializes the State Machine and its variables.
 
 Requires:
-  -
+  - None.
 
 Promises:
-  - 
+  - Returns TRUE if SoftDevice Interrupts are successfully enabled, FALSE otherwise.
 */
-void InterruptsInitialize(void)
+bool InterruptsInitialize(void)
 {
-
+  u32 result = NRF_SUCCESS;
+  
+  // Must enable the SoftDevice Interrupt first.
+  result |= sd_nvic_SetPriority(SD_EVT_IRQn, NRF_APP_PRIORITY_LOW);
+  result |= sd_nvic_EnableIRQ(SD_EVT_IRQn);
+  
+  // Enable the RTC Peripheral.
+  result |= sd_nvic_SetPriority(RTC1_IRQn, NRF_APP_PRIORITY_LOW);
+  result |= sd_nvic_EnableIRQ(RTC1_IRQn);
+  
+  return (result == NRF_SUCCESS);
 } /* end InterruptsInitialize() */
 
 

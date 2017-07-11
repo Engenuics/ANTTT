@@ -59,36 +59,40 @@ void main(void)
   
   // Enable the s310 SoftDevice Stack. If Failure, we shall not progress as 
   // successive code is dependent on SD success.
-  if (SocIntegrationInitialize())
+  if (!SocIntegrationInitialize())
     while (1);
   
   /* Low Level Initialization Modules */
-  InterruptsInitialize();
   WatchDogSetup(); /* During development, set to not reset processor if timeout */
   SysTickSetup();
-
+  InterruptsInitialize();
+  
+  
   /* Driver initialization */
   LedInitialize();
   //AntInitialize();
   ANTIntegrationInitialize();
   BLEIntegrationInitialize();
+  bleperipheralInitialize();
   
   /* Application initialization */
   AntttInitialize();
-  bleperipheralInitialize();
   
   /* Exit initialization */
   G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
   
+  uint8_t temp = 0x01;
   /* Main loop */  
   while(1)
   {
     SocIntegrationHandler();
     LedUpdate();
     
+    // DEBUG: Call this to ensure that your system is running the application.
+    LedInitialize();
+    
     /* System sleep*/
     SystemSleep();
-    
   } /* end while(1) main super loop */
   
 } /* end main() */
@@ -97,6 +101,7 @@ void main(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File */

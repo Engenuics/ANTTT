@@ -9,15 +9,20 @@
 //define symbol __ICFEDIT_region_ROM_start__ = 0x0000A100;
 
 /* Softdevice 3.0 (51422 rev. DA and E0) */
-define symbol __ICFEDIT_intvec_start__ = 0x0000C000;
-define symbol __ICFEDIT_region_ROM_start__ = 0x0000C0C0;
+//define symbol __ICFEDIT_intvec_start__ = 0x0000C000;
+//define symbol __ICFEDIT_region_ROM_start__ = 0x0000C0C0;
 
 /* Softdevice 4.0 (51422 rev. Fx0, Ax0, Bx0) */
 //define symbol __ICFEDIT_intvec_start__ = 0x0000D000;
 //define symbol __ICFEDIT_region_ROM_start__ = 0x0000D100;
 
+/* Softdevice 310 1.0 (51422 rev. DA and E0) */
+define symbol __ICFEDIT_intvec_start__ = 0x00020000;
+define symbol __ICFEDIT_region_ROM_start__ = 0x00020000;
+
+
 define symbol __ICFEDIT_region_ROM_end__   = 0x0003FFFF;
-define symbol __ICFEDIT_region_RAM_start__ = 0x20000900;
+define symbol __ICFEDIT_region_RAM_start__ = 0x20002400;
 define symbol __ICFEDIT_region_RAM_end__   = 0x20003FFF;
 
 /*-Sizes-*/

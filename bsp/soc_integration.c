@@ -46,15 +46,26 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationInitialize
+
+Description:
+Initializes the SoftDevice to use the Protocol Stacks. Enables the SD_EVT_IRQ to allow forwarding of Protocol Interrupts to the
+application.
+
+Requires:
+  - Called once during initialization.
+
+Promises:
+  - Returns TRUE if SoftDevice enabled successfully.
+  - Returns FALSE if SoftDevice enabling failed.
+*/
 bool SocIntegrationInitialize(void)
 {
-  uint32_t result = 0;
+  uint32_t result = NRF_SUCCESS;
   
   result |= sd_softdevice_enable(NRF_CLOCK_LFCLKSRC_SYNTH_250_PPM, softdevice_assert_callback);
-  result |= sd_nvic_SetPriority(SD_EVT_IRQn, NRF_APP_PRIORITY_LOW);
-  result |= sd_nvic_EnableIRQ(SD_EVT_IRQn);
-  
-  return result == 0;
+  return result == NRF_SUCCESS;
 }
 
 
@@ -89,9 +100,18 @@ void SocIntegrationHandler(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
-/**
- * @brief Handler for softdevice asserts
- */
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationHandler
+
+Description:
+Assertion handler from the Softdevice.
+
+Requires:
+  - None
+Promises:
+  - Halts the system.
+  - Provides the PC counter, Line Num and the FileName in the SoftDevice Code that caused the assertion.
+*/
 void softdevice_assert_callback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName)
 {
    while (1);

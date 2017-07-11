@@ -295,8 +295,9 @@ void LedInitialize(void)
   LedOff(HOME5);
   LedOn(AWAY5);
   
-  while (1)
-  {
+  
+  //while (1)
+  //{
     /* Sequentially light up the LEDs */
     for(u8 i = 0; i < 8; i++)
     {
@@ -307,10 +308,8 @@ void LedInitialize(void)
       for(u32 j = 0; j < 200000; j++);
       LedOff(aeLedSequenceHome[i]);
       LedOff(aeLedSequenceAway[i]);
-
     }
-
-  }
+  //}
 
 #if 0
   /* Sequentially light up the LEDs */

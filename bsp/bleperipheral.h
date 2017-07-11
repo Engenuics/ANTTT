@@ -64,6 +64,8 @@ Constants / Definitions
 
 #define DEVICE_NAME                     "ANTTT"                                  /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Engenuics"                                 /**< Manufacturer. Will be passed to Device Information Service. */
+#define BLEPERIPHERAL_DEVICE_APPEARANCE BLE_APPEARANCE_HID_GAMEPAD                   // Advertise as a HID Gamepad device.
+
 #define APP_ADV_INTERVAL                40                                           /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
 #define APP_ADV_TIMEOUT_IN_SECONDS      0                                            /**< The advertising timeout in units of seconds. */
 

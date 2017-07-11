@@ -217,9 +217,6 @@ u32 SysTickSetup(void)
   /* Clear then start the RTC */
   NRF_RTC1->TASKS_CLEAR = 1;
   NRF_RTC1->TASKS_START = 1;
-  
-  // Enable the interrupt.
-  return sd_nvic_EnableIRQ(RTC1_IRQn);
 } /* end SysTickSetup() */
 
 
