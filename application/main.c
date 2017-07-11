@@ -75,10 +75,10 @@ void main(void)
   
   /* Application initialization */
   AntttInitialize();
+  bleperipheralInitialize();
   
   /* Exit initialization */
   G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
-  
   
   /* Main loop */  
   while(1)

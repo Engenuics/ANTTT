@@ -2077,6 +2077,12 @@
                 <name>$PROJ_DIR$\..\bsp\anttt-ehdw-04.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata_parser.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\bsp\ble_integration.c</name>
             </file>
             <file>

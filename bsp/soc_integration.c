@@ -18,7 +18,6 @@ volatile u32 G_u32SocIntegrationFlags;                 /* Global state flags */
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
 extern volatile u32 G_u32SystemFlags;                  /* From main.c */
-
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
@@ -58,6 +57,23 @@ bool SocIntegrationInitialize(void)
   return result == 0;
 }
 
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationHandler
+
+Description:
+This is the global event checker for Protocol Events. It is called continuously from main(). It checks if the 
+_SYSTEM_PROTOCOL_EVENT is set. If so, it calls the dispatchers for the protocol event handlers.
+
+Requires:
+  - SoftDevice is enabled
+  - BLE and ANT have been initialized
+  - Application is running
+
+Promises:
+  - Proper dispatching of Protocol events to its handlers
+  - Clears the _SYSTEM_PROTOCOL_EVENT system flag
+*/
 void SocIntegrationHandler(void)
 {
   // Check if pending event.

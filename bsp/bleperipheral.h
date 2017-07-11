@@ -103,11 +103,11 @@ bool blePeripheralEventHandler(ble_evt_t* evt);
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
-static bool bleclover_gap_params_init(void);
-static bool bleclover_advertising_init(void);
-static bool bleclover_services_init(void);
-static bool bleclover_advertising_start(void);
-static void bleclover_sec_params_init(void);
+static bool bleperipheral_gap_params_init(void);
+static bool bleperipheral_advertising_init(void);
+static bool bleperipheral_services_init(void);
+static bool bleperipheral_advertising_start(void);
+static void bleperipheral_sec_params_init(void);
 
 #endif /* __ANTINT_H */
 

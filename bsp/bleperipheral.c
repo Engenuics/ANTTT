@@ -27,8 +27,7 @@ extern volatile u32 G_u32SystemTime1s;                 /* From board-specific so
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "SocInt_" and be declared as static.
 ***********************************************************************************************************************/
-static u32 bleInt_u32Timeout;                      /* Timeout counter used across states */
-static uint8_t m_evt_buffer[CEIL_DIV(sizeof(ble_evt_t) + (BLE_L2CAP_MTU_DEF), sizeof(uint32_t))];
+static u32 bleperipheral_u32Timeout;                      /* Timeout counter used across states */
 static ble_gap_adv_params_t             m_adv_params;                                /**< Parameters to be passed to the stack when starting advertising. */
 static ble_gap_sec_params_t             m_sec_params;                                /**< Security requirements for this application. */
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;     /**< Handle of the current connection. */
@@ -44,23 +43,51 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheralInitialize
+
+Description:
+Initializes the GAP and GATT layers services for the system. Starts the GAP Advertising.
+
+Requires:
+  - None
+
+Promises:
+  - Returns TRUE if all sub-systems are successfully activated.
+  - Returns FALSE if a sub-system failed and was not activated successfully.
+*/
 bool bleperipheralInitialize(void)
 {
   bool result = false;
 
-  // BLEPERIPHERAL GAP Setup.
+  // Set up all the base services for the peripheral mode.
   result |= bleperipheral_gap_params_init();
   result |= bleperipheral_advertising_init();
   result |= bleperipheral_services_init();
-  result |= bleperipheral_sec_params_init();
+  bleperipheral_sec_params_init();
   result |= bleperipheral_advertising_start();
   
   return result;
 }
 
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: blePeripheralEventHandler(ble_evt*)
+
+Description:
+The Event handler which handles the various GATT and GAP events received from the SoftDevice once BLE Services have been activated.
+
+Requires:
+  - ble_evt_t*: Pointer to the single buffer holding the current ble_evt_t from the SoftDevice.
+
+Promises:
+  - Decodes the ble_evt_t and handles message accordingly.
+  - Returns TRUE if ble_evt_t decoded and action taken.
+  - Returns FALSE if ble_evt_t decoded and action failed.
+*/
 bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
 {
-  u32 err_code = NRF_SUCCESS;
+    u32 err_code = NRF_SUCCESS;
 
     switch (p_ble_evt->header.evt_id)
     {
@@ -96,21 +123,30 @@ bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-/**@brief GAP initialization.
- *
- * @details This function sets up all the necessary GAP (Generic Access Profile) parameters of the
- *          device including the device name, appearance, and the preferred connection parameters.
- */
-static bool bleclover_gap_params_init(void)
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheral_gap_params_init
+
+Description:
+Initializes the GAP parameters for the device. Sets the device name, sets the device apperance type and defines the peripheral 
+requested rates.
+
+Requires:
+  - None
+
+Promises:
+  - Returns TRUE if GAP params are successfully completed.
+  - Returns FALSE if GAP params are not set successfully.
+*/
+static bool bleperipheral_gap_params_init(void)
 {
-    u32                err_code;
+    u32 err_code = NRF_SUCCESS;
     ble_gap_conn_params_t   gap_conn_params;
     ble_gap_conn_sec_mode_t sec_mode;
 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
 
-    err_code = sd_ble_gap_device_name_set(&sec_mode, DEVICE_NAME, strlen(DEVICE_NAME));
-    err_code = sd_ble_gap_appearance_set(BLE_APPEARANCE_HEART_RATE_SENSOR_HEART_RATE_BELT);
+    err_code |= sd_ble_gap_device_name_set(&sec_mode, DEVICE_NAME, strlen(DEVICE_NAME));
+    err_code |= sd_ble_gap_appearance_set(BLE_APPEARANCE_HEART_RATE_SENSOR_HEART_RATE_BELT);
 
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
     gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
@@ -118,21 +154,30 @@ static bool bleclover_gap_params_init(void)
     gap_conn_params.slave_latency     = SLAVE_LATENCY;
     gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
 
-    err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
+    err_code |= sd_ble_gap_ppcp_set(&gap_conn_params);
     
     return err_code == NRF_SUCCESS;
 }
 
-/**@brief Advertising functionality initialization.
- *
- * @details Encodes the required advertising data and passes it to the stack.
- *          Also builds a structure to be passed to the stack when starting advertising.
- */
-static bool bleclover_advertising_init(void)
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheral_advertising_init
+
+Description:
+Initializes the GAP parameters for the device. Sets the device name, sets the device apperance type and defines the peripheral 
+requested rates.
+
+Requires:
+  - None
+
+Promises:
+  - Returns TRUE if GAP params are successfully completed.
+  - Returns FALSE if GAP params are not set successfully.
+*/
+static bool bleperipheral_advertising_init(void)
 {
-    u32      err_code;
+    u32 err_code = NRF_SUCCESS;
     ble_advdata_t advdata;
-    u8       flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
+    u8 flags = BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE;
 
     ble_uuid_t adv_uuids[] =
     {
@@ -150,8 +195,7 @@ static bool bleclover_advertising_init(void)
     advdata.uuids_complete.uuid_cnt = sizeof(adv_uuids) / sizeof(adv_uuids[0]);
     advdata.uuids_complete.p_uuids  = adv_uuids;
 
-    err_code = ble_advdata_set(&advdata, NULL);
-    APP_ERROR_CHECK(err_code);
+    err_code |= ble_advdata_set(&advdata, NULL);
 
     // Initialise advertising parameters (used when starting advertising)
     memset(&m_adv_params, 0, sizeof(m_adv_params));
@@ -165,19 +209,40 @@ static bool bleclover_advertising_init(void)
     return err_code == NRF_SUCCESS;
 }
 
-/**@brief Initialize services that will be used by the application.
- *
- * @details Initialize the Heart Rate and Device Information services.
- */
-static bool bleclover_services_init(void)
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheral_advertising_init
+
+Description:
+Initializes any BLE Peripheral Services.
+
+Requires:
+  - None
+
+Promises:
+  - Returns TRUE if service initialization successful.
+  - Returns FALSE if service initialization fails.
+*/
+static bool bleperipheral_services_init(void)
 {
-  u32 err_code;
-  return err_code == NRF_SUCCESS;
+  u32 err_code = NRF_SUCCESS;
+  return (err_code == NRF_SUCCESS);
 }
 
-/**@brief Start advertising.
- */
-static bool bleclover_advertising_start(void)
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheral_advertising_start
+
+Description:
+Start Advertising
+
+Requires:
+  - None
+
+Promises:
+  - Returns TRUE if advertising start successful.
+  - Returns FALSE if advertising start fails.
+*/
+static bool bleperipheral_advertising_start(void)
 {
     u32 err_code;
 
@@ -185,9 +250,20 @@ static bool bleclover_advertising_start(void)
     return err_code == NRF_SUCCESS;
 }
 
-/**@brief Initialize security parameters.
- */
-static void bleclover_sec_params_init(void)
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: bleperipheral_sec_params_init
+
+Description:
+Initializes security parameteres.
+
+Requires:
+  - None
+
+Promises:
+  - None
+*/
+static void bleperipheral_sec_params_init(void)
 {
     m_sec_params.timeout      = SEC_PARAM_TIMEOUT;
     m_sec_params.bond         = SEC_PARAM_BOND;
