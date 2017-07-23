@@ -93,10 +93,12 @@ bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
     {
         case BLE_GAP_EVT_CONNECTED:
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            BPEngenuicsOnConnect(p_ble_evt);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
+            BPEngenuicsOnDisconnect();
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -111,6 +113,10 @@ bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
         case BLE_GATTS_EVT_SYS_ATTR_MISSING:
             err_code = sd_ble_gatts_sys_attr_set(m_conn_handle, NULL, 0);
             break;
+            
+        case BLE_GATTS_EVT_WRITE:
+          BPEngenuicsOnWrite(p_ble_evt);
+          break;
 
         default:
             // No implementation needed.
@@ -224,8 +230,9 @@ Promises:
 */
 static bool bleperipheral_services_init(void)
 {
-  u32 err_code = NRF_SUCCESS;
-  return (err_code == NRF_SUCCESS);
+  // Initialize the BPEngenuics service.
+  if (!BPEngenuicsInitialize())
+    return false;
 }
 
 

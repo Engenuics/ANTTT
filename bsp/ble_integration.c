@@ -46,7 +46,6 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 bool BLEIntegrationInitialize(void)
 {
-   // Initialize relevant BLE Services.
    return true;
 }
 

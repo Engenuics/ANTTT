@@ -7,6 +7,9 @@ Header file for bleperipheral_engenuics.c source.
 
 #ifndef __BLEPERIPHERALENGENUICS_H
 #define __BLEPERIPHERALENGENUICS_H
+
+#include "typedefs.h"
+
 /**********************************************************************************************************************
 Type Definitions
 **********************************************************************************************************************/
@@ -58,7 +61,7 @@ Constants / Definitions
     00 [0] 
 */
 
-#define BPENGENUICS_MAX_CHAR_LEN       BLE_NUS_MAX_DATA_LEN     
+#define BPENGENUICS_MAX_CHAR_LEN       20     
 #define BPENGENUICS_BASE_UUID          {{0x9E, 0xCA, 0xDC, 0x24, 0x0E, 0xE5, 0xA9, 0xE0, 0x93, 0xF3, 0xA3, 0xB5, 0x00, 0x00, 0x40, 0x6E}}
 #define BPENGENUICS_SERVICE_UUID       0xEEEE
 #define BPENGENUICS_TX_CHAR_UUID       0x0001
@@ -71,13 +74,13 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void BPEngenuicsSendData(u8* buffer, u8 size);
+bool BPEngenuicsSendData(u8* buffer, u8 size);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void BPEngenuicsInitialize(void);
-void BPEngenuicsOnConnect(void);
+bool BPEngenuicsInitialize(void);
+void BPEngenuicsOnConnect(ble_evt_t* evt);
 void BPEngenuicsOnDisconnect(void);
 void BPEngenuicsOnWrite(ble_evt_t* evt);
 
@@ -85,9 +88,10 @@ void BPEngenuicsOnWrite(ble_evt_t* evt);
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
-static void BPEngenuicsAddTxCharacteristic(void);
-static void BPEngenuicsAddRxCharacteristic(void);
-static void BPEngenuicsAddService(void);
+static u32 BPEngenuicsAddService(void);
+static u32 BPEngenuicsAddTxCharacteristic(void);
+static u32 BPEngenuicsAddRxCharacteristic(void);
+
 
 
 #endif /* __BLEPERIPHERALENGENUICS_H */

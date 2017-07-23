@@ -2110,6 +2110,9 @@
                 <name>$PROJ_DIR$\..\application\anttt.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\application\bleperipheral_engenuics.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\application\main.h</name>
             </file>
             <file>
@@ -2123,6 +2126,9 @@
             <name>Source</name>
             <file>
                 <name>$PROJ_DIR$\..\application\anttt.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\application\bleperipheral_engenuics.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\nordic_sdk4_2_2\Source\iar_startup_nrf51.s</name>

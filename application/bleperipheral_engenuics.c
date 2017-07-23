@@ -42,12 +42,33 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
+bool BPEngenuicsSendData(u8* buffer, u8 size)
+{
+  ble_gatts_hvx_params_t hvx;   // Indication / Notification structure.
 
+  if (size > BPENGENUICS_MAX_CHAR_LEN)
+    return false;
+  
+  // Check that the module is connected AND notifications are enabled.
+  if ((conn_handle != BLE_CONN_HANDLE_INVALID) && (is_notification_enabled))
+  {
+    memset(&hvx, 0, sizeof(hvx));
+    hvx.handle = tx_handles.value_handle;
+    hvx.p_data = buffer;
+    hvx.p_len = (uint16_t*)&size;
+    hvx.type = BLE_GATT_HVX_NOTIFICATION;
+    
+    return (sd_ble_gatts_hvx(conn_handle, &hvx) == NRF_SUCCESS);
+  }
+  else
+  {
+    return false;
+  }
+}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 /*--------------------------------------------------------------------------------------------------------------------
 Function: BPEngenuicsInitialize
 
@@ -71,11 +92,11 @@ bool BPEngenuicsInitialize(void)
   is_notification_enabled = false;
 
   // Add the services and characteristics.
-  error |= BPEngenuicsAddService();
+  error = BPEngenuicsAddService();
   error |= BPEngenuicsAddRxCharacteristic();
   error |= BPEngenuicsAddTxCharacteristic();
 
-  return (erro == NRF_SUCCESS);
+  return (error == NRF_SUCCESS);
 } /* end BPEngenuicsInitialize() */
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -90,9 +111,10 @@ Requires:
 Promises:
   - Notifies the module that it is in the connected state.
 */
-void BPEngenuicsOnConnect(void)
+void BPEngenuicsOnConnect(ble_evt_t* evt)
 {
-   
+  // Update the conn_handle. Module knows that it is connected to a client.
+  conn_handle = evt->evt.gap_evt.conn_handle;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -109,7 +131,8 @@ Promises:
 */
 void BPEngenuicsOnDisconnect(void)
 {
-   
+  // Invalidate the conn_handle. Module knows that it is in a disconnected state
+  conn_handle = BLE_CONN_HANDLE_INVALID;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -123,12 +146,33 @@ Requires:
    - evt is the ble_evt_t* containing the appropriate GATTS Write information
    
 Promises:
-  - Handles Enabling/Disabling of the BPEngenucis Service.
-  - Handles Rx message decoding of the messages received from the Client.
+  - Handles Enabling/Disabling on the BPEngenucis TX Value Characteristic.
+  - Handles Rx Messages sent from the client on the RX Value Characteristic.
 */
 void BPEngenuicsOnWrite(ble_evt_t* evt)
 {
-   
+   // Create our ble_gatts_evt_write_t object.
+    ble_gatts_evt_write_t* evt_write = &evt->evt.gatts_evt.params.write;
+    
+    // Check if it is the TX Handle CCCD write event and len is 2.
+    if ((evt_write->handle == tx_handles.cccd_handle) && (evt_write->len == 2))
+    {
+      // Check if service needs to be enabled/disabled.
+      if (ble_srv_is_notification_enabled(evt_write->data))
+      {
+        is_notification_enabled = true;
+      }
+      else
+      {
+        is_notification_enabled = false;
+      }
+    }
+    else if (evt_write->handle == rx_handles.value_handle)    
+    {
+        // Write event for the RX Value Characteristic. Client sent a message.
+        // TODO: Add Callback mechanism.
+        // evt_write->data;, evt_write->len;
+    }    
 }
 
 
@@ -210,7 +254,7 @@ static u32 BPEngenuicsAddRxCharacteristic(void)
     attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
     attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
 
-    return sd_ble_gatts_characteristic_add(&service_handle, &rxchar_metadata, &attr_char_value, &rx_handles);
+    return sd_ble_gatts_characteristic_add(service_handle, &rxchar_metadata, &attr_char_value, &rx_handles);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -225,7 +269,7 @@ Requires:
 Promises:
   - Adds the BPEngenuics Tx Characteristic.
 */
-static void BPEngenuicsAddTxCharacteristic(void)
+static u32 BPEngenuicsAddTxCharacteristic(void)
 {
     ble_gatts_char_md_t txchar_metadata;
     ble_gatts_attr_md_t cccd_md;
@@ -264,7 +308,7 @@ static void BPEngenuicsAddTxCharacteristic(void)
     attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
     attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
 
-    return sd_ble_gatts_characteristic_add(&service_handle, &txchar_metadata, &attr_char_value, &tx_handles);
+    return sd_ble_gatts_characteristic_add(service_handle, &txchar_metadata, &attr_char_value, &tx_handles);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

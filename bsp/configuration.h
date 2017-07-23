@@ -68,6 +68,7 @@ Includes
 #include "ble_gap.h"
 #include "ble_advdata.h"
 #include "ble_srv_common.h"
+#include "bleperipheral_engenuics.h"
 
 
 /* MPG nRF51422 implementation headers */
