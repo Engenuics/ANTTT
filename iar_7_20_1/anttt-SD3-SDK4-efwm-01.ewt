@@ -2408,7 +2408,7 @@
                 <name>$PROJ_DIR$\..\application\bleperipheral_engenuics.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\nordic_sdk4_2_2\Source\iar_startup_nrf51.s</name>
+                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\iar_startup_nrf51.s</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\application\main.c</name>

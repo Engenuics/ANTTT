@@ -89,7 +89,7 @@ void main(void)
     LedUpdate();
     
     // DEBUG: Call this to ensure that your system is running the application.
-    LedInitialize();
+    //LedInitialize();
     
     /* System sleep*/
     SystemSleep();

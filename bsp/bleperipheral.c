@@ -88,22 +88,25 @@ Promises:
 bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
 {
     u32 err_code = NRF_SUCCESS;
-
+    
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             BPEngenuicsOnConnect(p_ble_evt);
+            LedToggle(STATUS_GRN);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             BPEngenuicsOnDisconnect();
+            bleperipheral_advertising_start();
+            LedToggle(STATUS_GRN);
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
             err_code = sd_ble_gap_sec_params_reply(m_conn_handle,
-                                                   BLE_GAP_SEC_STATUS_SUCCESS,
+                                                   BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP,
                                                    &m_sec_params);
             break;
 
@@ -233,6 +236,8 @@ static bool bleperipheral_services_init(void)
   // Initialize the BPEngenuics service.
   if (!BPEngenuicsInitialize())
     return false;
+  
+  return true;
 }
 
 

@@ -66,6 +66,8 @@ Includes
 #include "bleperipheral.h"
 #include "ble.h"
 #include "ble_gap.h"
+#include "ble_gatts.h"
+#include "ble_types.h"
 #include "ble_advdata.h"
 #include "ble_srv_common.h"
 #include "bleperipheral_engenuics.h"

@@ -26,8 +26,8 @@ extern volatile u32 G_u32SystemTime1s;                 /* From board-specific so
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "SocInt_" and be declared as static.
 ***********************************************************************************************************************/
-static u32 bleintegration_u32Timeout;                      /* Timeout counter used across states */
-static uint8_t m_evt_buffer[CEIL_DIV(sizeof(ble_evt_t) + (BLE_L2CAP_MTU_DEF), sizeof(uint32_t))];       /* Single BLE buffer used for incoming BLE messages */
+static u32 bleintegration_u32Timeout;                                            /* Timeout counter used across states */
+static uint8_t m_evt_buffer[100];      // TODO: Determine exact value             /* Single BLE buffer used for incoming BLE messages */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private Function Declarations.                                                                                                   */
@@ -46,7 +46,7 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 bool BLEIntegrationInitialize(void)
 {
-   return true;
+  return true;
 }
 
 /*----------------------------------------------------------------------------------------------------------------------
@@ -65,12 +65,15 @@ void BLEIntegrationHandler(void)
 {
     // Fetch message.
     ble_evt_t* ble_evt = BLEIntegration_get_buffer();
-    
+      
     // Check if message was successfully fetched.
-    if (ble_evt)
+    while (ble_evt)
     {
       // Dispatch to all BLE specific handlers.
       blePeripheralEventHandler(ble_evt);
+      
+      // Check if another message is pending.
+      ble_evt = BLEIntegration_get_buffer();
     }
 }
 
@@ -99,13 +102,15 @@ static ble_evt_t* BLEIntegration_get_buffer(void)
    err_code = sd_ble_evt_get(m_evt_buffer, &evt_len);
    if (err_code == NRF_ERROR_NOT_FOUND)
    {
+      
       return NULL;
    }
    else if (err_code != NRF_SUCCESS)
    {
-      // TODO: Add Appropriate Error Handler and repurcussions.
+     return NULL;
    }
 
+   
    return (ble_evt_t*) m_evt_buffer;
 }
 /*--------------------------------------------------------------------------------------------------------------------*/

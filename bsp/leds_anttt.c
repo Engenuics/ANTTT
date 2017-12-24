@@ -275,9 +275,9 @@ void LedInitialize(void)
   LedNumberType aeLedSequenceAway[] = {AWAY1, AWAY4, AWAY7, AWAY8, AWAY9, AWAY6, AWAY3, AWAY2};
   
   /* All status lights on */
-  LedOn(STATUS_RED);
-  LedOn(STATUS_YLW);
-  LedOn(STATUS_GRN);
+  //LedOn(STATUS_RED);
+  //LedOn(STATUS_YLW);
+  //LedOn(STATUS_GRN);
 
 #if 0 /* Picture mode */
   LedOn(HOME1);

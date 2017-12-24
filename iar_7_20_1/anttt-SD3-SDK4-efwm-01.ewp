@@ -11,7 +11,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>28</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.11.1.13270</state>
+                    <state>8.11.2.13604</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -195,6 +195,10 @@
                 <option>
                     <name>GenLocaleDisplayOnly</name>
                     <state></state>
+                </option>
+                <option>
+                    <name>DSPExtension</name>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -1036,7 +1040,7 @@
             <name>General</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <version>28</version>
+                <version>29</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1220,6 +1224,10 @@
                 <option>
                     <name>GenLocaleDisplayOnly</name>
                     <state></state>
+                </option>
+                <option>
+                    <name>DSPExtension</name>
+                    <state>0</state>
                 </option>
             </data>
         </settings>
@@ -2131,7 +2139,7 @@
                 <name>$PROJ_DIR$\..\application\bleperipheral_engenuics.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\nordic_sdk4_2_2\Source\iar_startup_nrf51.s</name>
+                <name>$PROJ_DIR$\..\nordic_sdk6_1_0\iar_startup_nrf51.s</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\application\main.c</name>
