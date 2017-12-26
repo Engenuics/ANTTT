@@ -1,0 +1,312 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:55
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWAD5A.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c -D NRF51 -lC
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\main.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\main.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
+      1          /***********************************************************************************************************************
+      2          File: main.c                                                                
+      3          
+      4          Description:
+      5          Container for the MPG nRF51422 firmware.  
+      6          ***********************************************************************************************************************/
+      7          
+      8          #include "configuration.h"
+      9          
+     10          /***********************************************************************************************************************
+     11          Global variable definitions with scope across entire project.
+     12          All Global variable names shall start with "G_"
+     13          ***********************************************************************************************************************/
+     14          /* New variables */
+
+   \                                 In section .bss, align 4
+     15          volatile u32 G_u32SystemFlags = 0;                     /* Global system flags */
+   \                     G_u32SystemFlags:
+   \   00000000                      DS8 4
+     16          
+     17          /*--------------------------------------------------------------------------------------------------------------------*/
+     18          /* External global variables defined in other files (must indicate which file they are defined in) */
+     19          extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
+     20          extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
+     21          
+     22          extern fnCode_type ANTT_SM;
+     23          
+     24          /***********************************************************************************************************************
+     25          Global variable definitions with scope limited to this local application.
+     26          Variable names shall start with "Main_" and be declared as static.
+     27          ***********************************************************************************************************************/
+
+   \                                 In section .bss, align 4
+     28          u32 Main_u32ErrorCode;
+   \                     Main_u32ErrorCode:
+   \   00000000                      DS8 4
+
+   \                                 In section .data, align 4
+     29          u8 Main_u8TestMessage[] = "9876 test message from ANT";
+   \                     Main_u8TestMessage:
+   \   00000000   0x39 0x38          DC8 "9876 test message from ANT"
+   \              0x37 0x36    
+   \              0x20 0x74    
+   \              0x65 0x73    
+   \              0x74 0x20    
+   \              0x6D 0x65    
+   \              0x73 0x73    
+   \              0x61 0x67    
+   \              0x65 0x20    
+   \              0x66 0x72    
+   \              0x6F 0x6D    
+   \              0x20 0x41    
+   \              0x4E 0x54    
+   \              0x00         
+   \   0000001B   0x00               DC8 0
+     30          
+     31          /***********************************************************************************************************************
+     32          Function Definitions
+     33          ***********************************************************************************************************************/
+     34          
+     35          /***********************************************************************************************************************
+     36          Main Program
+     37          Main has two sections:
+     38          
+     39          1. Initialization which is run once on power-up or reset.  All drivers and applications are setup here without timing
+     40          contraints but must complete execution regardless of success or failure of starting the application. 
+     41          
+     42          2. Main loop.  This is an event-driven system that sequentially executes tasks that require servicing in the event queue.
+     43          
+     44          ***********************************************************************************************************************/
+
+   \                                 In section .text, align 2, keep-with-next
+     45          void main(void)
+     46          {
+   \                     main: (+1)
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+     47            u32 u32Counter = 0;
+   \   00000002   0x2400             MOVS     R4,#+0
+     48            u32 u32M3PeriodCounter = 0;
+   \   00000004   0x2500             MOVS     R5,#+0
+     49            
+     50            G_u32SystemFlags |= _SYSTEM_INITIALIZING;
+   \   00000006   0x....             LDR      R0,??DataTable0
+   \   00000008   0x6800             LDR      R0,[R0, #+0]
+   \   0000000A   0x2180             MOVS     R1,#+128
+   \   0000000C   0x0609             LSLS     R1,R1,#+24       ;; #-2147483648
+   \   0000000E   0x4301             ORRS     R1,R1,R0
+   \   00000010   0x....             LDR      R0,??DataTable0
+   \   00000012   0x6001             STR      R1,[R0, #+0]
+     51            
+     52            // Due to the switch that the application makes from the User mode system to SoftDevice
+     53            // mode System, this module sets up the basic clocks and I/Os, followed by enabling the SD.
+     54            // Once the SD is enabled, the application shall only use the SD provided system calls
+     55            __disable_interrupt();
+   \   00000014   0xB672             CPSID    I
+     56            /* Clock, GPIO and SoftDevice setup */  
+     57            ClockSetup();
+   \   00000016   0x.... 0x....      BL       ClockSetup
+     58            GpioSetup();
+   \   0000001A   0x.... 0x....      BL       GpioSetup
+     59            __enable_interrupt();
+   \   0000001E   0xB662             CPSIE    I
+     60            
+     61            // Enable the s310 SoftDevice Stack. If Failure, we shall not progress as 
+     62            // successive code is dependent on SD success.
+     63            if (!SocIntegrationInitialize())
+   \   00000020   0x.... 0x....      BL       SocIntegrationInitialize
+   \   00000024   0x2800             CMP      R0,#+0
+   \   00000026   0xD100             BNE      ??main_0
+     64              while (1);
+   \                     ??main_1: (+1)
+   \   00000028   0xE7FE             B        ??main_1
+     65            
+     66            /* Low Level Initialization Modules */
+     67            WatchDogSetup(); /* During development, set to not reset processor if timeout */
+   \                     ??main_0: (+1)
+   \   0000002A   0x.... 0x....      BL       WatchDogSetup
+     68            SysTickSetup();
+   \   0000002E   0x.... 0x....      BL       SysTickSetup
+     69            InterruptsInitialize();
+   \   00000032   0x.... 0x....      BL       InterruptsInitialize
+     70            
+     71            
+     72            /* Driver initialization */
+     73            LedInitialize();
+   \   00000036   0x.... 0x....      BL       LedInitialize
+     74            //AntInitialize();
+     75            ANTIntegrationInitialize();
+   \   0000003A   0x.... 0x....      BL       ANTIntegrationInitialize
+     76            BLEIntegrationInitialize();
+   \   0000003E   0x.... 0x....      BL       BLEIntegrationInitialize
+     77            bleperipheralInitialize();
+   \   00000042   0x.... 0x....      BL       bleperipheralInitialize
+     78            
+     79            /* Application initialization */
+     80            AntttInitialize();
+                   ^
+Warning[Pe223]: function "AntttInitialize" declared implicitly
+   \   00000046   0x.... 0x....      BL       AntttInitialize
+     81            
+     82            /* Exit initialization */
+     83            G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
+   \   0000004A   0x....             LDR      R0,??DataTable0
+   \   0000004C   0x6800             LDR      R0,[R0, #+0]
+   \   0000004E   0x0040             LSLS     R0,R0,#+1        ;; ZeroExtS R0,R0,#+1,#+1
+   \   00000050   0x0840             LSRS     R0,R0,#+1
+   \   00000052   0x....             LDR      R1,??DataTable0
+   \   00000054   0x6008             STR      R0,[R1, #+0]
+     84            
+     85            /* Main loop */  
+     86            while(1)
+     87            {
+     88              SocIntegrationHandler();
+                     ^
+Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
+
+    u32 u32Counter = 0;
+        ^
+"C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c",47  Warning[Pe177]: 
+          variable "u32Counter" was declared but never referenced
+
+    u32 u32M3PeriodCounter = 0;
+        ^
+"C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c",48  Warning[Pe177]: 
+          variable "u32M3PeriodCounter" was declared but never referenced
+   \                     ??main_2: (+1)
+   \   00000056   0x.... 0x....      BL       SocIntegrationHandler
+     89              LedUpdate();
+   \   0000005A   0x.... 0x....      BL       LedUpdate
+     90              
+     91              /* State Machines */
+     92              ANTT_SM();
+   \   0000005E   0x....             LDR      R0,??DataTable0_1
+   \   00000060   0x6800             LDR      R0,[R0, #+0]
+   \   00000062   0x4780             BLX      R0
+     93              
+     94              
+     95              /* System sleep*/
+     96              SystemSleep();
+   \   00000064   0x.... 0x....      BL       SystemSleep
+   \   00000068   0xE7F5             B        ??main_2
+     97            } /* end while(1) main super loop */
+     98            
+     99          } /* end main() */
+    100          
+    101          
+    102          /*--------------------------------------------------------------------------------------------------------------------*/
+    103          /* Private functions                                                                                                  */
+    104          /*--------------------------------------------------------------------------------------------------------------------*/
+    105          /*----------------------------------------------------------------------------------------------------------------------
+    106          Function: callback_bleperipheral_engenuics_data_rx
+    107          
+    108          Description:
+    109          Callback to handle the message received on the RX Characteristic of the bleperipheral_engenuics profile.
+    110          
+    111          Requires:
+    112            - data: pointer to array containing data.
+    113            - len: Length of array
+    114          
+    115          Promises:
+    116            - Application handling of the message.
+    117          */
+
+   \                                 In section .text, align 2, keep-with-next
+    118          void callback_bleperipheral_engenuics_data_rx(u8* data, u8 len)
+    119          {
+    120            
+    121          }
+   \                     callback_bleperipheral_engenuics_data_rx: (+1)
+   \   00000000   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x........         DC32     G_u32SystemFlags
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0_1:
+   \   00000000   0x........         DC32     ANTT_SM
+    122          
+    123          /*--------------------------------------------------------------------------------------------------------------------*/
+    124          /* End of File */
+    125          /*--------------------------------------------------------------------------------------------------------------------*/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   callback_bleperipheral_engenuics_data_rx
+      16   main
+        16   -- Indirect call
+        16   -> ANTIntegrationInitialize
+        16   -> AntttInitialize
+        16   -> BLEIntegrationInitialize
+        16   -> ClockSetup
+        16   -> GpioSetup
+        16   -> InterruptsInitialize
+        16   -> LedInitialize
+        16   -> LedUpdate
+        16   -> SocIntegrationHandler
+        16   -> SocIntegrationInitialize
+        16   -> SysTickSetup
+        16   -> SystemSleep
+        16   -> WatchDogSetup
+        16   -> bleperipheralInitialize
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  G_u32SystemFlags
+       4  Main_u32ErrorCode
+      28  Main_u8TestMessage
+       2  callback_bleperipheral_engenuics_data_rx
+     106  main
+
+ 
+   8 bytes in section .bss
+  28 bytes in section .data
+ 116 bytes in section .text
+ 
+ 116 bytes of CODE memory
+  36 bytes of DATA memory
+
+Errors: none
+Warnings: 4

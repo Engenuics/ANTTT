@@ -1,0 +1,204 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:52
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\application\anttt.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWA091.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\application\anttt.c -D NRF51
+#        -lC C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\anttt.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\anttt.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\application\anttt.c
+      1          /**********************************************************************************************************************
+      2          File: anttt.c                                                                
+      3          
+      4          Description:
+      5          Implements TIC-TAC-TOE using data input from ANT or BLE.
+      6          
+      7          
+      8          
+      9          **********************************************************************************************************************/
+     10          
+     11          #include "configuration.h"
+     12          
+     13          /***********************************************************************************************************************
+     14          Global variable definitions with scope across entire project.
+     15          All Global variable names shall start with "G_xxAnttt"
+     16          ***********************************************************************************************************************/
+     17          /* New variables */
+
+   \                                 In section .bss, align 4
+     18          u32 G_u32AntttFlags;                                     /* Global state flags */
+   \                     G_u32AntttFlags:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+     19          fnCode_type ANTT_SM;
+   \                     ANTT_SM:
+   \   00000000                      DS8 4
+     20          
+     21          /*--------------------------------------------------------------------------------------------------------------------*/
+     22          /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
+     23          extern volatile u32 G_u32SystemFlags;                  /* From main.c */
+     24          
+     25          extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
+     26          extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
+     27          
+     28          
+     29          /***********************************************************************************************************************
+     30          Global variable definitions with scope limited to this local application.
+     31          Variable names shall start with "Anttt_" and be declared as static.
+     32          ***********************************************************************************************************************/
+     33          static u32 Anttt_u32Timeout;                             /* Timeout counter used across states */
+                            ^
+Warning[Pe177]: variable "Anttt_u32Timeout" was declared but never referenced
+     34          
+     35          static u32 Anttt_u32CyclePeriod;                         /* Current base time for Anttt modulation */
+                            ^
+Warning[Pe177]: variable "Anttt_u32CyclePeriod" was declared but never
+          referenced
+     36          
+     37          /**********************************************************************************************************************
+     38          Function Definitions
+     39          **********************************************************************************************************************/
+     40          
+     41          static void AntttSM_Idle(void);
+     42          
+     43          /*--------------------------------------------------------------------------------------------------------------------*/
+     44          /* Public functions                                                                                                   */
+     45          /*--------------------------------------------------------------------------------------------------------------------*/
+     46          
+     47          
+     48          /*--------------------------------------------------------------------------------------------------------------------*/
+     49          /* Protected functions                                                                                                */
+     50          /*--------------------------------------------------------------------------------------------------------------------*/
+     51          
+     52          /*--------------------------------------------------------------------------------------------------------------------
+     53          Function: AntttInitialize
+     54          
+     55          Description:
+     56          Initializes the State Machine and its variables.
+     57          
+     58          Requires:
+     59            -
+     60          
+     61          Promises:
+     62            - 
+     63          */
+
+   \                                 In section .text, align 2, keep-with-next
+     64          void AntttInitialize(void)
+     65          {
+     66            ANTT_SM = &AntttSM_Idle;
+   \                     AntttInitialize: (+1)
+   \   00000000   0x....             LDR      R0,??DataTable0
+   \   00000002   0x....             LDR      R1,??DataTable0_1
+   \   00000004   0x6008             STR      R0,[R1, #+0]
+     67            
+     68            /* Fire up the LEDs */
+     69            
+     70           
+     71          } /* end AntttInitialize() */
+   \   00000006   0x4770             BX       LR               ;; return
+     72          
+     73          
+     74          
+     75          /*--------------------------------------------------------------------------------------------------------------------*/
+     76          /* Private functions                                                                                                  */
+     77          /*--------------------------------------------------------------------------------------------------------------------*/
+     78          
+     79          
+     80          
+     81          
+     82          /*--------------------------------------------------------------------------------------------------------------------*/
+     83          /* State Machine definitions                                                                                          */
+     84          /*--------------------------------------------------------------------------------------------------------------------*/
+     85          
+     86          /*--------------------------------------------------------------------------------------------------------------------
+     87          Function: AntttSM_Idle
+     88          */
+
+   \                                 In section .text, align 2, keep-with-next
+     89          static void AntttSM_Idle(void)
+     90          {
+     91            
+     92          } /* end AntttInitialize() */
+   \                     AntttSM_Idle: (+1)
+   \   00000000   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   0x........         DC32     AntttSM_Idle
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable0_1:
+   \   00000000   0x........         DC32     ANTT_SM
+     93          
+     94          
+     95          
+     96          
+     97          /*--------------------------------------------------------------------------------------------------------------------*/
+     98          /* End of File                                                                                                        */
+     99          /*--------------------------------------------------------------------------------------------------------------------*/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   AntttInitialize
+       0   AntttSM_Idle
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable0
+       4  ??DataTable0_1
+       4  ANTT_SM
+       8  AntttInitialize
+       2  AntttSM_Idle
+       4  G_u32AntttFlags
+
+ 
+  8 bytes in section .bss
+ 18 bytes in section .text
+ 
+ 18 bytes of CODE memory
+  8 bytes of DATA memory
+
+Errors: none
+Warnings: 2

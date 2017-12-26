@@ -1,0 +1,317 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:54
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\interrupts.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWAA4B.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\interrupts.c -D NRF51 -lC
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\interrupts.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\interrupts.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\interrupts.c
+      1          /**********************************************************************************************************************
+      2          File: interrupts.c                                                                
+      3          
+      4          Description:
+      5          This is a interrupts .c file new source code.
+      6          System-level interrupt handlers are defined here.  Driver-specific handlers will be found in
+      7          their respective source files.
+      8          
+      9          All SoC interrupts are in soc_integration.c
+     10          
+     11          This might be too fragmented, so we reserve the right to change it up after we play with it for a while.
+     12          
+     13          **********************************************************************************************************************/
+     14          
+     15          #include "configuration.h"
+     16          
+     17          /***********************************************************************************************************************
+     18          Global variable definitions with scope across entire project.
+     19          All Global variable names shall start with "G_"
+     20          ***********************************************************************************************************************/
+     21          /* New variables */
+
+   \                                 In section .bss, align 4
+     22          volatile u32 G_u32InterruptsFlags;                     /* Global state flags */
+   \                     G_u32InterruptsFlags:
+   \   00000000                      DS8 4
+     23          
+     24          
+     25          /*--------------------------------------------------------------------------------------------------------------------*/
+     26          /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
+     27          extern volatile u32 G_u32SystemFlags;                  /* From main.c */
+     28          
+     29          extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
+     30          extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
+     31          
+     32          
+     33          /***********************************************************************************************************************
+     34          Global variable definitions with scope limited to this local application.
+     35          Variable names shall start with "Interrupts_" and be declared as static.
+     36          ***********************************************************************************************************************/
+     37          static u32 Interrupts_u32Timeout;                     /* Timeout counter used across states */
+     38          
+     39          
+     40          /**********************************************************************************************************************
+     41          Function Definitions
+     42          **********************************************************************************************************************/
+     43          
+     44          /*--------------------------------------------------------------------------------------------------------------------
+     45          Function: InterruptsInitialize
+     46          
+     47          Description:
+     48          Initializes the State Machine and its variables.
+     49          
+     50          Requires:
+     51            - None.
+     52          
+     53          Promises:
+     54            - Returns TRUE if SoftDevice Interrupts are successfully enabled, FALSE otherwise.
+     55          */
+
+   \                                 In section .text, align 2, keep-with-next
+     56          bool InterruptsInitialize(void)
+     57          {
+   \                     InterruptsInitialize: (+1)
+   \   00000000   0xB510             PUSH     {R4,LR}
+     58            u32 result = NRF_SUCCESS;
+   \   00000002   0x2200             MOVS     R2,#+0
+     59            
+     60            // Must enable the SoftDevice Interrupt first.
+     61            result |= sd_nvic_SetPriority(SD_EVT_IRQn, NRF_APP_PRIORITY_LOW);
+   \   00000004   0x2103             MOVS     R1,#+3
+   \   00000006   0x2016             MOVS     R0,#+22
+   \   00000008   0xDF28             SVC      0x28
+   \   0000000A   0x0003             MOVS     R3,R0
+   \   0000000C   0x4313             ORRS     R3,R3,R2
+     62            result |= sd_nvic_EnableIRQ(SD_EVT_IRQn);
+   \   0000000E   0x2016             MOVS     R0,#+22
+   \   00000010   0xDF23             SVC      0x23
+   \   00000012   0x0004             MOVS     R4,R0
+   \   00000014   0x431C             ORRS     R4,R4,R3
+     63            
+     64            // Enable the RTC Peripheral.
+     65            result |= sd_nvic_SetPriority(RTC1_IRQn, NRF_APP_PRIORITY_LOW);
+   \   00000016   0x2103             MOVS     R1,#+3
+   \   00000018   0x2011             MOVS     R0,#+17
+   \   0000001A   0xDF28             SVC      0x28
+   \   0000001C   0x0001             MOVS     R1,R0
+   \   0000001E   0x4321             ORRS     R1,R1,R4
+     66            result |= sd_nvic_EnableIRQ(RTC1_IRQn);
+   \   00000020   0x2011             MOVS     R0,#+17
+   \   00000022   0xDF23             SVC      0x23
+   \   00000024   0x4308             ORRS     R0,R0,R1
+     67            
+     68            return (result == NRF_SUCCESS);
+   \   00000026   0x2800             CMP      R0,#+0
+   \   00000028   0xD101             BNE      ??InterruptsInitialize_0
+   \   0000002A   0x2001             MOVS     R0,#+1
+   \   0000002C   0xE000             B        ??InterruptsInitialize_1
+   \                     ??InterruptsInitialize_0: (+1)
+   \   0000002E   0x2000             MOVS     R0,#+0
+   \                     ??InterruptsInitialize_1: (+1)
+   \   00000030   0xB2C0             UXTB     R0,R0
+   \   00000032   0xBD10             POP      {R4,PC}          ;; return
+     69          } /* end InterruptsInitialize() */
+     70          
+     71          
+     72          /*--------------------------------------------------------------------------------------------------------------------*/
+     73          /* Handlers                                                                                                  */
+     74          /*--------------------------------------------------------------------------------------------------------------------*/
+     75          
+
+   \                                 In section .text, align 2, keep-with-next
+     76          void HardFault_Handler(u32 u32ProgramCounter_, u32 u32LinkRegister_)
+     77          {
+   \                     HardFault_Handler: (+1)
+   \   00000000   0xB500             PUSH     {LR}
+     78            (void)u32ProgramCounter_;
+     79            (void)u32LinkRegister_;
+     80          
+     81             while(1); // loop for debugging
+   \                     ??HardFault_Handler_0: (+1)
+   \   00000002   0xE7FE             B        ??HardFault_Handler_0
+     82             NVIC_SystemReset();
+                    ^
+Warning[Pe111]: statement is unreachable
+
+  static u32 Interrupts_u32Timeout;                     /* Timeout counter used across states */
+             ^
+"C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\interrupts.c",37  Warning[Pe177]: 
+          variable "Interrupts_u32Timeout" was declared but never referenced
+     83          }
+     84          
+     85          
+
+   \                                 In section .text, align 2, keep-with-next
+     86          void TIMER1_IRQHandler(void)
+     87          { 
+   \                     TIMER1_IRQHandler: (+1)
+   \   00000000   0xB500             PUSH     {LR}
+     88            while(1);
+   \                     ??TIMER1_IRQHandler_0: (+1)
+   \   00000002   0xE7FE             B        ??TIMER1_IRQHandler_0
+     89          }
+     90          
+
+   \                                 In section .text, align 2, keep-with-next
+     91          void RTC1_IRQHandler(void)
+     92          {
+   \                     RTC1_IRQHandler: (+1)
+   \   00000000   0xB500             PUSH     {LR}
+     93            // Clear the Tick Event
+     94            NRF_RTC1->EVENTS_TICK = 0;
+   \   00000002   0x2000             MOVS     R0,#+0
+   \   00000004   0x....             LDR      R1,??DataTable2  ;; 0x40011100
+   \   00000006   0x6008             STR      R0,[R1, #+0]
+     95            
+     96            // Update global counters.
+     97            G_u32SystemTime1ms++;
+   \   00000008   0x....             LDR      R0,??DataTable2_1
+   \   0000000A   0x6800             LDR      R0,[R0, #+0]
+   \   0000000C   0x1C40             ADDS     R0,R0,#+1
+   \   0000000E   0x....             LDR      R1,??DataTable2_1
+   \   00000010   0x6008             STR      R0,[R1, #+0]
+     98            if ((G_u32SystemTime1ms % 1000) == 0)
+   \   00000012   0x....             LDR      R0,??DataTable2_1
+   \   00000014   0x6800             LDR      R0,[R0, #+0]
+   \   00000016   0x21FA             MOVS     R1,#+250
+   \   00000018   0x0089             LSLS     R1,R1,#+2        ;; #+1000
+   \   0000001A   0x.... 0x....      BL       __aeabi_uidivmod
+   \   0000001E   0x2900             CMP      R1,#+0
+   \   00000020   0xD104             BNE      ??RTC1_IRQHandler_0
+     99            {
+    100              G_u32SystemTime1s++;
+   \   00000022   0x....             LDR      R0,??DataTable2_2
+   \   00000024   0x6800             LDR      R0,[R0, #+0]
+   \   00000026   0x1C40             ADDS     R0,R0,#+1
+   \   00000028   0x....             LDR      R1,??DataTable2_2
+   \   0000002A   0x6008             STR      R0,[R1, #+0]
+    101            }
+    102          }
+   \                     ??RTC1_IRQHandler_0: (+1)
+   \   0000002C   0xBD00             POP      {PC}             ;; return
+    103          
+    104          /*--------------------------------------------------------------------------------------------------------------------
+    105          Interrupt handler: SD_EVT_IRQHandler
+    106          
+    107          Description:
+    108          Processes soft device events.
+    109          
+    110          Requires:
+    111            -
+    112          
+    113          Promises:
+    114            -  Sets global system flags indicating that BLE and ANT events are pending.
+    115               It is possible that either ANT or BLE events OR ANT & BLE events are pending.
+    116               The application shall handle all the cases. 
+    117          --------------------------------------------------------------------------------------------------------------------*/
+
+   \                                 In section .text, align 2, keep-with-next
+    118          void SD_EVT_IRQHandler(void)
+    119          {
+    120            /* Set Flag that ANT and BLE Events pending. */
+    121            G_u32SystemFlags |= (_SYSTEM_PROTOCOL_EVENT); 
+   \                     SWI2_IRQHandler: (+1)
+   \   00000000   0x....             LDR      R0,??DataTable2_3
+   \   00000002   0x6800             LDR      R0,[R0, #+0]
+   \   00000004   0x2180             MOVS     R1,#+128
+   \   00000006   0x0249             LSLS     R1,R1,#+9        ;; #+65536
+   \   00000008   0x4301             ORRS     R1,R1,R0
+   \   0000000A   0x....             LDR      R0,??DataTable2_3
+   \   0000000C   0x6001             STR      R1,[R0, #+0]
+    122          }
+   \   0000000E   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   0x40011100         DC32     0x40011100
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \   00000000   0x........         DC32     G_u32SystemTime1ms
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \   00000000   0x........         DC32     G_u32SystemTime1s
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \   00000000   0x........         DC32     G_u32SystemFlags
+    123          
+    124          
+    125          
+    126          
+    127          /*--------------------------------------------------------------------------------------------------------------------*/
+    128          /* End of File                                                                                                        */
+    129          /*--------------------------------------------------------------------------------------------------------------------*/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       4   HardFault_Handler
+       8   InterruptsInitialize
+       4   RTC1_IRQHandler
+         4 __aeabi_uidivmod
+       0   SWI2_IRQHandler
+       4   TIMER1_IRQHandler
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  G_u32InterruptsFlags
+       4  HardFault_Handler
+      52  InterruptsInitialize
+      46  RTC1_IRQHandler
+      16  SWI2_IRQHandler
+       4  TIMER1_IRQHandler
+
+ 
+   4 bytes in section .bss
+ 138 bytes in section .text
+ 
+ 138 bytes of CODE memory
+   4 bytes of DATA memory
+
+Errors: none
+Warnings: 2

@@ -1,0 +1,127 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:53
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\nordic_sdk6_1_0\ble_advdata_parser.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWA5B3.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\nordic_sdk6_1_0\ble_advdata_parser.c
+#        -D NRF51 -lC
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\ble_advdata_parser.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\ble_advdata_parser.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\nordic_sdk6_1_0\ble_advdata_parser.c
+      1          #include "ble_advdata_parser.h"
+      2          
+
+   \                                 In section .text, align 2, keep-with-next
+      3          uint32_t ble_advdata_parser_field_find(uint8_t    type,
+      4                                                 uint8_t  * p_advdata,
+      5                                                 uint8_t  * len,
+      6                                                 uint8_t ** pp_field_data)
+      7          {
+   \                     ble_advdata_parser_field_find: (+1)
+   \   00000000   0xB5F8             PUSH     {R3-R7,LR}
+   \   00000002   0x0003             MOVS     R3,R0
+      8              uint32_t index = 0;
+   \   00000004   0x2400             MOVS     R4,#+0
+      9          
+     10              while (index < *len)
+   \                     ??ble_advdata_parser_field_find_0: (+1)
+   \   00000006   0x7810             LDRB     R0,[R2, #+0]
+   \   00000008   0x4284             CMP      R4,R0
+   \   0000000A   0xD214             BCS      ??ble_advdata_parser_field_find_1
+     11              {
+     12                  uint8_t field_length = p_advdata[index];
+   \   0000000C   0x5D0D             LDRB     R5,[R1, R4]
+     13                  uint8_t field_type   = p_advdata[index + 1];
+   \   0000000E   0x1908             ADDS     R0,R1,R4
+   \   00000010   0x7846             LDRB     R6,[R0, #+1]
+     14          
+     15                  if (field_type == type)
+   \   00000012   0x0030             MOVS     R0,R6
+   \   00000014   0x001F             MOVS     R7,R3
+   \   00000016   0xB2C0             UXTB     R0,R0
+   \   00000018   0xB2FF             UXTB     R7,R7
+   \   0000001A   0x42B8             CMP      R0,R7
+   \   0000001C   0xD107             BNE      ??ble_advdata_parser_field_find_2
+     16                  {
+     17                      *pp_field_data = &p_advdata[index + 2];
+   \   0000001E   0x1908             ADDS     R0,R1,R4
+   \   00000020   0x1C80             ADDS     R0,R0,#+2
+   \   00000022   0x9F00             LDR      R7,[SP, #+0]
+   \   00000024   0x6038             STR      R0,[R7, #+0]
+     18                      *len           = field_length - 1;
+   \   00000026   0x1E68             SUBS     R0,R5,#+1
+   \   00000028   0x7010             STRB     R0,[R2, #+0]
+     19                      return NRF_SUCCESS;
+   \   0000002A   0x2000             MOVS     R0,#+0
+   \   0000002C   0xE004             B        ??ble_advdata_parser_field_find_3
+     20                  }
+     21                  index += field_length + 1;
+   \                     ??ble_advdata_parser_field_find_2: (+1)
+   \   0000002E   0xB2ED             UXTB     R5,R5
+   \   00000030   0x1C6D             ADDS     R5,R5,#+1
+   \   00000032   0x1964             ADDS     R4,R4,R5
+   \   00000034   0xE7E7             B        ??ble_advdata_parser_field_find_0
+     22              }
+     23              return NRF_ERROR_NOT_FOUND;
+   \                     ??ble_advdata_parser_field_find_1: (+1)
+   \   00000036   0x2005             MOVS     R0,#+5
+   \                     ??ble_advdata_parser_field_find_3: (+1)
+   \   00000038   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+     24          }
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   ble_advdata_parser_field_find
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      58  ble_advdata_parser_field_find
+
+ 
+ 58 bytes in section .text
+ 
+ 58 bytes of CODE memory
+
+Errors: none
+Warnings: none
