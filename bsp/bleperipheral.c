@@ -85,7 +85,7 @@ Promises:
   - Returns TRUE if ble_evt_t decoded and action taken.
   - Returns FALSE if ble_evt_t decoded and action failed.
 */
-bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
+bool bleperipheralEventHandler(ble_evt_t* p_ble_evt)
 {
     u32 err_code = NRF_SUCCESS;
     
@@ -106,7 +106,7 @@ bool blePeripheralEventHandler(ble_evt_t* p_ble_evt)
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
             err_code = sd_ble_gap_sec_params_reply(m_conn_handle,
-                                                   BLE_GAP_SEC_STATUS_PAIRING_NOT_SUPP,
+                                                   BLE_GAP_SEC_STATUS_SUCCESS,
                                                    &m_sec_params);
             break;
 

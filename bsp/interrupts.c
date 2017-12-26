@@ -92,6 +92,13 @@ void RTC1_IRQHandler(void)
 {
   // Clear the Tick Event
   NRF_RTC1->EVENTS_TICK = 0;
+  
+  // Update global counters.
+  G_u32SystemTime1ms++;
+  if ((G_u32SystemTime1ms % 1000) == 0)
+  {
+    G_u32SystemTime1s++;
+  }
 }
 
 /*--------------------------------------------------------------------------------------------------------------------

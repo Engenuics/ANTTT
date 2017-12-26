@@ -345,6 +345,7 @@
                     <state>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\ble\ble_services</state>
                     <state>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\ble\device_manager</state>
                     <state>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\app_common</state>
+                    <state>$PROJ_DIR$\..\drivers</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2059,6 +2060,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\bsp\bleperipheral.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\drivers\buttons.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\bsp\configuration.h</name>

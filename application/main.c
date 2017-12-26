@@ -19,6 +19,7 @@ volatile u32 G_u32SystemFlags = 0;                     /* Global system flags */
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
+extern fnCode_type ANTT_SM;
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
@@ -81,15 +82,15 @@ void main(void)
   /* Exit initialization */
   G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
   
-  uint8_t temp = 0x01;
   /* Main loop */  
   while(1)
   {
     SocIntegrationHandler();
     LedUpdate();
     
-    // DEBUG: Call this to ensure that your system is running the application.
-    //LedInitialize();
+    /* State Machines */
+    ANTT_SM();
+    
     
     /* System sleep*/
     SystemSleep();
@@ -101,7 +102,23 @@ void main(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------------------------------------
+Function: callback_bleperipheral_engenuics_data_rx
 
+Description:
+Callback to handle the message received on the RX Characteristic of the bleperipheral_engenuics profile.
+
+Requires:
+  - data: pointer to array containing data.
+  - len: Length of array
+
+Promises:
+  - Application handling of the message.
+*/
+void callback_bleperipheral_engenuics_data_rx(u8* data, u8 len)
+{
+  
+}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File */

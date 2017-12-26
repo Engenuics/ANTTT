@@ -1423,7 +1423,7 @@
                 <expressions>
                     <item>result</item>
                     <item>err_code</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

@@ -16,7 +16,7 @@ All Global variable names shall start with "G_xxAnttt"
 ***********************************************************************************************************************/
 /* New variables */
 u32 G_u32AntttFlags;                                     /* Global state flags */
-
+fnCode_type ANTT_SM;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
@@ -37,6 +37,8 @@ static u32 Anttt_u32CyclePeriod;                         /* Current base time fo
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
+
+static void AntttSM_Idle(void);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
@@ -61,10 +63,11 @@ Promises:
 */
 void AntttInitialize(void)
 {
+  ANTT_SM = &AntttSM_Idle;
   
   /* Fire up the LEDs */
   
-
+ 
 } /* end AntttInitialize() */
 
 
@@ -83,9 +86,9 @@ void AntttInitialize(void)
 /*--------------------------------------------------------------------------------------------------------------------
 Function: AntttSM_Idle
 */
-void AntttSM_Idle(void)
+static void AntttSM_Idle(void)
 {
-
+  
 } /* end AntttInitialize() */
 
 

@@ -169,9 +169,7 @@ void BPEngenuicsOnWrite(ble_evt_t* evt)
     }
     else if (evt_write->handle == rx_handles.value_handle)    
     {
-        // Write event for the RX Value Characteristic. Client sent a message.
-        // TODO: Add Callback mechanism.
-        // evt_write->data;, evt_write->len;
+      callback_bleperipheral_engenuics_data_rx(evt_write->data, evt_write->len);
     }    
 }
 

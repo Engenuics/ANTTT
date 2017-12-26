@@ -70,7 +70,7 @@ void BLEIntegrationHandler(void)
     while (ble_evt)
     {
       // Dispatch to all BLE specific handlers.
-      blePeripheralEventHandler(ble_evt);
+      bleperipheralEventHandler(ble_evt);
       
       // Check if another message is pending.
       ble_evt = BLEIntegration_get_buffer();

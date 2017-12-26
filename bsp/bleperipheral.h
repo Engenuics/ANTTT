@@ -98,8 +98,8 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-bool blePeripheralInitialize(void);
-bool blePeripheralEventHandler(ble_evt_t* evt);
+bool bleperipheralInitialize(void);
+bool bleperipheralEventHandler(ble_evt_t* evt);
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/

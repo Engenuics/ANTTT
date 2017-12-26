@@ -83,6 +83,7 @@ bool BPEngenuicsInitialize(void);
 void BPEngenuicsOnConnect(ble_evt_t* evt);
 void BPEngenuicsOnDisconnect(void);
 void BPEngenuicsOnWrite(ble_evt_t* evt);
+void callback_bleperipheral_engenuics_data_rx(u8* data, u8 len);
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
