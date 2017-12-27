@@ -115,6 +115,7 @@ void BPEngenuicsOnConnect(ble_evt_t* evt)
 {
   // Update the conn_handle. Module knows that it is connected to a client.
   conn_handle = evt->evt.gap_evt.conn_handle;
+  G_u32BPEngenuicsFlags |= BPENGENUICS_CONNECTED;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
@@ -133,6 +134,7 @@ void BPEngenuicsOnDisconnect(void)
 {
   // Invalidate the conn_handle. Module knows that it is in a disconnected state
   conn_handle = BLE_CONN_HANDLE_INVALID;
+  G_u32BPEngenuicsFlags &= ~BPENGENUICS_CONNECTED;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------
