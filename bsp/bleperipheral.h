@@ -100,6 +100,7 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 bool bleperipheralInitialize(void);
 bool bleperipheralEventHandler(ble_evt_t* evt);
+bool bleperipheralIsConnectedandEnabled(void);
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -110,6 +111,7 @@ static bool bleperipheral_advertising_init(void);
 static bool bleperipheral_services_init(void);
 static bool bleperipheral_advertising_start(void);
 static void bleperipheral_sec_params_init(void);
+
 
 #endif /* __ANTINT_H */
 

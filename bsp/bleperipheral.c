@@ -94,14 +94,12 @@ bool bleperipheralEventHandler(ble_evt_t* p_ble_evt)
         case BLE_GAP_EVT_CONNECTED:
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             BPEngenuicsOnConnect(p_ble_evt);
-            LedToggle(STATUS_GRN);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             BPEngenuicsOnDisconnect();
             bleperipheral_advertising_start();
-            LedToggle(STATUS_GRN);
             break;
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -128,6 +126,13 @@ bool bleperipheralEventHandler(ble_evt_t* p_ble_evt)
 
     return err_code == NRF_SUCCESS;
 }
+
+bool bleperipheralIsConnectedandEnabled(void)
+{
+   // Check if connected and service enabled on BLE.
+   return (m_conn_handle != BLE_CONN_HANDLE_INVALID);
+}
+
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                */
