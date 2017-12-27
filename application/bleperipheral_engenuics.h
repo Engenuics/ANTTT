@@ -67,6 +67,7 @@ Constants / Definitions
 #define BPENGENUICS_TX_CHAR_UUID       0x0001
 #define BPENGENUICS_RX_CHAR_UUID       0x0002
 
+#define BPENGENUICS_CONNECTED          0x01
 /**********************************************************************************************************************
 Function Declarations
 **********************************************************************************************************************/
