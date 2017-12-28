@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:53:04
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:43
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
 #    Endian       =  little
 #    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\leds_anttt.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EWCDDC.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EW927A.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\leds_anttt.c -D NRF51 -lC
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
@@ -548,84 +548,99 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\leds_anttt.c
     271          void LedInitialize(void)
     272          {
    \                     LedInitialize: (+1)
-   \   00000000   0xB500             PUSH     {LR}
-   \   00000002   0xB085             SUB      SP,SP,#+20
+   \   00000000   0xB51F             PUSH     {R0-R4,LR}
     273            u32 u32Timer;
+                       ^
+Warning[Pe177]: variable "u32Timer" was declared but never referenced
     274            LedNumberType aeLedSequenceHome[] = {HOME1, HOME2, HOME3, HOME6, HOME9, HOME8, HOME7, HOME4};
-   \   00000004   0xA802             ADD      R0,SP,#+8
-   \   00000006   0x....             LDR      R1,??DataTable6_6
-   \   00000008   0xC90C             LDM      R1!,{R2,R3}
-   \   0000000A   0xC00C             STM      R0!,{R2,R3}
-   \   0000000C   0x3908             SUBS     R1,R1,#+8
-   \   0000000E   0x3808             SUBS     R0,R0,#+8
+   \   00000002   0xA802             ADD      R0,SP,#+8
+   \   00000004   0x....             LDR      R1,??DataTable6_6
+   \   00000006   0xC90C             LDM      R1!,{R2,R3}
+   \   00000008   0xC00C             STM      R0!,{R2,R3}
+   \   0000000A   0x3908             SUBS     R1,R1,#+8
+   \   0000000C   0x3808             SUBS     R0,R0,#+8
     275            LedNumberType aeLedSequenceAway[] = {AWAY1, AWAY4, AWAY7, AWAY8, AWAY9, AWAY6, AWAY3, AWAY2};
-   \   00000010   0x4668             MOV      R0,SP
-   \   00000012   0x....             LDR      R1,??DataTable6_7
-   \   00000014   0xC90C             LDM      R1!,{R2,R3}
-   \   00000016   0xC00C             STM      R0!,{R2,R3}
-   \   00000018   0x3908             SUBS     R1,R1,#+8
-   \   0000001A   0x3808             SUBS     R0,R0,#+8
+   \   0000000E   0x4668             MOV      R0,SP
+   \   00000010   0x....             LDR      R1,??DataTable6_7
+   \   00000012   0xC90C             LDM      R1!,{R2,R3}
+   \   00000014   0xC00C             STM      R0!,{R2,R3}
+   \   00000016   0x3908             SUBS     R1,R1,#+8
+   \   00000018   0x3808             SUBS     R0,R0,#+8
     276            
     277            /* All status lights on */
     278            //LedOn(STATUS_RED);
     279            //LedOn(STATUS_YLW);
     280            //LedOn(STATUS_GRN);
     281          
-    282          //#if 0 /* Picture mode */
+    282          #if 0 /* Picture mode */
     283            LedOn(HOME1);
-   \   0000001C   0x2000             MOVS     R0,#+0
-   \   0000001E   0x.... 0x....      BL       LedOn
     284            LedOn(HOME5);
-   \   00000022   0x2004             MOVS     R0,#+4
-   \   00000024   0x.... 0x....      BL       LedOn
     285            LedOn(HOME7);
-   \   00000028   0x2006             MOVS     R0,#+6
-   \   0000002A   0x.... 0x....      BL       LedOn
     286            LedOn(HOME2);
-   \   0000002E   0x2001             MOVS     R0,#+1
-   \   00000030   0x.... 0x....      BL       LedOn
     287            LedOn(AWAY9);
-   \   00000034   0x2011             MOVS     R0,#+17
-   \   00000036   0x.... 0x....      BL       LedOn
     288            LedOn(AWAY4);
-   \   0000003A   0x200C             MOVS     R0,#+12
-   \   0000003C   0x.... 0x....      BL       LedOn
     289            LedOn(AWAY6);
-   \   00000040   0x200E             MOVS     R0,#+14
-   \   00000042   0x.... 0x....      BL       LedOn
     290            LedOn(AWAY8);
-   \   00000046   0x2010             MOVS     R0,#+16
-   \   00000048   0x.... 0x....      BL       LedOn
     291          
     292            while(1);
-   \                     ??LedInitialize_0: (+1)
-   \   0000004C   0xE7FE             B        ??LedInitialize_0
-    293          //#endif
+    293          #endif
     294          
     295            LedOff(HOME5);
-                   ^
-Warning[Pe111]: statement is unreachable
-
-    u32 u32Timer;
-        ^
-"C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\leds_anttt.c",273  Warning[Pe177]: 
-          variable "u32Timer" was declared but never referenced
+   \   0000001A   0x2004             MOVS     R0,#+4
+   \   0000001C   0x.... 0x....      BL       LedOff
     296            LedOn(AWAY5);
+   \   00000020   0x200D             MOVS     R0,#+13
+   \   00000022   0x.... 0x....      BL       LedOn
     297            
     298            
     299            //while (1)
     300            //{
     301              /* Sequentially light up the LEDs */
     302              for(u8 i = 0; i < 8; i++)
+   \   00000026   0x2400             MOVS     R4,#+0
+   \                     ??LedInitialize_0: (+1)
+   \   00000028   0xB2E4             UXTB     R4,R4
+   \   0000002A   0x2C08             CMP      R4,#+8
+   \   0000002C   0xDA21             BGE      ??LedInitialize_1
     303              {
     304                LedToggle(HOME5);
+   \   0000002E   0x2004             MOVS     R0,#+4
+   \   00000030   0x.... 0x....      BL       LedToggle
     305                LedToggle(AWAY5);
+   \   00000034   0x200D             MOVS     R0,#+13
+   \   00000036   0x.... 0x....      BL       LedToggle
     306                LedOn(aeLedSequenceHome[i]);
+   \   0000003A   0xA802             ADD      R0,SP,#+8
+   \   0000003C   0xB2E4             UXTB     R4,R4
+   \   0000003E   0x5D00             LDRB     R0,[R0, R4]
+   \   00000040   0x.... 0x....      BL       LedOn
     307                LedOn(aeLedSequenceAway[i]);
+   \   00000044   0x4668             MOV      R0,SP
+   \   00000046   0xB2E4             UXTB     R4,R4
+   \   00000048   0x5D00             LDRB     R0,[R0, R4]
+   \   0000004A   0x.... 0x....      BL       LedOn
     308                for(u32 j = 0; j < 200000; j++);
+   \   0000004E   0x2000             MOVS     R0,#+0
+   \                     ??LedInitialize_2: (+1)
+   \   00000050   0x....             LDR      R1,??DataTable6_8  ;; 0x30d40
+   \   00000052   0x4288             CMP      R0,R1
+   \   00000054   0xD201             BCS      ??LedInitialize_3
+   \   00000056   0x1C40             ADDS     R0,R0,#+1
+   \   00000058   0xE7FA             B        ??LedInitialize_2
     309                LedOff(aeLedSequenceHome[i]);
+   \                     ??LedInitialize_3: (+1)
+   \   0000005A   0xA802             ADD      R0,SP,#+8
+   \   0000005C   0xB2E4             UXTB     R4,R4
+   \   0000005E   0x5D00             LDRB     R0,[R0, R4]
+   \   00000060   0x.... 0x....      BL       LedOff
     310                LedOff(aeLedSequenceAway[i]);
+   \   00000064   0x4668             MOV      R0,SP
+   \   00000066   0xB2E4             UXTB     R4,R4
+   \   00000068   0x5D00             LDRB     R0,[R0, R4]
+   \   0000006A   0x.... 0x....      BL       LedOff
     311              }
+   \   0000006E   0x1C64             ADDS     R4,R4,#+1
+   \   00000070   0xE7DA             B        ??LedInitialize_0
     312            //}
     313          
     314          #if 0
@@ -639,6 +654,14 @@ Warning[Pe111]: statement is unreachable
     322          
     323            /* Pause for show */
     324            for(u32 i = 0; i < 2000000; i++);
+   \                     ??LedInitialize_1: (+1)
+   \   00000072   0x2000             MOVS     R0,#+0
+   \                     ??LedInitialize_4: (+1)
+   \   00000074   0x....             LDR      R1,??DataTable6_9  ;; 0x1e8480
+   \   00000076   0x4288             CMP      R0,R1
+   \   00000078   0xD201             BCS      ??LedInitialize_5
+   \   0000007A   0x1C40             ADDS     R0,R0,#+1
+   \   0000007C   0xE7FA             B        ??LedInitialize_4
     325          
     326          #if 0
     327            /* Turn all LEDs on full, then fade them out over a few seconds */
@@ -671,6 +694,8 @@ Warning[Pe111]: statement is unreachable
     354          #endif
     355            
     356          } /* end LedInitialize() */
+   \                     ??LedInitialize_5: (+1)
+   \   0000007E   0xBD1F             POP      {R0-R4,PC}       ;; return
     357          
     358          
     359          /*--------------------------------------------------------------------------------------------------------------------*/
@@ -961,6 +986,14 @@ Warning[Pe111]: statement is unreachable
    \                     ??DataTable6_7:
    \   00000000   0x........         DC32     ?_1
 
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_8:
+   \   00000000   0x00030D40         DC32     0x30d40
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_9:
+   \   00000000   0x001E8480         DC32     0x1e8480
+
    \                                 In section .rodata, align 4
    \                     ?_0:
    \   00000000   0x00 0x01          DC8 0, 1, 2, 5, 8, 7, 6, 3
@@ -988,7 +1021,9 @@ Warning[Pe111]: statement is unreachable
    ------- --------
        4   LedBlink
       24   LedInitialize
+        24   -> LedOff
         24   -> LedOn
+        24   -> LedToggle
        4   LedOff
        4   LedOn
        4   LedPWM
@@ -1011,10 +1046,12 @@ Warning[Pe111]: statement is unreachable
        4  ??DataTable6_5
        4  ??DataTable6_6
        4  ??DataTable6_7
+       4  ??DataTable6_8
+       4  ??DataTable6_9
        8  ?_0
        8  ?_1
       42  LedBlink
-      78  LedInitialize
+     128  LedInitialize
       62  LedOff
       62  LedOn
       56  LedPWM
@@ -1026,11 +1063,11 @@ Warning[Pe111]: statement is unreachable
  
  252 bytes in section .data
   16 bytes in section .rodata
- 702 bytes in section .text
+ 760 bytes in section .text
  
- 702 bytes of CODE  memory
+ 760 bytes of CODE  memory
   16 bytes of CONST memory
  252 bytes of DATA  memory
 
 Errors: none
-Warnings: 2
+Warnings: 1

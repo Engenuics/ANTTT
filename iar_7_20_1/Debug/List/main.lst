@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:55
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:43
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
 #    Endian       =  little
 #    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EWAD5A.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EW954A.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c -D NRF51 -lC
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
@@ -178,8 +178,6 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
      78            
      79            /* Application initialization */
      80            AntttInitialize();
-                   ^
-Warning[Pe223]: function "AntttInitialize" declared implicitly
    \   00000046   0x.... 0x....      BL       AntttInitialize
      81            
      82            /* Exit initialization */
@@ -309,4 +307,4 @@ Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
   36 bytes of DATA memory
 
 Errors: none
-Warnings: 4
+Warnings: 3

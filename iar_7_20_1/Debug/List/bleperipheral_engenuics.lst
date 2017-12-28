@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:52:54
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:42
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
@@ -8,7 +8,7 @@
 #    Source file  =  
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\application\bleperipheral_engenuics.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EWA8B4.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EW8F6B.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\application\bleperipheral_engenuics.c
 #        -D NRF51 -lC
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
@@ -183,7 +183,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   0000002E   0x0038             MOVS     R0,R7
    \   00000030   0x.... 0x....      BL       __aeabi_memset
      56              hvx.handle = tx_handles.value_handle;
-   \   00000034   0x....             LDR      R0,??DataTable8_1
+   \   00000034   0x....             LDR      R0,??DataTable7_2
    \   00000036   0x8800             LDRH     R0,[R0, #+0]
    \   00000038   0x4669             MOV      R1,SP
    \   0000003A   0x8008             STRH     R0,[R1, #+0]
@@ -304,202 +304,230 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000000   0x8881             LDRH     R1,[R0, #+4]
    \   00000002   0x....             LDR      R2,??DataTable8
    \   00000004   0x8011             STRH     R1,[R2, #+0]
-    118          }
-   \   00000006   0x4770             BX       LR               ;; return
-    119          
-    120          /*--------------------------------------------------------------------------------------------------------------------
-    121          Function: BPEngenuicsOnDisconnect
-    122          
-    123          Description:
-    124          Initializes the State Machine and its variables.
-    125          
-    126          Requires:
-    127             - BPEngenuicsInitialize has been called
-    128          
-    129          Promises:
-    130            - Notifies the module that it is in the disconnected state.
-    131          */
+    118            G_u32BPEngenuicsFlags |= BPENGENUICS_CONNECTED;
+   \   00000006   0x....             LDR      R1,??DataTable8_1
+   \   00000008   0x6809             LDR      R1,[R1, #+0]
+   \   0000000A   0x2201             MOVS     R2,#+1
+   \   0000000C   0x430A             ORRS     R2,R2,R1
+   \   0000000E   0x....             LDR      R1,??DataTable8_1
+   \   00000010   0x600A             STR      R2,[R1, #+0]
+    119          }
+   \   00000012   0x4770             BX       LR               ;; return
+    120          
+    121          /*--------------------------------------------------------------------------------------------------------------------
+    122          Function: BPEngenuicsOnDisconnect
+    123          
+    124          Description:
+    125          Initializes the State Machine and its variables.
+    126          
+    127          Requires:
+    128             - BPEngenuicsInitialize has been called
+    129          
+    130          Promises:
+    131            - Notifies the module that it is in the disconnected state.
+    132          */
 
    \                                 In section .text, align 2, keep-with-next
-    132          void BPEngenuicsOnDisconnect(void)
-    133          {
-    134            // Invalidate the conn_handle. Module knows that it is in a disconnected state
-    135            conn_handle = BLE_CONN_HANDLE_INVALID;
+    133          void BPEngenuicsOnDisconnect(void)
+    134          {
+    135            // Invalidate the conn_handle. Module knows that it is in a disconnected state
+    136            conn_handle = BLE_CONN_HANDLE_INVALID;
    \                     BPEngenuicsOnDisconnect: (+1)
    \   00000000   0x....             LDR      R0,??DataTable7  ;; 0xffff
    \   00000002   0x....             LDR      R1,??DataTable8
    \   00000004   0x8008             STRH     R0,[R1, #+0]
-    136          }
-   \   00000006   0x4770             BX       LR               ;; return
-    137          
-    138          /*--------------------------------------------------------------------------------------------------------------------
-    139          Function: BPEngenuicsOnWrite
-    140          
-    141          Description:
-    142          Handles the Service enabling/disabling. Handles the Value Char writes from Client.
-    143          
-    144          Requires:
-    145             - Called after the module has been initialized.
-    146             - evt is the ble_evt_t* containing the appropriate GATTS Write information
-    147             
-    148          Promises:
-    149            - Handles Enabling/Disabling on the BPEngenucis TX Value Characteristic.
-    150            - Handles Rx Messages sent from the client on the RX Value Characteristic.
-    151          */
+    137            G_u32BPEngenuicsFlags &= ~BPENGENUICS_CONNECTED;
+   \   00000006   0x....             LDR      R0,??DataTable8_1
+   \   00000008   0x6800             LDR      R0,[R0, #+0]
+   \   0000000A   0x2101             MOVS     R1,#+1
+   \   0000000C   0x4388             BICS     R0,R0,R1
+   \   0000000E   0x....             LDR      R1,??DataTable8_1
+   \   00000010   0x6008             STR      R0,[R1, #+0]
+    138          }
+   \   00000012   0x4770             BX       LR               ;; return
+    139          
+    140          /*--------------------------------------------------------------------------------------------------------------------
+    141          Function: BPEngenuicsOnWrite
+    142          
+    143          Description:
+    144          Handles the Service enabling/disabling. Handles the Value Char writes from Client.
+    145          
+    146          Requires:
+    147             - Called after the module has been initialized.
+    148             - evt is the ble_evt_t* containing the appropriate GATTS Write information
+    149             
+    150          Promises:
+    151            - Handles Enabling/Disabling on the BPEngenucis TX Value Characteristic.
+    152            - Handles Rx Messages sent from the client on the RX Value Characteristic.
+    153          */
 
    \                                 In section .text, align 2, keep-with-next
-    152          void BPEngenuicsOnWrite(ble_evt_t* evt)
-    153          {
+    154          void BPEngenuicsOnWrite(ble_evt_t* evt)
+    155          {
    \                     BPEngenuicsOnWrite: (+1)
    \   00000000   0xB538             PUSH     {R3-R5,LR}
    \   00000002   0x0004             MOVS     R4,R0
-    154             // Create our ble_gatts_evt_write_t object.
-    155              ble_gatts_evt_write_t* evt_write = &evt->evt.gatts_evt.params.write;
+    156             // Create our ble_gatts_evt_write_t object.
+    157              ble_gatts_evt_write_t* evt_write = &evt->evt.gatts_evt.params.write;
    \   00000004   0x1DA5             ADDS     R5,R4,#+6
-    156              
-    157              // Check if it is the TX Handle CCCD write event and len is 2.
-    158              if ((evt_write->handle == tx_handles.cccd_handle) && (evt_write->len == 2))
+    158              
+    159              // Check if it is the TX Handle CCCD write event and len is 2.
+    160              if ((evt_write->handle == tx_handles.cccd_handle) && (evt_write->len == 2))
    \   00000006   0x8828             LDRH     R0,[R5, #+0]
-   \   00000008   0x....             LDR      R1,??DataTable8_1
+   \   00000008   0x....             LDR      R1,??DataTable7_2
    \   0000000A   0x8889             LDRH     R1,[R1, #+4]
    \   0000000C   0x4288             CMP      R0,R1
-   \   0000000E   0xD110             BNE      ??BPEngenuicsOnWrite_0
+   \   0000000E   0xD11C             BNE      ??BPEngenuicsOnWrite_0
    \   00000010   0x8B28             LDRH     R0,[R5, #+24]
    \   00000012   0x2802             CMP      R0,#+2
-   \   00000014   0xD10D             BNE      ??BPEngenuicsOnWrite_0
-    159              {
-    160                // Check if service needs to be enabled/disabled.
-    161                if (ble_srv_is_notification_enabled(evt_write->data))
+   \   00000014   0xD119             BNE      ??BPEngenuicsOnWrite_0
+    161              {
+    162                // Check if service needs to be enabled/disabled.
+    163                if (ble_srv_is_notification_enabled(evt_write->data))
    \   00000016   0x0028             MOVS     R0,R5
    \   00000018   0x301A             ADDS     R0,R0,#+26
    \   0000001A   0x.... 0x....      BL       ble_srv_is_notification_enabled
    \   0000001E   0x2800             CMP      R0,#+0
-   \   00000020   0xD003             BEQ      ??BPEngenuicsOnWrite_1
-    162                {
-    163                  is_notification_enabled = true;
+   \   00000020   0xD009             BEQ      ??BPEngenuicsOnWrite_1
+    164                {
+    165                  is_notification_enabled = true;
    \   00000022   0x2001             MOVS     R0,#+1
    \   00000024   0x....             LDR      R1,??DataTable7_1
    \   00000026   0x7008             STRB     R0,[R1, #+0]
-   \   00000028   0xE00E             B        ??BPEngenuicsOnWrite_2
-    164                }
-    165                else
-    166                {
-    167                  is_notification_enabled = false;
+    166                  G_u32BPEngenuicsFlags |= BPENGENUICS_SERVICEENABLED;
+   \   00000028   0x....             LDR      R0,??DataTable8_1
+   \   0000002A   0x6800             LDR      R0,[R0, #+0]
+   \   0000002C   0x2102             MOVS     R1,#+2
+   \   0000002E   0x4301             ORRS     R1,R1,R0
+   \   00000030   0x....             LDR      R0,??DataTable8_1
+   \   00000032   0x6001             STR      R1,[R0, #+0]
+   \   00000034   0xE014             B        ??BPEngenuicsOnWrite_2
+    167                }
+    168                else
+    169                {
+    170                  is_notification_enabled = false;
    \                     ??BPEngenuicsOnWrite_1: (+1)
-   \   0000002A   0x2000             MOVS     R0,#+0
-   \   0000002C   0x....             LDR      R1,??DataTable7_1
-   \   0000002E   0x7008             STRB     R0,[R1, #+0]
-   \   00000030   0xE00A             B        ??BPEngenuicsOnWrite_2
-    168                }
-    169              }
-    170              else if (evt_write->handle == rx_handles.value_handle)    
+   \   00000036   0x2000             MOVS     R0,#+0
+   \   00000038   0x....             LDR      R1,??DataTable7_1
+   \   0000003A   0x7008             STRB     R0,[R1, #+0]
+    171                  G_u32BPEngenuicsFlags &= ~BPENGENUICS_SERVICEENABLED;
+   \   0000003C   0x....             LDR      R0,??DataTable8_1
+   \   0000003E   0x6800             LDR      R0,[R0, #+0]
+   \   00000040   0x2102             MOVS     R1,#+2
+   \   00000042   0x4388             BICS     R0,R0,R1
+   \   00000044   0x....             LDR      R1,??DataTable8_1
+   \   00000046   0x6008             STR      R0,[R1, #+0]
+   \   00000048   0xE00A             B        ??BPEngenuicsOnWrite_2
+    172                }
+    173              }
+    174              else if (evt_write->handle == rx_handles.value_handle)    
    \                     ??BPEngenuicsOnWrite_0: (+1)
-   \   00000032   0x8828             LDRH     R0,[R5, #+0]
-   \   00000034   0x....             LDR      R1,??DataTable8_2
-   \   00000036   0x8809             LDRH     R1,[R1, #+0]
-   \   00000038   0x4288             CMP      R0,R1
-   \   0000003A   0xD105             BNE      ??BPEngenuicsOnWrite_2
-    171              {
-    172                callback_bleperipheral_engenuics_data_rx(evt_write->data, evt_write->len);
-   \   0000003C   0x8B29             LDRH     R1,[R5, #+24]
-   \   0000003E   0xB2C9             UXTB     R1,R1
-   \   00000040   0x0028             MOVS     R0,R5
-   \   00000042   0x301A             ADDS     R0,R0,#+26
-   \   00000044   0x.... 0x....      BL       callback_bleperipheral_engenuics_data_rx
-    173              }    
-    174          }
+   \   0000004A   0x8828             LDRH     R0,[R5, #+0]
+   \   0000004C   0x....             LDR      R1,??DataTable8_2
+   \   0000004E   0x8809             LDRH     R1,[R1, #+0]
+   \   00000050   0x4288             CMP      R0,R1
+   \   00000052   0xD105             BNE      ??BPEngenuicsOnWrite_2
+    175              {
+    176                callback_bleperipheral_engenuics_data_rx(evt_write->data, evt_write->len);
+   \   00000054   0x8B29             LDRH     R1,[R5, #+24]
+   \   00000056   0xB2C9             UXTB     R1,R1
+   \   00000058   0x0028             MOVS     R0,R5
+   \   0000005A   0x301A             ADDS     R0,R0,#+26
+   \   0000005C   0x.... 0x....      BL       callback_bleperipheral_engenuics_data_rx
+    177              }    
+    178          }
    \                     ??BPEngenuicsOnWrite_2: (+1)
-   \   00000048   0xBD31             POP      {R0,R4,R5,PC}    ;; return
-    175          
-    176          
-    177          
-    178          /*--------------------------------------------------------------------------------------------------------------------*/
-    179          /* Private functions                                                                                                  */
-    180          /*--------------------------------------------------------------------------------------------------------------------*/
-    181          /*--------------------------------------------------------------------------------------------------------------------
-    182          Function: BPEngenuicsAddService
-    183          
-    184          Description:
-    185          Registers the service to the
-    186          
-    187          Requires:
-    188             - Called after the module has been intialized.
-    189             
-    190          Promises:
-    191            - Adds the BPEngenuics Rx Service.
-    192            - Registers a properietary 128bit Service UUID base.
-    193            - Followed by 16bit Service identifier. 
-    194          */
+   \   00000060   0xBD31             POP      {R0,R4,R5,PC}    ;; return
+    179          
+    180          
+    181          
+    182          /*--------------------------------------------------------------------------------------------------------------------*/
+    183          /* Private functions                                                                                                  */
+    184          /*--------------------------------------------------------------------------------------------------------------------*/
+    185          /*--------------------------------------------------------------------------------------------------------------------
+    186          Function: BPEngenuicsAddService
+    187          
+    188          Description:
+    189          Registers the service to the
+    190          
+    191          Requires:
+    192             - Called after the module has been intialized.
+    193             
+    194          Promises:
+    195            - Adds the BPEngenuics Rx Service.
+    196            - Registers a properietary 128bit Service UUID base.
+    197            - Followed by 16bit Service identifier. 
+    198          */
 
    \                                 In section .text, align 2, keep-with-next
-    195          static u32 BPEngenuicsAddService(void)
-    196          {
+    199          static u32 BPEngenuicsAddService(void)
+    200          {
    \                     BPEngenuicsAddService: (+1)
    \   00000000   0xB500             PUSH     {LR}
    \   00000002   0xB085             SUB      SP,SP,#+20
-    197             u32 err;
-    198             ble_uuid_t ble_uuid;
-    199             ble_uuid128_t ble_base_uuid = BPENGENUICS_BASE_UUID;
+    201             u32 err;
+    202             ble_uuid_t ble_uuid;
+    203             ble_uuid128_t ble_base_uuid = BPENGENUICS_BASE_UUID;
    \   00000004   0xA801             ADD      R0,SP,#+4
    \   00000006   0x....             LDR      R1,??DataTable8_3
    \   00000008   0x2210             MOVS     R2,#+16
    \   0000000A   0x.... 0x....      BL       __aeabi_memcpy4
-    200          
-    201             // Add Service UUID with base .
-    202             err = sd_ble_uuid_vs_add(&ble_base_uuid, &uuid_type);
+    204          
+    205             // Add Service UUID with base .
+    206             err = sd_ble_uuid_vs_add(&ble_base_uuid, &uuid_type);
    \   0000000E   0x....             LDR      R1,??DataTable8_4
    \   00000010   0xA801             ADD      R0,SP,#+4
    \   00000012   0xDF62             SVC      0x62
    \   00000014   0x0003             MOVS     R3,R0
-    203          
-    204             // Add the 16bit unique value to base.
-    205             ble_uuid.type = uuid_type;
+    207          
+    208             // Add the 16bit unique value to base.
+    209             ble_uuid.type = uuid_type;
    \   00000016   0x....             LDR      R0,??DataTable8_4
    \   00000018   0x7800             LDRB     R0,[R0, #+0]
    \   0000001A   0x4669             MOV      R1,SP
    \   0000001C   0x7088             STRB     R0,[R1, #+2]
-    206             ble_uuid.uuid = BPENGENUICS_SERVICE_UUID;
+    210             ble_uuid.uuid = BPENGENUICS_SERVICE_UUID;
    \   0000001E   0x....             LDR      R0,??DataTable8_5  ;; 0xeeee
    \   00000020   0x4669             MOV      R1,SP
    \   00000022   0x8008             STRH     R0,[R1, #+0]
-    207             err = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid, &service_handle);
+    211             err = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid, &service_handle);
    \   00000024   0x....             LDR      R2,??DataTable8_6
    \   00000026   0x4669             MOV      R1,SP
    \   00000028   0x2001             MOVS     R0,#+1
    \   0000002A   0xDFA0             SVC      0xA0
-    208          
-    209             return err;
+    212          
+    213             return err;
    \   0000002C   0xB005             ADD      SP,SP,#+20
    \   0000002E   0xBD00             POP      {PC}             ;; return
-    210          }
-    211          
-    212          
-    213          /*--------------------------------------------------------------------------------------------------------------------
-    214          Function: BPEngenuicsAddRxcharacteristic
+    214          }
     215          
-    216          Description:
-    217          Adds the Rx Characteristic to the BLE Service.
-    218          
-    219          Requires:
-    220             - Called during module initialization
-    221             
-    222          Promises:
-    223            - Adds the BPEngenuics Rx Characteristic.
-    224          */
+    216          
+    217          /*--------------------------------------------------------------------------------------------------------------------
+    218          Function: BPEngenuicsAddRxcharacteristic
+    219          
+    220          Description:
+    221          Adds the Rx Characteristic to the BLE Service.
+    222          
+    223          Requires:
+    224             - Called during module initialization
+    225             
+    226          Promises:
+    227            - Adds the BPEngenuics Rx Characteristic.
+    228          */
 
    \                                 In section .text, align 2, keep-with-next
-    225          static u32 BPEngenuicsAddRxCharacteristic(void)
-    226          {
+    229          static u32 BPEngenuicsAddRxCharacteristic(void)
+    230          {
    \                     BPEngenuicsAddRxCharacteristic: (+1)
    \   00000000   0xB5F0             PUSH     {R4-R7,LR}
    \   00000002   0xB091             SUB      SP,SP,#+68
-    227              ble_gatts_char_md_t rxchar_metadata;
-    228              ble_gatts_attr_t    attr_char_value;
-    229              ble_uuid_t          ble_uuid;
-    230              ble_gatts_attr_md_t attr_md;
-    231          
-    232             // Metadata for the Rx Characteristic.
-    233              memset(&rxchar_metadata, 0, sizeof(rxchar_metadata));
+    231              ble_gatts_char_md_t rxchar_metadata;
+    232              ble_gatts_attr_t    attr_char_value;
+    233              ble_uuid_t          ble_uuid;
+    234              ble_gatts_attr_md_t attr_md;
+    235          
+    236             // Metadata for the Rx Characteristic.
+    237              memset(&rxchar_metadata, 0, sizeof(rxchar_metadata));
    \   00000004   0x201C             MOVS     R0,#+28
    \   00000006   0x9004             STR      R0,[SP, #+16]
    \   00000008   0x2000             MOVS     R0,#+0
@@ -509,34 +537,34 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000010   0x9904             LDR      R1,[SP, #+16]
    \   00000012   0x0020             MOVS     R0,R4
    \   00000014   0x.... 0x....      BL       __aeabi_memset
-    234              rxchar_metadata.char_props.write = 1;
+    238              rxchar_metadata.char_props.write = 1;
    \   00000018   0xA80A             ADD      R0,SP,#+40
    \   0000001A   0x7800             LDRB     R0,[R0, #+0]
    \   0000001C   0x2108             MOVS     R1,#+8
    \   0000001E   0x4301             ORRS     R1,R1,R0
    \   00000020   0xA80A             ADD      R0,SP,#+40
    \   00000022   0x7001             STRB     R1,[R0, #+0]
-    235              rxchar_metadata.char_props.write_wo_resp = 1;
+    239              rxchar_metadata.char_props.write_wo_resp = 1;
    \   00000024   0xA80A             ADD      R0,SP,#+40
    \   00000026   0x7800             LDRB     R0,[R0, #+0]
    \   00000028   0x2104             MOVS     R1,#+4
    \   0000002A   0x4301             ORRS     R1,R1,R0
    \   0000002C   0xA80A             ADD      R0,SP,#+40
    \   0000002E   0x7001             STRB     R1,[R0, #+0]
-    236            
-    237              // Load the RX CHAR UUID.
-    238              ble_uuid.type = uuid_type;
+    240            
+    241              // Load the RX CHAR UUID.
+    242              ble_uuid.type = uuid_type;
    \   00000030   0x....             LDR      R0,??DataTable8_4
    \   00000032   0x7800             LDRB     R0,[R0, #+0]
    \   00000034   0xA901             ADD      R1,SP,#+4
    \   00000036   0x7088             STRB     R0,[R1, #+2]
-    239              ble_uuid.uuid = BPENGENUICS_RX_CHAR_UUID;
+    243              ble_uuid.uuid = BPENGENUICS_RX_CHAR_UUID;
    \   00000038   0x2002             MOVS     R0,#+2
    \   0000003A   0x4669             MOV      R1,SP
    \   0000003C   0x8088             STRH     R0,[R1, #+4]
-    240          
-    241              // Metadata for the Rx Attribute.
-    242              memset(&attr_md, 0, sizeof(attr_md));
+    244          
+    245              // Metadata for the Rx Attribute.
+    246              memset(&attr_md, 0, sizeof(attr_md));
    \   0000003E   0x2003             MOVS     R0,#+3
    \   00000040   0x9002             STR      R0,[SP, #+8]
    \   00000042   0x2400             MOVS     R4,#+0
@@ -545,7 +573,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000048   0x9902             LDR      R1,[SP, #+8]
    \   0000004A   0x0028             MOVS     R0,R5
    \   0000004C   0x.... 0x....      BL       __aeabi_memset
-    243              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+    247              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
    \   00000050   0x4668             MOV      R0,SP
    \   00000052   0x7800             LDRB     R0,[R0, #+0]
    \   00000054   0x21F0             MOVS     R1,#+240
@@ -562,7 +590,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   0000006A   0x4301             ORRS     R1,R1,R0
    \   0000006C   0x4668             MOV      R0,SP
    \   0000006E   0x7001             STRB     R1,[R0, #+0]
-    244              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
+    248              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
    \   00000070   0x4668             MOV      R0,SP
    \   00000072   0x7840             LDRB     R0,[R0, #+1]
    \   00000074   0x21F0             MOVS     R1,#+240
@@ -579,7 +607,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   0000008A   0x4301             ORRS     R1,R1,R0
    \   0000008C   0x4668             MOV      R0,SP
    \   0000008E   0x7041             STRB     R1,[R0, #+1]
-    245              attr_md.vloc    = BLE_GATTS_VLOC_STACK;
+    249              attr_md.vloc    = BLE_GATTS_VLOC_STACK;
    \   00000090   0x4668             MOV      R0,SP
    \   00000092   0x7880             LDRB     R0,[R0, #+2]
    \   00000094   0x21F9             MOVS     R1,#+249
@@ -588,16 +616,16 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   0000009A   0x4308             ORRS     R0,R0,R1
    \   0000009C   0x4669             MOV      R1,SP
    \   0000009E   0x7088             STRB     R0,[R1, #+2]
-    246              attr_md.vlen    = 1;
+    250              attr_md.vlen    = 1;
    \   000000A0   0x4668             MOV      R0,SP
    \   000000A2   0x7880             LDRB     R0,[R0, #+2]
    \   000000A4   0x2101             MOVS     R1,#+1
    \   000000A6   0x4301             ORRS     R1,R1,R0
    \   000000A8   0x4668             MOV      R0,SP
    \   000000AA   0x7081             STRB     R1,[R0, #+2]
-    247          
-    248              // Setup of the Rx Attribute.
-    249              memset(&attr_char_value, 0, sizeof(attr_char_value));
+    251          
+    252              // Setup of the Rx Attribute.
+    253              memset(&attr_char_value, 0, sizeof(attr_char_value));
    \   000000AC   0x2514             MOVS     R5,#+20
    \   000000AE   0x2600             MOVS     R6,#+0
    \   000000B0   0xAF05             ADD      R7,SP,#+20
@@ -605,22 +633,22 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000B4   0x0029             MOVS     R1,R5
    \   000000B6   0x0038             MOVS     R0,R7
    \   000000B8   0x.... 0x....      BL       __aeabi_memset
-    250              attr_char_value.p_uuid    = &ble_uuid;
+    254              attr_char_value.p_uuid    = &ble_uuid;
    \   000000BC   0xA801             ADD      R0,SP,#+4
    \   000000BE   0x9005             STR      R0,[SP, #+20]
-    251              attr_char_value.p_attr_md = &attr_md;
+    255              attr_char_value.p_attr_md = &attr_md;
    \   000000C0   0x4668             MOV      R0,SP
    \   000000C2   0x9006             STR      R0,[SP, #+24]
-    252              attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
+    256              attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
    \   000000C4   0x2014             MOVS     R0,#+20
    \   000000C6   0xA905             ADD      R1,SP,#+20
    \   000000C8   0x8108             STRH     R0,[R1, #+8]
-    253              attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
+    257              attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
    \   000000CA   0x2014             MOVS     R0,#+20
    \   000000CC   0xA905             ADD      R1,SP,#+20
    \   000000CE   0x8188             STRH     R0,[R1, #+12]
-    254          
-    255              return sd_ble_gatts_characteristic_add(service_handle, &rxchar_metadata, &attr_char_value, &rx_handles);
+    258          
+    259              return sd_ble_gatts_characteristic_add(service_handle, &rxchar_metadata, &attr_char_value, &rx_handles);
    \   000000D0   0x....             LDR      R3,??DataTable8_2
    \   000000D2   0xAA05             ADD      R2,SP,#+20
    \   000000D4   0xA90A             ADD      R1,SP,#+40
@@ -629,35 +657,35 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000DA   0xDFA2             SVC      0xA2
    \   000000DC   0xB011             ADD      SP,SP,#+68
    \   000000DE   0xBDF0             POP      {R4-R7,PC}       ;; return
-    256          }
-    257          
-    258          /*--------------------------------------------------------------------------------------------------------------------
-    259          Function: BPEngenuicsAddTxcharacteristic
-    260          
-    261          Description:
-    262          Adds the Tx Characteristic to the BLE Service.
-    263          
-    264          Requires:
-    265             - Called during module initialization.
-    266             
-    267          Promises:
-    268            - Adds the BPEngenuics Tx Characteristic.
-    269          */
+    260          }
+    261          
+    262          /*--------------------------------------------------------------------------------------------------------------------
+    263          Function: BPEngenuicsAddTxcharacteristic
+    264          
+    265          Description:
+    266          Adds the Tx Characteristic to the BLE Service.
+    267          
+    268          Requires:
+    269             - Called during module initialization.
+    270             
+    271          Promises:
+    272            - Adds the BPEngenuics Tx Characteristic.
+    273          */
 
    \                                 In section .text, align 2, keep-with-next
-    270          static u32 BPEngenuicsAddTxCharacteristic(void)
-    271          {
+    274          static u32 BPEngenuicsAddTxCharacteristic(void)
+    275          {
    \                     BPEngenuicsAddTxCharacteristic: (+1)
    \   00000000   0xB5F0             PUSH     {R4-R7,LR}
    \   00000002   0xB095             SUB      SP,SP,#+84
-    272              ble_gatts_char_md_t txchar_metadata;
-    273              ble_gatts_attr_md_t cccd_md;
-    274              ble_gatts_attr_t    attr_char_value;
-    275              ble_uuid_t          ble_uuid;
-    276              ble_gatts_attr_md_t attr_md;
-    277          
-    278              // ClientConfigurationDescriptor Metadata.
-    279              memset(&cccd_md, 0, sizeof(cccd_md));
+    276              ble_gatts_char_md_t txchar_metadata;
+    277              ble_gatts_attr_md_t cccd_md;
+    278              ble_gatts_attr_t    attr_char_value;
+    279              ble_uuid_t          ble_uuid;
+    280              ble_gatts_attr_md_t attr_md;
+    281          
+    282              // ClientConfigurationDescriptor Metadata.
+    283              memset(&cccd_md, 0, sizeof(cccd_md));
    \   00000004   0x2003             MOVS     R0,#+3
    \   00000006   0x9007             STR      R0,[SP, #+28]
    \   00000008   0x2000             MOVS     R0,#+0
@@ -667,7 +695,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000010   0x9907             LDR      R1,[SP, #+28]
    \   00000012   0x0020             MOVS     R0,R4
    \   00000014   0x.... 0x....      BL       __aeabi_memset
-    280              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
+    284              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.read_perm);
    \   00000018   0x4668             MOV      R0,SP
    \   0000001A   0x7900             LDRB     R0,[R0, #+4]
    \   0000001C   0x21F0             MOVS     R1,#+240
@@ -684,7 +712,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000032   0x4301             ORRS     R1,R1,R0
    \   00000034   0x4668             MOV      R0,SP
    \   00000036   0x7101             STRB     R1,[R0, #+4]
-    281              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
+    285              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&cccd_md.write_perm);
    \   00000038   0xA801             ADD      R0,SP,#+4
    \   0000003A   0x7840             LDRB     R0,[R0, #+1]
    \   0000003C   0x21F0             MOVS     R1,#+240
@@ -701,9 +729,9 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000052   0x4301             ORRS     R1,R1,R0
    \   00000054   0xA801             ADD      R0,SP,#+4
    \   00000056   0x7041             STRB     R1,[R0, #+1]
-    282          
-    283              // Location of CCCD characteristic is on user stack.
-    284              cccd_md.vloc = BLE_GATTS_VLOC_STACK;
+    286          
+    287              // Location of CCCD characteristic is on user stack.
+    288              cccd_md.vloc = BLE_GATTS_VLOC_STACK;
    \   00000058   0xA801             ADD      R0,SP,#+4
    \   0000005A   0x7880             LDRB     R0,[R0, #+2]
    \   0000005C   0x21F9             MOVS     R1,#+249
@@ -712,9 +740,9 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000062   0x4308             ORRS     R0,R0,R1
    \   00000064   0xA901             ADD      R1,SP,#+4
    \   00000066   0x7088             STRB     R0,[R1, #+2]
-    285          
-    286              // Metadata for the Tx Characteristic.
-    287              memset(&txchar_metadata, 0, sizeof(txchar_metadata));
+    289          
+    290              // Metadata for the Tx Characteristic.
+    291              memset(&txchar_metadata, 0, sizeof(txchar_metadata));
    \   00000068   0x201C             MOVS     R0,#+28
    \   0000006A   0x9005             STR      R0,[SP, #+20]
    \   0000006C   0x2000             MOVS     R0,#+0
@@ -724,30 +752,30 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000074   0x9905             LDR      R1,[SP, #+20]
    \   00000076   0x0020             MOVS     R0,R4
    \   00000078   0x.... 0x....      BL       __aeabi_memset
-    288              txchar_metadata.char_props.notify = 1;
+    292              txchar_metadata.char_props.notify = 1;
    \   0000007C   0xA80D             ADD      R0,SP,#+52
    \   0000007E   0x7800             LDRB     R0,[R0, #+0]
    \   00000080   0x2110             MOVS     R1,#+16
    \   00000082   0x4301             ORRS     R1,R1,R0
    \   00000084   0xA80D             ADD      R0,SP,#+52
    \   00000086   0x7001             STRB     R1,[R0, #+0]
-    289              txchar_metadata.p_cccd_md         = &cccd_md;
+    293              txchar_metadata.p_cccd_md         = &cccd_md;
    \   00000088   0xA801             ADD      R0,SP,#+4
    \   0000008A   0x9012             STR      R0,[SP, #+72]
-    290          
-    291              // Load the TX CHAR UUID.
-    292              ble_uuid.type = uuid_type;
+    294          
+    295              // Load the TX CHAR UUID.
+    296              ble_uuid.type = uuid_type;
    \   0000008C   0x....             LDR      R0,??DataTable8_4
    \   0000008E   0x7800             LDRB     R0,[R0, #+0]
    \   00000090   0xA902             ADD      R1,SP,#+8
    \   00000092   0x7088             STRB     R0,[R1, #+2]
-    293              ble_uuid.uuid = BPENGENUICS_TX_CHAR_UUID;
+    297              ble_uuid.uuid = BPENGENUICS_TX_CHAR_UUID;
    \   00000094   0x2001             MOVS     R0,#+1
    \   00000096   0x4669             MOV      R1,SP
    \   00000098   0x8108             STRH     R0,[R1, #+8]
-    294          
-    295              // Metadata for the Tx Attribute.
-    296              memset(&attr_md, 0, sizeof(attr_md));
+    298          
+    299              // Metadata for the Tx Attribute.
+    300              memset(&attr_md, 0, sizeof(attr_md));
    \   0000009A   0x2003             MOVS     R0,#+3
    \   0000009C   0x9003             STR      R0,[SP, #+12]
    \   0000009E   0x2400             MOVS     R4,#+0
@@ -756,7 +784,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000A4   0x9903             LDR      R1,[SP, #+12]
    \   000000A6   0x0028             MOVS     R0,R5
    \   000000A8   0x.... 0x....      BL       __aeabi_memset
-    297              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+    301              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
    \   000000AC   0x4668             MOV      R0,SP
    \   000000AE   0x7800             LDRB     R0,[R0, #+0]
    \   000000B0   0x21F0             MOVS     R1,#+240
@@ -773,7 +801,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000C6   0x4301             ORRS     R1,R1,R0
    \   000000C8   0x4668             MOV      R0,SP
    \   000000CA   0x7001             STRB     R1,[R0, #+0]
-    298              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
+    302              BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
    \   000000CC   0x4668             MOV      R0,SP
    \   000000CE   0x7840             LDRB     R0,[R0, #+1]
    \   000000D0   0x21F0             MOVS     R1,#+240
@@ -790,7 +818,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000E6   0x4301             ORRS     R1,R1,R0
    \   000000E8   0x4668             MOV      R0,SP
    \   000000EA   0x7041             STRB     R1,[R0, #+1]
-    299              attr_md.vloc    = BLE_GATTS_VLOC_STACK;
+    303              attr_md.vloc    = BLE_GATTS_VLOC_STACK;
    \   000000EC   0x4668             MOV      R0,SP
    \   000000EE   0x7880             LDRB     R0,[R0, #+2]
    \   000000F0   0x21F9             MOVS     R1,#+249
@@ -799,16 +827,16 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   000000F6   0x4308             ORRS     R0,R0,R1
    \   000000F8   0x4669             MOV      R1,SP
    \   000000FA   0x7088             STRB     R0,[R1, #+2]
-    300              attr_md.vlen    = 1;
+    304              attr_md.vlen    = 1;
    \   000000FC   0x4668             MOV      R0,SP
    \   000000FE   0x7880             LDRB     R0,[R0, #+2]
    \   00000100   0x2101             MOVS     R1,#+1
    \   00000102   0x4301             ORRS     R1,R1,R0
    \   00000104   0x4668             MOV      R0,SP
    \   00000106   0x7081             STRB     R1,[R0, #+2]
-    301          
-    302              // Setup of the Tx Attribute.
-    303              memset(&attr_char_value, 0, sizeof(attr_char_value));
+    305          
+    306              // Setup of the Tx Attribute.
+    307              memset(&attr_char_value, 0, sizeof(attr_char_value));
    \   00000108   0x2514             MOVS     R5,#+20
    \   0000010A   0x2600             MOVS     R6,#+0
    \   0000010C   0xAF08             ADD      R7,SP,#+32
@@ -816,23 +844,23 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000110   0x0029             MOVS     R1,R5
    \   00000112   0x0038             MOVS     R0,R7
    \   00000114   0x.... 0x....      BL       __aeabi_memset
-    304              attr_char_value.p_uuid    = &ble_uuid;
+    308              attr_char_value.p_uuid    = &ble_uuid;
    \   00000118   0xA802             ADD      R0,SP,#+8
    \   0000011A   0x9008             STR      R0,[SP, #+32]
-    305              attr_char_value.p_attr_md = &attr_md;
+    309              attr_char_value.p_attr_md = &attr_md;
    \   0000011C   0x4668             MOV      R0,SP
    \   0000011E   0x9009             STR      R0,[SP, #+36]
-    306              attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
+    310              attr_char_value.init_len  = BPENGENUICS_MAX_CHAR_LEN;
    \   00000120   0x2014             MOVS     R0,#+20
    \   00000122   0xA908             ADD      R1,SP,#+32
    \   00000124   0x8108             STRH     R0,[R1, #+8]
-    307              attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
+    311              attr_char_value.max_len   = BPENGENUICS_MAX_CHAR_LEN;
    \   00000126   0x2014             MOVS     R0,#+20
    \   00000128   0xA908             ADD      R1,SP,#+32
    \   0000012A   0x8188             STRH     R0,[R1, #+12]
-    308          
-    309              return sd_ble_gatts_characteristic_add(service_handle, &txchar_metadata, &attr_char_value, &tx_handles);
-   \   0000012C   0x....             LDR      R3,??DataTable8_1
+    312          
+    313              return sd_ble_gatts_characteristic_add(service_handle, &txchar_metadata, &attr_char_value, &tx_handles);
+   \   0000012C   0x....             LDR      R3,??DataTable8_7
    \   0000012E   0xAA08             ADD      R2,SP,#+32
    \   00000130   0xA90D             ADD      R1,SP,#+52
    \   00000132   0x....             LDR      R0,??DataTable8_6
@@ -840,7 +868,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000136   0xDFA2             SVC      0xA2
    \   00000138   0xB015             ADD      SP,SP,#+84
    \   0000013A   0xBDF0             POP      {R4-R7,PC}       ;; return
-    310          }
+    314          }
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable7:
@@ -851,12 +879,16 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \   00000000   0x........         DC32     is_notification_enabled
 
    \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_2:
+   \   00000000   0x........         DC32     tx_handles
+
+   \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable8:
    \   00000000   0x........         DC32     conn_handle
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable8_1:
-   \   00000000   0x........         DC32     tx_handles
+   \   00000000   0x........         DC32     G_u32BPEngenuicsFlags
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable8_2:
@@ -878,6 +910,10 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \                     ??DataTable8_6:
    \   00000000   0x........         DC32     service_handle
 
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable8_7:
+   \   00000000   0x........         DC32     tx_handles
+
    \                                 In section .rodata, align 4
    \                     ?_0:
    \   00000000   0x9E 0xCA          DC8 158, 202, 220, 36, 14, 229, 169, 224, 147, 243, 163, 181, 0, 0, 64
@@ -889,10 +925,10 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    \              0x00 0x00    
    \              0x40         
    \   0000000F   0x6E               DC8 110
-    311          
-    312          /*--------------------------------------------------------------------------------------------------------------------*/
-    313          /* End of File                                                                                                        */
-    314          /*--------------------------------------------------------------------------------------------------------------------*/
+    315          
+    316          /*--------------------------------------------------------------------------------------------------------------------*/
+    317          /* End of File                                                                                                        */
+    318          /*--------------------------------------------------------------------------------------------------------------------*/
 
    Maximum stack usage in bytes:
 
@@ -926,6 +962,7 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
    -----  --------------
        4  ??DataTable7
        4  ??DataTable7_1
+       4  ??DataTable7_2
        4  ??DataTable8
        4  ??DataTable8_1
        4  ??DataTable8_2
@@ -933,14 +970,15 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
        4  ??DataTable8_4
        4  ??DataTable8_5
        4  ??DataTable8_6
+       4  ??DataTable8_7
       16  ?_0
      224  BPEngenuicsAddRxCharacteristic
       48  BPEngenuicsAddService
      316  BPEngenuicsAddTxCharacteristic
       48  BPEngenuicsInitialize
-       8  BPEngenuicsOnConnect
-       8  BPEngenuicsOnDisconnect
-      74  BPEngenuicsOnWrite
+      20  BPEngenuicsOnConnect
+      20  BPEngenuicsOnDisconnect
+      98  BPEngenuicsOnWrite
      100  BPEngenuicsSendData
        4  G_u32BPEngenuicsFlags
       20  ble_srv_is_notification_enabled
@@ -955,9 +993,9 @@ Warning[Pe177]: variable "BPEngenuics_u32Timeout" was declared but never
  
   26 bytes in section .bss
   16 bytes in section .rodata
- 894 bytes in section .text
+ 950 bytes in section .text
  
- 894 bytes of CODE  memory
+ 950 bytes of CODE  memory
   16 bytes of CONST memory
   26 bytes of DATA  memory
 

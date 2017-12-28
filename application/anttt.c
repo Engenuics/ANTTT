@@ -35,17 +35,18 @@ static u8 Anttt_rx_data[ANTTT_COMMAND_SIZE];
 static uint16_t Anttt_home_state;
 static uint16_t Anttt_away_state;
 
-u16 winning_combos = 
+u16 winning_combos[] = 
 {
-   0b000000111,
-   0b000111000,
-   0b111000000,
-   0b001001001,
-   0b010010010,
-   0b100100100,
-   0b100010001,
-   0b001010100
+   0x0007,        // 0b000000111
+   0x0038,        // 0b000111000
+   0x01C0,        // 0b111000000
+   0x0049,        // 0b001001001
+   0x0092,        // 0b010010010
+   0x0124,        // 0b100100100
+   0x0111,        // 0b100010001
+   0x0054         // 0b001010100
 };
+
 
 
 /**********************************************************************************************************************
@@ -175,7 +176,7 @@ static void AntttSM_Wait(void)
          temp[ANTTT_COMMAND_ID_OFFSET] = ANTTT_COMMAND_ID_MOVE_RESP;
          BPEngenuicsSendData(temp, ANTTT_COMMAND_SIZE);
 
-         if (anttt_is_game_over())
+         if (Anttt_is_game_over())
          {
             ANTT_SM = &AntttSM_Gameover;
             return;
@@ -184,7 +185,7 @@ static void AntttSM_Wait(void)
          memset(Anttt_rx_data, 0xFF, ANTTT_COMMAND_SIZE);   // Reset message.
 
          // Update State.
-         ANTT_SM = &AntttSM_Acive;
+         ANTT_SM = &AntttSM_Active;
          LedOff(STATUS_RED);
       }
    }
@@ -210,7 +211,7 @@ static void AntttSM_Active(void)
          memset(Anttt_rx_data, 0xFF, ANTTT_COMMAND_SIZE);   // Reset message.
 
          // Check if game is over.
-         if (anttt_is_game_over())
+         if (Anttt_is_game_over())
          {
             ANTT_SM = &AntttSM_Gameover;
             return;
@@ -228,7 +229,7 @@ static void AntttSM_Active(void)
    }
 }
 
-static void AnttttSM_Gameover(void)
+static void AntttSM_Gameover(void)
 {   
    // Play Winning Sequence. 
    if (G_u32SystemTime1ms % 500)
