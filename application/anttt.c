@@ -51,13 +51,12 @@ u16 winning_combos =
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
-
 static void AntttSM_Idle(void);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void AnttttIncommingMessage(u8* data, u8 len)
+void AntttIncomingMessage(u8* data, u8 len)
 {
    // Check length of the Command Size.
    if (len != ANTTT_COMMAND_SIZE)
@@ -95,9 +94,10 @@ void AntttInitialize(void)
 
 void AntttHandleIncomingMessage(u8* data, u8 len)
 {
-   if (anttt_state == ANTTT_STATE_WAIT)
+   // Check the appropriate length.
+   if (len == ANTTT_COMMAND_SIZE)
    {
-      
+      memcpy(Anttt_rx_data, data, len);
    }
 }
 
@@ -105,14 +105,34 @@ void AntttHandleIncomingMessage(u8* data, u8 len)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+static bool Anttt_is_game_over(void)
+{
+   // Check all 8 winning combinations.
+   for (int i = 0; i < 8; i++)
+   {
+      if (Anttt_home_state & winning_combos[i])
+      {
+         Anttt_home_state = winning_combos[i];
+         Anttt_home_state |= 0x200;       // Set this flag to indicate home won.
 
+         return true;
+      }
+      else if (Anttt_away_state & winning_combos[i])
+      {
+         Anttt_away_state = winning_combos[i];
+         Anttt_away_state |= 0x200;       // Set this flag to indicate away winning won.
 
+         return true;
+      }
+   }
+
+   return false;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* State Machine definitions                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 /*--------------------------------------------------------------------------------------------------------------------
 Function: AntttSM_Idle
 */
@@ -121,7 +141,7 @@ static void AntttSM_Idle(void)
    // Check if module is connected to client.
    if (G_u32BPEngenuicsFlags == BPENGENUICS_CONNECTED)
    {
-      // Set LEDs and proress to wait state.
+      // Set LEDs and proceed to wait state.
       LedOn(STATUS_GRN);   // Connected to Client.
       LedOn(STATUS_RED);   // Waiting on Client to make first move.
       LedOff(STATUS_YLW);  // Status LED off
@@ -132,25 +152,24 @@ static void AntttSM_Idle(void)
 
 static void AntttSM_Wait(void)
 {
-   // Check if module is connected to client.
-   if (G_u32BPEngenuicsFlags == BPENGENUICS_CONNECTED)
+   // Check if module has established connection with client.
+   if (G_u32BPEngenuicsFlags & BPENGENUICS_SERVICEENABLED)
    {
       // Wait for Client to make a move.
       if (Anttt_rx_data[ANTTT_COMMAND_ID_OFFSET] == ANTTT_COMMAND_ID_MOVE)
       {
          u8 temp[ANTTT_COMMAND_SIZE];
-         u32  position = Anttt_rx_data[ANTTT_COMMAND_POSITION_OFFSET];
+         u16  position = Anttt_rx_data[ANTTT_COMMAND_POSITION_OFFSET];
          
          // Check if position is already chosen.
-         if (Anttt_away_state & (1 << (position-1))
+         if (Anttt_away_state & (1 << (position-1)))
          {
-            // Do nothing.
             return;
          }
 
          // New Position.
-         LedOn(position);
-         Anttt_away_state |= 1 << (position - 1);
+         LedOn(position + 9);  // 9 is the offset for away LEDs.
+         Anttt_away_state = 1 << (position - 1);
          
          // Send response.
          temp[ANTTT_COMMAND_ID_OFFSET] = ANTTT_COMMAND_ID_MOVE_RESP;
@@ -162,7 +181,6 @@ static void AntttSM_Wait(void)
             return;
          }
          
-
          memset(Anttt_rx_data, 0xFF, ANTTT_COMMAND_SIZE);   // Reset message.
 
          // Update State.
@@ -170,15 +188,21 @@ static void AntttSM_Wait(void)
          LedOff(STATUS_RED);
       }
    }
+   else
+   {
+      // Disconnected from client.
+      AntttInitialize();
+   }
 }
 
 static void AntttSM_Active(void)
 {
-   // Check if module is connected to client.
-   if (G_u32BPEngenuicsFlags == BPENGENUICS_CONNECTED)
+   // Check if module has established connection with client.
+   if (G_u32BPEngenuicsFlags & BPENGENUICS_SERVICEENABLED)
    {
       // Make a move.
       // TODO:
+
       
       // Check if response received.
       if (Anttt_rx_data[ANTTT_COMMAND_ID_OFFSET] != ANTTT_COMMAND_ID_MOVE_RESP)
@@ -196,6 +220,11 @@ static void AntttSM_Active(void)
          ANTT_SM = &AntttSM_Wait;
          LedOn(STATUS_RED);
       }
+   }
+   else
+   {
+      // Disconnected from client.
+      AntttInitialize();
    }
 }
 
@@ -256,31 +285,6 @@ static void AnttttSM_Gameover(void)
 
    // TODO: Reset SM once a button is pressed.
 }
-
-static bool Anttt_is_game_over(void)
-{
-   for (int i = 0; i < 8; i++)
-   {
-      if (Anttt_home_state & winning_combos[i])
-      {
-         Anttt_home_state = winning_combos[i];
-         Anttt_home_state |= 0x200;       // Set this flag to play home winning sequence.
-
-         return true;
-      }
-      else if (Anttt_away_state & winning_combos[i])
-      {
-         Anttt_away_state = winning_combos[i];
-         Anttt_away_state |= 0x200;       // Set this flag to play home winning sequence.
-
-         return true;
-      }
-   }
-
-   return false;
-}
-   
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File                                                                                                        */
 /*--------------------------------------------------------------------------------------------------------------------*/

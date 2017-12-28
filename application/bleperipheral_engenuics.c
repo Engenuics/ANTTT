@@ -163,10 +163,12 @@ void BPEngenuicsOnWrite(ble_evt_t* evt)
       if (ble_srv_is_notification_enabled(evt_write->data))
       {
         is_notification_enabled = true;
+        G_u32BPEngenuicsFlags |= BPENGENUICS_SERVICEENABLED;
       }
       else
       {
         is_notification_enabled = false;
+        G_u32BPEngenuicsFlags &= ~BPENGENUICS_SERVICEENABLED;
       }
     }
     else if (evt_write->handle == rx_handles.value_handle)    
