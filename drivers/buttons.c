@@ -70,42 +70,6 @@ static u32 Button_au32HoldTimeStart[TOTAL_BUTTONS];         /* System 1ms time w
 static bool Button_abNewPress[TOTAL_BUTTONS];               /* Flags to indicate a button was pressed */    
 
 
-/************ %BUTTON% EDIT BOARD-SPECIFIC GPIO DEFINITIONS BELOW ***************/
-/* Add all of the GPIO pin names for the buttons in the system.  
-The order of the definitions below must match the order of the definitions provided in configuration.h */ 
-
-#ifdef MPGL1
-static const u32 Button_au32ButtonPins[TOTAL_BUTTONS] = 
-{
-  PA_17_BUTTON0, PB_00_BUTTON1, PB_01_BUTTON2, PB_02_BUTTON3
-};
-
-/* Control array for all buttons in system initialized for ButtonInitialize().  Array values correspond to ButtonConfigType fields: 
-     eActiveState       ePort                   */
-static ButtonConfigType Buttons_asArray[TOTAL_BUTTONS] = 
-{{BUTTON_ACTIVE_LOW, BUTTON_PORTA}, /* BUTTON0  */
- {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON1  */
- {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON2  */
- {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON3  */
-};   
-#endif /* MPGL1 */
-
-#ifdef MPGL2
-static const u32 Button_au32ButtonPins[TOTAL_BUTTONS] = 
-{
-  PA_17_BUTTON0, PB_00_BUTTON1
-};
-
-/* Control array for all buttons in system initialized for ButtonInitialize().  Array values correspond to ButtonConfigType fields: 
-     eActiveState       ePort                   */
-static ButtonConfigType Buttons_asArray[TOTAL_BUTTONS] = 
-{{BUTTON_ACTIVE_LOW, BUTTON_PORTA}, /* BUTTON0  */
- {BUTTON_ACTIVE_LOW, BUTTON_PORTB} /* BUTTON1  */
-};   
-#endif /* MPGL2 */
-
-/************ EDIT BOARD-SPECIFIC GPIO DEFINITIONS ABOVE ***************/
-
 
 /***********************************************************************************************************************
 Function Definitions
@@ -245,7 +209,6 @@ void ButtonInitialize(void)
 {
   u32 u32PortAInterruptMask = 0;
   u32 u32PortBInterruptMask = 0;
-  static u8 au8ButtonStartupMsg[] = "Button task ready\n\r";
   
   /* Setup default data for all of the buttons in the system */
   for(u8 i = 0; i < TOTAL_BUTTONS; i++)
@@ -255,39 +218,22 @@ void ButtonInitialize(void)
     Button_aeNewState[i]        = RELEASED;
   }
   
-  /* Create masks based on any buttons in the system.  It's ok to have an empty mask. */
-  for(u8 i = 0; i < TOTAL_BUTTONS; i++)
-  {
-    if(Buttons_asArray[i].ePort == BUTTON_PORTA)
-    {
-      u32PortAInterruptMask |= Button_au32ButtonPins[i];
-    }
-    else if(Buttons_asArray[i].ePort == BUTTON_PORTB)
-    {
-      u32PortBInterruptMask |= Button_au32ButtonPins[i];
-    }
-  }
-
-  /* Enable PIO interrupts */
-  AT91C_BASE_PIOA->PIO_IER = u32PortAInterruptMask;
-  AT91C_BASE_PIOB->PIO_IER = u32PortBInterruptMask;
+  // Initialize BUTTON_COLS to initial state.
+  nrf_gpio_pin_clr(BUTTON_COL1_PIN);    // Enabled Column (ACTIVE LOW)
+  nrf_gpio_pin_set(BUTTON_COL2_PIN);    // Disabled Column
+  nrf_gpio_pin_set(BUTTON_COL3_PIN);    // Disabled Column
   
-  /* Read the ISR register to clear all the current flags */
-  u32PortAInterruptMask = AT91C_BASE_PIOA->PIO_ISR;
-  u32PortBInterruptMask = AT91C_BASE_PIOB->PIO_ISR;
-
-  /* Configure the NVIC to ensure the PIOA and PIOB interrupts are active */
-  NVIC_ClearPendingIRQ(IRQn_PIOA);
-  NVIC_ClearPendingIRQ(IRQn_PIOB);
-  NVIC_EnableIRQ(IRQn_PIOA);
-  NVIC_EnableIRQ(IRQn_PIOB);
-    
+  // Enable Interrupts.
+  nrf_gpiote_event_config(BUTTON_ROW1_GPIOTE_CHANNEL, BUTTON_ROW1_PIN, NRF_GPIOTE_POLARITY_TOGGLE);
+  nrf_gpiote_event_config(BUTTON_ROW2_GPIOTE_CHANNEL, BUTTON_ROW2_PIN, NRF_GPIOTE_POLARITY_TOGGLE);
+  nrf_gpiote_event_config(BUTTON_ROW3_GPIOTE_CHANNEL, BUTTON_ROW3_PIN, NRF_GPIOTE_POLARITY_TOGGLE);
+  NRF_GPIOTE->INTENSET = (GPIOTE_INTENSET_IN0_Msk | GPIOTE_INTENSET_IN1_Msk | GPIOTE_INTENSET_IN2_Msk);  
+  
+   
   /* Init complete: set function pointer and application flag */
   Button_pfnStateMachine = ButtonSM_Idle;
   G_u32ApplicationFlags |= _APPLICATION_FLAGS_BUTTON;
-  DebugPrintf(au8ButtonStartupMsg);
-
-} /* end ButtonInitialize() */
+ } /* end ButtonInitialize() */
 
 
 /*----------------------------------------------------------------------------------------------------------------------
@@ -311,43 +257,48 @@ void ButtonRunActiveState(void)
 } /* end ButtonRunActiveState */
 
 
-/*----------------------------------------------------------------------------------------------------------------------
-Function: GetButtonBitLocation
-
-Description:
-Returns the location of the button within its port.  
-The GPIO interrupt requires access to this function.
-
-Requires:
-  - u8Button_ is a valid ButtonNumberType.
-  - ePort_ is the port where the button is located
-
-Promises:
-  - Returns a value that has a bit set in the corresponding position of u32Button_ on the button's port
-  - Returns 0 if no match
-*/
-u32 GetButtonBitLocation(u8 u8Button_, ButtonPortType ePort_)
+u8 Button_get_active_column(void)
 {
-  /* Make sure the index is valid */
-  if(u8Button_ < TOTAL_BUTTONS) 
-  {
-    /* Index is valid so check that the button exists on the port */
-    if(Buttons_asArray[u8Button_].ePort == ePort_)
-    {
-      /* Return the button position if the index is the correct port */
-      return(Button_au32ButtonPins[u8Button_]);
-    }
-  }
-  
-  /* Otherwise return 0 */
-  return(0);
-  
-} /* end GetButtonBitLocation() */
+   // Check the col that is active and return its corresponding index (0-2)
+   // Only one col can be active at a time (active_low)
+   if (nrf_gpio_pin_read(BUTTON_COL1_PIN) == 0)
+      return 0;
+   else if (nrf_gpio_pin_read(BUTTON_COL2_PIN) == 0)
+      return 1;
+   else  if (nrf_gpio_pin_read(BUTTON_COL3_PIN) == 0)
+      return 2;
+
+   return 0xFF;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions */
 /*--------------------------------------------------------------------------------------------------------------------*/
+static void Button_rotate_columns(void)
+{
+   if (G_u32SystemTime1ms % BUTTON_COLUMN_SWITCH_TIME_MS)
+   {
+      nrf_gpio_pin_toggle(BUTTON_COL1_PIN);
+      nrf_gpio_pin_toggle(BUTTON_COL2_PIN);
+      nrf_gpio_pin_toggle(BUTTON_COL3_PIN);
+   }
+}
+
+static bool Button_is_still_pressed(u8 button)
+{
+   row = (button - Button_get_active_column()) / 3;   // Row corresponding 
+
+   // Map Row Index to Pin and check if pin is low (active low)
+   if (row == 0)
+      return (nrf_gpio_pin_read(BUTTON_ROW1_PIN) == 0);
+   else if (row == 1)
+      return (nrf_gpio_pin_read(BUTTON_ROW2_PIN) == 0);
+   else if (row == 2)
+      return (nrf_gpio_pin_read(BUTTON_ROW3_PIN) == 0);
+
+   return false;
+}
 
 
 /***********************************************************************************************************************
@@ -368,56 +319,35 @@ static void ButtonSM_Idle(void)
       Button_pfnStateMachine = ButtonSM_ButtonActive;
     }
   }
-  
+
+  button_rotate_columns();
 } /* end ButtonSM_Idle(void) */
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 static void ButtonSM_ButtonActive(void)         
 {
-  u32 *pu32PortAddress;
-  u32 *pu32InterruptAddress;
-
   /* Start by resseting back to Idle in case no buttons are active */
   Button_pfnStateMachine = ButtonSM_Idle;
 
   /* Check for buttons that are debouncing */
   for(u8 i = 0; i < TOTAL_BUTTONS; i++)
   {
-    /* Load address offsets for the current button */
-    pu32PortAddress = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR) + Buttons_asArray[i].ePort);
-    pu32InterruptAddress = (u32*)(&(AT91C_BASE_PIOA->PIO_IER) + Buttons_asArray[i].ePort);
-    
-    if( G_abButtonDebounceActive[i] )
+    if(G_abButtonDebounceActive[i] )
     {
       /* Still have an active button */
       Button_pfnStateMachine = ButtonSM_ButtonActive;
       
       if( IsTimeUp((u32*)&G_au32ButtonDebounceTimeStart[i], BUTTON_DEBOUNCE_TIME) )
       {
-        /* Active low: get current state of button */
-        if(Buttons_asArray[i].eActiveState == BUTTON_ACTIVE_LOW)
-        {
-          if( ~(*pu32PortAddress) & Button_au32ButtonPins[i] )
-          {          
+         if(Button_is_still_pressed(i))
+         {
             Button_aeNewState[i] = PRESSED;
-          }
-          else
-          {
+         }
+         else
+         {
             Button_aeNewState[i] = RELEASED;
-          }
-        }
-        /* Active high */
-        else
-        {
-          if( *pu32PortAddress & Button_au32ButtonPins[i] )
-          {          
-            Button_aeNewState[i] = PRESSED;
-          }
-          else
-          {
-            Button_aeNewState[i] = RELEASED;
-          }
+         }
         }
         
         /* Update if the button state has changed */
@@ -433,12 +363,10 @@ static void ButtonSM_ButtonActive(void)
 
         /* Regardless of a good press or not, clear the debounce active flag and re-enable the interrupts */
         G_abButtonDebounceActive[i] = FALSE;
-        *pu32InterruptAddress |= Button_au32ButtonPins[i];
-        
+        NRF_GPIOTE->INTENSET = (GPIOTE_INTENSET_IN0_Msk | GPIOTE_INTENSET_IN1_Msk | GPIOTE_INTENSET_IN2_Msk);  
       } /* end if( IsTimeUp...) */
     } /* end if(G_abButtonDebounceActive[index]) */
   } /* end for i */
-  
 } /* end ButtonSM_ButtonActive() */
 
 

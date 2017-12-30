@@ -11,7 +11,6 @@ File: buttons.h
 Type Definitions
 ***********************************************************************************************************************/
 typedef enum {RELEASED, PRESSED} ButtonStateType; 
-typedef enum {BUTTON_PORTA = 0, BUTTON_PORTB = 0x80} ButtonPortType;  /* Offset between port registers (in 32 bit words) */
 typedef enum {BUTTON_ACTIVE_LOW = 0, BUTTON_ACTIVE_HIGH = 1} ButtonActiveType;
 
 typedef struct 
@@ -26,7 +25,20 @@ Constants / Definitions
 ***********************************************************************************************************************/
 #define BUTTON_INIT_MSG_TIMEOUT         (u32)1000     /* Time in ms for init message to send */
 #define BUTTON_DEBOUNCE_TIME            (u32)25       /* Time in ms for button debouncing */
+#define TOTAL_BUTTONS                   (u8)9
+#define BUTTON_COLUMN_SWITCH_TIME_MS    50            // Time in ms for switching of the button column line 
 
+#define BUTTON_ROW1_GPIOTE_CHANNEL      0
+#define BUTTON_ROW2_GPIOTE_CHANNEL      1
+#define BUTTON_ROW3_GPIOTE_CHANNEL      2
+
+#define BUTTON_ROW1_PIN                 P0_26_INDEX
+#define BUTTON_ROW2_PIN                 P0_08_INDEX
+#define BUTTON_ROW3_PIN                 P0_09_INDEX
+
+#define BUTTON_COL1_PIN                 P0_14_INDEX
+#define BUTTON_COL2_PIN                 P0_15_INDEX
+#define BUTTON_COL3_PIN                 P0_23_INDEX
 
 /***********************************************************************************************************************
 Function Declarations
@@ -45,13 +57,12 @@ bool IsButtonHeld(u32 u32Button_, u32 u32ButtonHeldTime_);
 /*--------------------------------------------------------------------------------------------------------------------*/
 void ButtonInitialize(void);                        
 void ButtonRunActiveState(void);
-
-u32 GetButtonBitLocation(u8 u8Button_, ButtonPortType ePort_);
+u8 Button_get_active_column(void);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
+static void Button_rotate_columns(void);
 
 /***********************************************************************************************************************
 State Machine Declarations

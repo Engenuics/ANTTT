@@ -46,8 +46,10 @@ Includes
 #include "nrf_assert.h"
 #include "nrf_delay.h"
 #include "nrf_error.h"
+#include "nrf_gpiote.h"
 #include "nrf_soc.h"
 #include "nrf_sdm.h"
+
 
 #include "ant_interface.h"
 #include "ant_parameters.h"
