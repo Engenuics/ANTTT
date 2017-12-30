@@ -1,0 +1,724 @@
+###############################################################################
+#                                                                             #
+#     IAR Assembler V8.11.2.13589/W32 for ARM 28/Dec/2017  14:32:34           #
+#     Copyright 1999-2017 IAR Systems AB.                                     #
+#                                                                             #
+#           Source file   =  C:\Users\Vipin\Documents\GitHub\ANTTT\nordic_sdk6_1_0\iar_startup_nrf51.s#
+#           List file     =  C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\iar_startup_nrf51.lst#
+#           Object file   =  C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\iar_startup_nrf51.o#
+#           Command line  =  -f C:\Users\Vipin\AppData\Local\Temp\EWB759.tmp  #
+#                            (C:\Users\Vipin\Documents\GitHub\ANTTT\nordic_sdk6_1_0\iar_startup_nrf51.s #
+#                            -OC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj #
+#                            -s+ -M<> -w+ -r                                  #
+#                            -LC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List #
+#                            -cAOM -i -B -t2 -xDI --cpu Cortex-M0 --fpu None  #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\mpg_application\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\Include\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\Include\ant\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\Include\app_common\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\Source\ #
+#                            -IC:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk4_2_2\Source\app_common\) #
+#                                                                             #
+###############################################################################
+
+    1                           ;; Copyright (c) 2013, Nordic Semiconductor
+                                 ASA
+    2                           ;; All rights reserved.
+    3                           ;; 
+    4                           ;; Redistribution and use in source and binary
+                                 forms, with or without
+    5                           ;; modification, are permitted provided that
+                                 the following conditions are met:
+    6                           ;; 
+    7                           ;; * Redistributions of source code must
+                                 retain the above copyright notice, this
+    8                           ;;   list of conditions and the following
+                                 disclaimer.
+    9                           ;; 
+   10                           ;; * Redistributions in binary form must
+                                 reproduce the above copyright notice,
+   11                           ;;   this list of conditions and the following
+                                 disclaimer in the documentation
+   12                           ;;   and/or other materials provided with the
+                                 distribution.
+   13                           ;; 
+   14                           ;; * Neither the name of Nordic Semiconductor
+                                 ASA nor the names of its
+   15                           ;;   contributors may be used to endorse or
+                                 promote products derived from
+   16                           ;;   this software without specific prior
+                                 written permission.
+   17                           ;; 
+   18                           ;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+                                 HOLDERS AND CONTRIBUTORS "AS IS"
+   19                           ;; AND ANY EXPRESS OR IMPLIED WARRANTIES,
+                                 INCLUDING, BUT NOT LIMITED TO, THE
+   20                           ;; IMPLIED WARRANTIES OF MERCHANTABILITY AND
+                                 FITNESS FOR A PARTICULAR PURPOSE ARE
+   21                           ;; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+                                 HOLDER OR CONTRIBUTORS BE LIABLE
+   22                           ;; FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+                                 SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   23                           ;; DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                                 PROCUREMENT OF SUBSTITUTE GOODS OR
+   24                           ;; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+                                 BUSINESS INTERRUPTION) HOWEVER
+   25                           ;; CAUSED AND ON ANY THEORY OF LIABILITY,
+                                 WHETHER IN CONTRACT, STRICT LIABILITY,
+   26                           ;; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+                                 ARISING IN ANY WAY OUT OF THE USE
+   27                           ;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+                                 POSSIBILITY OF SUCH DAMAGE.
+   28                           
+   29                           
+   30                           
+   31                           ;; NOTE: Template files (including this one)
+                                 are application specific and therefore
+                                 
+   32                           ;; expected to be copied into the application
+                                 project folder prior to its use!
+   33                           
+   34                           ;; Description message
+   35                           
+   36                                   MODULE  ?cstartup
+   37                           
+   38                                   ;; Stack size default : 2048
+   39                                   ;; Heap size default : 2048
+   40                           
+   41                                   ;; Forward declaration of sections.
+   42                                   SECTION CSTACK:DATA:NOROOT(3)
+   43                           
+   44                                   SECTION .intvec:CODE:NOROOT(2)
+   45                           
+   46                                   EXTERN  __iar_program_start
+   47                                   EXTERN  SystemInit
+   48                                   PUBLIC  __vector_table
+   49                                   PUBLIC  __Vectors
+   50                                   PUBLIC  __Vectors_End
+   51                                   PUBLIC  __Vectors_Size
+   52                           
+   53                                   DATA
+   54                           
+   55                           __vector_table
+   56    00000000 ........              DCD     sfe(CSTACK)
+   57    00000004 ........              DCD     Reset_Handler
+   58    00000008 ........              DCD     NMI_Handler
+   59    0000000C ........              DCD     HardFault_Handler
+   60    00000010 00000000              DCD     0
+   61    00000014 00000000              DCD     0
+   62    00000018 00000000              DCD     0
+   63                           ;__vector_table_0x1c
+   64    0000001C 00000000              DCD     0
+   65    00000020 00000000              DCD     0
+   66    00000024 00000000              DCD     0
+   67    00000028 00000000              DCD     0
+   68    0000002C ........              DCD     SVC_Handler
+   69    00000030 00000000              DCD     0
+   70    00000034 00000000              DCD     0
+   71    00000038 ........              DCD     PendSV_Handler
+   72    0000003C ........              DCD     SysTick_Handler
+   73                           
+   74                                   ; External Interrupts
+   75    00000040 ........              DCD      POWER_CLOCK_IRQHandler
+                                                                         ;POWER
+                                                                        _CLOCK
+   76    00000044 ........              DCD      RADIO_IRQHandler ;RADIO
+   77    00000048 ........              DCD      UART0_IRQHandler ;UART0
+   78    0000004C ........              DCD      SPI0_TWI0_IRQHandler
+                                                                       ;SPI0_TW
+                                                                      I0
+   79    00000050 ........              DCD      SPI1_TWI1_IRQHandler
+                                                                       ;SPI1_TW
+                                                                      I1
+   80    00000054 00000000              DCD      0 ;Reserved
+   81    00000058 ........              DCD      GPIOTE_IRQHandler ;GPIOTE
+   82    0000005C ........              DCD      ADC_IRQHandler ;ADC
+   83    00000060 ........              DCD      TIMER0_IRQHandler ;TIMER0
+   84    00000064 ........              DCD      TIMER1_IRQHandler ;TIMER1
+   85    00000068 ........              DCD      TIMER2_IRQHandler ;TIMER2
+   86    0000006C ........              DCD      RTC0_IRQHandler ;RTC0
+   87    00000070 ........              DCD      TEMP_IRQHandler ;TEMP
+   88    00000074 ........              DCD      RNG_IRQHandler ;RNG
+   89    00000078 ........              DCD      ECB_IRQHandler ;ECB
+   90    0000007C ........              DCD      CCM_AAR_IRQHandler ;CCM_AAR
+   91    00000080 ........              DCD      WDT_IRQHandler ;WDT
+   92    00000084 ........              DCD      RTC1_IRQHandler ;RTC1
+   93    00000088 ........              DCD      QDEC_IRQHandler ;QDEC
+   94    0000008C ........              DCD      LPCOMP_IRQHandler ;LPCOMP
+   95    00000090 ........              DCD      SWI0_IRQHandler ;SWI0
+   96    00000094 ........              DCD      SWI1_IRQHandler ;SWI1
+   97    00000098 ........              DCD      SWI2_IRQHandler ;SWI2
+   98    0000009C ........              DCD      SWI3_IRQHandler ;SWI3
+   99    000000A0 ........              DCD      SWI4_IRQHandler ;SWI4
+  100    000000A4 ........              DCD      SWI5_IRQHandler ;SWI5
+  101    000000A8 00000000              DCD      0 ;Reserved
+  102    000000AC 00000000              DCD      0 ;Reserved
+  103    000000B0 00000000              DCD      0 ;Reserved
+  104    000000B4 00000000              DCD      0 ;Reserved
+  105    000000B8 00000000              DCD      0 ;Reserved
+  106    000000BC 00000000              DCD      0 ;Reserved
+  107                           
+  108                           
+  109                           __Vectors_End
+  110                           __Vectors                           EQU  
+                                 __vector_table
+  111                           __Vectors_Size                      EQU  
+                                 __Vectors_End - __Vectors
+  112                           
+  113                           NRF_POWER_RAMON_ADDRESS              EQU  
+                                 0x40000524  ; NRF_POWER->RAMON address
+  114                           NRF_POWER_RAMONB_ADDRESS             EQU  
+                                 0x40000554  ; NRF_POWER->RAMONB address
+  115                           NRF_POWER_RAMONx_RAMxON_ONMODE_Msk   EQU   0x3
+                                         ; All RAM blocks on in onmode bit
+                                 mask
+  116                           
+  117                           ; Default handlers.
+  118                                   THUMB
+  119                           
+  120                                   PUBWEAK Reset_Handler
+  121                                   SECTION .text:CODE:REORDER:NOROOT(2)
+  122                           Reset_Handler
+  123    00000000 0321                  MOVS    R1, #NRF_POWER_RAMONx_RAMxON_ON
+                                                MODE_Msk
+  124                                   
+  125    00000002 0648                  LDR     R0, =NRF_POWER_RAMON_ADDRESS
+  126    00000004 0268                  LDR     R2, [R0]
+  127    00000006 0A43                  ORRS    R2, R2, R1
+  128    00000008 0260                  STR     R2, [R0]
+  129                                   
+  130    0000000A 0548                  LDR     R0, =NRF_POWER_RAMONB_ADDRESS
+  131    0000000C 0268                  LDR     R2, [R0]
+  132    0000000E 0A43                  ORRS    R2, R2, R1
+  133    00000010 0260                  STR     R2, [R0]
+  134                                   
+  135    00000012 0448                  LDR     R0, =SystemInit
+  136    00000014 8047                  BLX     R0
+  137    00000016 0448                  LDR     R0, =__iar_program_start
+  138    00000018 0047                  BX      R0
+  139                           
+  140                                   ; Dummy exception handlers
+  141                           
+  142                                   PUBWEAK NMI_Handler
+  142.1                                  TABLE
+  142.2  0000001C 24050040              Reference on line 125
+  142.3  00000020 54050040              Reference on line 130
+  142.4  00000024 ........              Reference on line 135
+  142.5  00000028 ........              Reference on line 137
+  143                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  144                           NMI_Handler
+  145    00000000 FEE7                  B .
+  146                           
+  147                                   PUBWEAK HardFault_Handler
+  148                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  149                           HardFault_Handler
+  150    00000000 FEE7                  B .
+  151                           
+  152                                   PUBWEAK SVC_Handler
+  153                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  154                           SVC_Handler
+  155    00000000 FEE7                  B .
+  156                           
+  157                                   PUBWEAK PendSV_Handler
+  158                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  159                           PendSV_Handler
+  160    00000000 FEE7                  B .
+  161                           
+  162                                   PUBWEAK SysTick_Handler
+  163                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  164                           SysTick_Handler
+  165    00000000 FEE7                  B .
+  166                           
+  167                                  ; Dummy interrupt handlers
+  168                           
+  169                                   PUBWEAK  POWER_CLOCK_IRQHandler
+  170                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  171                           POWER_CLOCK_IRQHandler
+  172    00000000 FEE7                  B .
+  173                                   PUBWEAK  RADIO_IRQHandler
+  174                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  175                           RADIO_IRQHandler
+  176    00000000 FEE7                  B .
+  177                                   PUBWEAK  UART0_IRQHandler
+  178                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  179                           UART0_IRQHandler
+  180    00000000 FEE7                  B .
+  181                                   PUBWEAK  SPI0_TWI0_IRQHandler
+  182                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  183                           SPI0_TWI0_IRQHandler
+  184    00000000 FEE7                  B .
+  185                                   PUBWEAK  SPI1_TWI1_IRQHandler
+  186                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  187                           SPI1_TWI1_IRQHandler
+  188    00000000 FEE7                  B .
+  189                                   PUBWEAK  GPIOTE_IRQHandler
+  190                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  191                           GPIOTE_IRQHandler
+  192    00000000 FEE7                  B .
+  193                                   PUBWEAK  ADC_IRQHandler
+  194                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  195                           ADC_IRQHandler
+  196    00000000 FEE7                  B .
+  197                                   PUBWEAK  TIMER0_IRQHandler
+  198                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  199                           TIMER0_IRQHandler
+  200    00000000 FEE7                  B .
+  201                                   PUBWEAK  TIMER1_IRQHandler
+  202                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  203                           TIMER1_IRQHandler
+  204    00000000 FEE7                  B .
+  205                                   PUBWEAK  TIMER2_IRQHandler
+  206                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  207                           TIMER2_IRQHandler
+  208    00000000 FEE7                  B .
+  209                                   PUBWEAK  RTC0_IRQHandler
+  210                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  211                           RTC0_IRQHandler
+  212    00000000 FEE7                  B .
+  213                                   PUBWEAK  TEMP_IRQHandler
+  214                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  215                           TEMP_IRQHandler
+  216    00000000 FEE7                  B .
+  217                                   PUBWEAK  RNG_IRQHandler
+  218                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  219                           RNG_IRQHandler
+  220    00000000 FEE7                  B .
+  221                                   PUBWEAK  ECB_IRQHandler
+  222                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  223                           ECB_IRQHandler
+  224    00000000 FEE7                  B .
+  225                                   PUBWEAK  CCM_AAR_IRQHandler
+  226                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  227                           CCM_AAR_IRQHandler
+  228    00000000 FEE7                  B .
+  229                                   PUBWEAK  WDT_IRQHandler
+  230                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  231                           WDT_IRQHandler
+  232    00000000 FEE7                  B .
+  233                                   PUBWEAK  RTC1_IRQHandler
+  234                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  235                           RTC1_IRQHandler
+  236    00000000 FEE7                  B .
+  237                                   PUBWEAK  QDEC_IRQHandler
+  238                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  239                           QDEC_IRQHandler
+  240    00000000 FEE7                  B .
+  241                                   PUBWEAK  LPCOMP_IRQHandler
+  242                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  243                           LPCOMP_IRQHandler
+  244    00000000 FEE7                  B .
+  245                                   PUBWEAK  SWI0_IRQHandler
+  246                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  247                           SWI0_IRQHandler
+  248    00000000 FEE7                  B .
+  249                                   PUBWEAK  SWI1_IRQHandler
+  250                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  251                           SWI1_IRQHandler
+  252    00000000 FEE7                  B .
+  253                                   PUBWEAK  SWI2_IRQHandler
+  254                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  255                           SWI2_IRQHandler
+  256    00000000 FEE7                  B .
+  257                                   PUBWEAK  SWI3_IRQHandler
+  258                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  259                           SWI3_IRQHandler
+  260    00000000 FEE7                  B .
+  261                                   PUBWEAK  SWI4_IRQHandler
+  262                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  263                           SWI4_IRQHandler
+  264    00000000 FEE7                  B .
+  265                                   PUBWEAK  SWI5_IRQHandler
+  266                                   SECTION .text:CODE:REORDER:NOROOT(1)
+  267                           SWI5_IRQHandler
+  268    00000000 FEE7                  B .
+  269                           
+  270                           
+  271                                   END
+
+
+\n                   DELIMITER 
+                     DELIMITER 
+!                    OPERATOR 
+!=                   OPERATOR 
+%                    OPERATOR 
+&                    OPERATOR 
+&&                   OPERATOR 
+(                    OPERATOR 
+(                    DELIMITER 
+)                    OPERATOR 
+)                    DELIMITER 
+*                    OPERATOR 
++                    OPERATOR 
+,                    DELIMITER 
+-                    OPERATOR 
+.                    Target symbol: 24 
+/                    OPERATOR 
+/                    DELIMITER 
+:                    Target symbol: 22 
+:                    DELIMITER 
+;                    Target symbol: 23 
+<                    OPERATOR 
+<<                   OPERATOR 
+<=                   OPERATOR 
+<>                   OPERATOR 
+=                    OPERATOR 
+=                    DIRECTIVE 
+==                   OPERATOR 
+>                    OPERATOR 
+>=                   OPERATOR 
+>>                   OPERATOR 
+@                    DELIMITER 
+AAPCS                DIRECTIVE 
+ALIAS                DIRECTIVE 
+ALIGN                DIRECTIVE 
+ALIGNRAM             DIRECTIVE 
+ALIGNROM             DIRECTIVE 
+ANOTE                DIRECTIVE 
+ARGFRAME             DIRECTIVE 
+ARM                  DIRECTIVE 
+ASEGN                DIRECTIVE 
+ASR                  MNEMONIC 
+BIT                  SEGMENT TYPE 
+BYTE1                OPERATOR 
+BYTE2                OPERATOR 
+BYTE3                OPERATOR 
+BYTE4                OPERATOR 
+C0                   REGISTER 
+C1                   REGISTER 
+C10                  REGISTER 
+C11                  REGISTER 
+C12                  REGISTER 
+C13                  REGISTER 
+C14                  REGISTER 
+C15                  REGISTER 
+C2                   REGISTER 
+C3                   REGISTER 
+C4                   REGISTER 
+C5                   REGISTER 
+C6                   REGISTER 
+C7                   REGISTER 
+C8                   REGISTER 
+C9                   REGISTER 
+CALL_GRAPH_ROOT      DIRECTIVE 
+CASEOFF              DIRECTIVE 
+CASEON               DIRECTIVE 
+CBREL                OPERATOR 
+CBREL_NEAR           OPERATOR 
+CFI                  DIRECTIVE 
+CODE                 SEGMENT TYPE 
+CODE                 DIRECTIVE 
+CODE16               DIRECTIVE 
+CODE32               DIRECTIVE 
+COL                  DIRECTIVE 
+CONST                SEGMENT TYPE 
+DATA                 SEGMENT TYPE 
+DATA                 DIRECTIVE 
+DATE                 OPERATOR 
+DC16                 DIRECTIVE 
+DC24                 DIRECTIVE 
+DC32                 DIRECTIVE 
+DC8                  DIRECTIVE 
+DCB                  DIRECTIVE 
+DCD                  DIRECTIVE 
+DCREL32              DIRECTIVE 
+DCW                  DIRECTIVE 
+DEFINE               DIRECTIVE 
+DF32                 DIRECTIVE 
+DF64                 DIRECTIVE 
+DS16                 DIRECTIVE 
+DS24                 DIRECTIVE 
+DS32                 DIRECTIVE 
+DS8                  DIRECTIVE 
+ELSE                 DIRECTIVE 
+ELSEIF               DIRECTIVE 
+END                  DIRECTIVE 
+ENDIF                DIRECTIVE 
+ENDM                 DIRECTIVE 
+ENDMOD               DIRECTIVE 
+ENDR                 DIRECTIVE 
+EQU                  DIRECTIVE 
+EVEN                 DIRECTIVE 
+EXCEPTION_CODE       DIRECTIVE 
+EXITM                DIRECTIVE 
+EXPORT               DIRECTIVE 
+EXTERN               DIRECTIVE 
+EXTWEAK              DIRECTIVE 
+FAR                  SEGMENT TYPE 
+FARCODE              SEGMENT TYPE 
+FARCONST             SEGMENT TYPE 
+FARDATA              SEGMENT TYPE 
+FUNCALL              DIRECTIVE 
+FUNCTION             DIRECTIVE 
+HIGH                 OPERATOR 
+HUGE                 SEGMENT TYPE 
+HUGECODE             SEGMENT TYPE 
+HUGECONST            SEGMENT TYPE 
+HUGEDATA             SEGMENT TYPE 
+HWRD                 OPERATOR 
+IDATA                SEGMENT TYPE 
+IF                   DIRECTIVE 
+IMPORT               DIRECTIVE 
+INCLUDE              DIRECTIVE 
+LIBRARY              DIRECTIVE 
+LOCAL                DIRECTIVE 
+LOCFRAME             DIRECTIVE 
+LOW                  OPERATOR 
+LR                   REGISTER 
+LSL                  MNEMONIC 
+LSR                  MNEMONIC 
+LSTCND               DIRECTIVE 
+LSTCOD               DIRECTIVE 
+LSTEXP               DIRECTIVE 
+LSTMAC               DIRECTIVE 
+LSTOUT               DIRECTIVE 
+LSTPAG               DIRECTIVE 
+LSTREP               DIRECTIVE 
+LSTXRF               DIRECTIVE 
+LTORG                DIRECTIVE 
+LWRD                 OPERATOR 
+MACRO                DIRECTIVE 
+MODULE               DIRECTIVE 
+NAME                 DIRECTIVE 
+NEAR                 SEGMENT TYPE 
+NEARCODE             SEGMENT TYPE 
+NEARCONST            SEGMENT TYPE 
+NEARDATA             SEGMENT TYPE 
+NOALLOC              SEGMENT TYPE 
+NOCALL               DIRECTIVE 
+NOROOT               SEGMENT TYPE 
+NPAGE                SEGMENT TYPE 
+ODD                  DIRECTIVE 
+P0                   REGISTER 
+P1                   REGISTER 
+P10                  REGISTER 
+P11                  REGISTER 
+P12                  REGISTER 
+P13                  REGISTER 
+P14                  REGISTER 
+P15                  REGISTER 
+P2                   REGISTER 
+P3                   REGISTER 
+P4                   REGISTER 
+P5                   REGISTER 
+P6                   REGISTER 
+P7                   REGISTER 
+P8                   REGISTER 
+P9                   REGISTER 
+PAGE                 DIRECTIVE 
+PAGSIZ               DIRECTIVE 
+PC                   REGISTER 
+PRESERVE8            DIRECTIVE 
+PROGRAM              DIRECTIVE 
+PUBLIC               DIRECTIVE 
+PUBWEAK              DIRECTIVE 
+R0                   REGISTER 
+R1                   REGISTER 
+R10                  REGISTER 
+R11                  REGISTER 
+R12                  REGISTER 
+R13                  REGISTER 
+R14                  REGISTER 
+R15                  REGISTER 
+R2                   REGISTER 
+R3                   REGISTER 
+R4                   REGISTER 
+R5                   REGISTER 
+R6                   REGISTER 
+R7                   REGISTER 
+R8                   REGISTER 
+R9                   REGISTER 
+RADIX                DIRECTIVE 
+REGISTER             SEGMENT TYPE 
+RELOC_ARM_PREL31     OPERATOR 
+RELOC_ARM_TARGET1    OPERATOR 
+RELOC_ARM_TARGET2    OPERATOR 
+RELOC_LOCAL          OPERATOR 
+REORDER              SEGMENT TYPE 
+REPT                 DIRECTIVE 
+REPTC                DIRECTIVE 
+REPTI                DIRECTIVE 
+REQUIRE              DIRECTIVE 
+REQUIRE8             DIRECTIVE 
+ROOT                 SEGMENT TYPE 
+ROR                  MNEMONIC 
+RRX                  MNEMONIC 
+RSEG                 DIRECTIVE 
+RTMODEL              DIRECTIVE 
+SBREL                OPERATOR 
+SBREL_NEAR           OPERATOR 
+SECTION              DIRECTIVE 
+SECTION_GROUP        DIRECTIVE 
+SECTION_LINK         DIRECTIVE 
+SECTION_TYPE         DIRECTIVE 
+SET                  DIRECTIVE 
+SETA                 DIRECTIVE 
+SFB                  OPERATOR 
+SFE                  OPERATOR 
+SFS                  OPERATOR 
+SIZEOF               OPERATOR 
+SORT                 SEGMENT TYPE 
+SP                   REGISTER 
+THUMB                DIRECTIVE 
+THUMBX               DIRECTIVE 
+TLS                  SEGMENT TYPE 
+TLS                  OPERATOR 
+UGT                  OPERATOR 
+ULT                  OPERATOR 
+UNTYPED              SEGMENT TYPE 
+VAR                  DIRECTIVE 
+XDATA                SEGMENT TYPE 
+XOR                  OPERATOR 
+ZPAGE                SEGMENT TYPE 
+[                    DELIMITER 
+]                    DELIMITER 
+^                    OPERATOR 
+^                    DELIMITER 
+__ARM4TM__           #define, value: 4, line:         0  
+__ARM5TM__           #define, value: 5, line:         0  
+__ARM5T__            #define, value: 5, line:         0  
+__ARM5__             #define, value: 5, line:         0  
+__ARM6M__            #define, value: 11, line:         0  
+__ARM6SM__           #define, value: 12, line:         0  
+__ARM6__             #define, value: 6, line:         0  
+__ARM_ARCH           #define, value: 6, line:         0  
+__ARM_ARCH_ISA_THUMB #define, value: 1, line:         0  
+__ARM_ARCH_PROFILE   #define, value: 'M', line:         0  
+__ARM_BIG_ENDIAN     #define, value: 0, line:         0  
+__ARM_FEATURE_DSP    #define, value: 0, line:         0  
+__ARM_FEATURE_IDIV   #define, value: 0, line:         0  
+__ARM_PROFILE_M__    #define, value: 1, line:         0  
+__BUILD_NUMBER__     #define,            line:         0  
+__CORE__             #define, value: __ARM6M__, line:         0  
+__DATE__             #define,            line:         0  
+__FILE__             #define,            line:         0  
+__IAR_SYSTEMS_ASM    #define,            line:         0  
+__IAR_SYSTEMS_ASM__  #define,            line:         0  
+__IASMARM__          #define, value: 1, line:         0  
+__LINE__             #define,            line:         0  
+__LITTLE_ENDIAN__    #define, value: 1, line:         0  
+__SUBVERSION__       #define,            line:         0  
+__TID__              #define,            line:         0  
+__TIME__             #define,            line:         0  
+__VER__              #define,            line:         0  
+define               PREPROCESSOR DIRECTIVE 
+defined              Target symbol: 0 
+elif                 PREPROCESSOR DIRECTIVE 
+else                 PREPROCESSOR DIRECTIVE 
+endif                PREPROCESSOR DIRECTIVE 
+error                PREPROCESSOR DIRECTIVE 
+if                   PREPROCESSOR DIRECTIVE 
+ifdef                PREPROCESSOR DIRECTIVE 
+ifndef               PREPROCESSOR DIRECTIVE 
+include              PREPROCESSOR DIRECTIVE 
+line                 PREPROCESSOR DIRECTIVE 
+message              PREPROCESSOR DIRECTIVE 
+pragma               PREPROCESSOR DIRECTIVE 
+undef                PREPROCESSOR DIRECTIVE 
+{                    DELIMITER 
+|                    OPERATOR 
+||                   OPERATOR 
+}                    DELIMITER 
+~                    OPERATOR 
+EOF                  DELIMITER 
+
+Segment             Type 	Mode
+----------------------------------------
+.intvec             CODE  	REL 
+.text               CODE  	REL 
+CSTACK              DATA  	REL 
+__EXTERNS           CODE  	ABS Org:0 
+
+Label               Mode   Type                   Segment    Value/Offset
+------------------------------------------------------------------------------
+??DUMMY_SYMBOL_IN_BACKEND_PARSED_OPERANDS
+                    ABS    CONST UNTYP.           ASEG       1267 
+ADC_IRQHandler      REL    CONST EXT [014] UNTYP. .intvec    Solved Extern 
+CCM_AAR_IRQHandler  REL    CONST EXT [022] UNTYP. .intvec    Solved Extern 
+ECB_IRQHandler      REL    CONST EXT [021] UNTYP. .intvec    Solved Extern 
+GPIOTE_IRQHandler   REL    CONST EXT [013] UNTYP. .intvec    Solved Extern 
+HardFault_Handler   REL    CONST EXT [004] UNTYP. .intvec    Solved Extern 
+LPCOMP_IRQHandler   REL    CONST EXT [026] UNTYP. .intvec    Solved Extern 
+NMI_Handler         REL    CONST EXT [003] UNTYP. .intvec    Solved Extern 
+NRF_POWER_RAMONB_ADDRESSABS    CONST UNTYP.           .intvec    40000554 
+NRF_POWER_RAMON_ADDRESSABS    CONST UNTYP.           .intvec    40000524 
+NRF_POWER_RAMONx_RAMxON_ONMODE_Msk
+                    ABS    CONST UNTYP.           .intvec    3 
+POWER_CLOCK_IRQHandlerREL    CONST EXT [008] UNTYP. .intvec    Solved Extern 
+PendSV_Handler      REL    CONST EXT [006] UNTYP. .intvec    Solved Extern 
+QDEC_IRQHandler     REL    CONST EXT [025] UNTYP. .intvec    Solved Extern 
+RADIO_IRQHandler    REL    CONST EXT [009] UNTYP. .intvec    Solved Extern 
+RNG_IRQHandler      REL    CONST EXT [020] UNTYP. .intvec    Solved Extern 
+RTC0_IRQHandler     REL    CONST EXT [018] UNTYP. .intvec    Solved Extern 
+RTC1_IRQHandler     REL    CONST EXT [024] UNTYP. .intvec    Solved Extern 
+Reset_Handler       REL    CONST EXT [002] UNTYP. .intvec    Solved Extern 
+SPI0_TWI0_IRQHandlerREL    CONST EXT [011] UNTYP. .intvec    Solved Extern 
+SPI1_TWI1_IRQHandlerREL    CONST EXT [012] UNTYP. .intvec    Solved Extern 
+SVC_Handler         REL    CONST EXT [005] UNTYP. .intvec    Solved Extern 
+SWI0_IRQHandler     REL    CONST EXT [027] UNTYP. .intvec    Solved Extern 
+SWI1_IRQHandler     REL    CONST EXT [028] UNTYP. .intvec    Solved Extern 
+SWI2_IRQHandler     REL    CONST EXT [029] UNTYP. .intvec    Solved Extern 
+SWI3_IRQHandler     REL    CONST EXT [030] UNTYP. .intvec    Solved Extern 
+SWI4_IRQHandler     REL    CONST EXT [031] UNTYP. .intvec    Solved Extern 
+SWI5_IRQHandler     REL    CONST EXT [032] UNTYP. .intvec    Solved Extern 
+SysTick_Handler     REL    CONST EXT [007] UNTYP. .intvec    Solved Extern 
+SystemInit          ABS    CONST EXT [001] UNTYP. __EXTERNS  Solved Extern 
+TEMP_IRQHandler     REL    CONST EXT [019] UNTYP. .intvec    Solved Extern 
+TID                 ABS    CONST UNTYP.           ASEG       4F00 
+TIMER0_IRQHandler   REL    CONST EXT [015] UNTYP. .intvec    Solved Extern 
+TIMER1_IRQHandler   REL    CONST EXT [016] UNTYP. .intvec    Solved Extern 
+TIMER2_IRQHandler   REL    CONST EXT [017] UNTYP. .intvec    Solved Extern 
+UART0_IRQHandler    REL    CONST EXT [010] UNTYP. .intvec    Solved Extern 
+WDT_IRQHandler      REL    CONST EXT [023] UNTYP. .intvec    Solved Extern 
+__Vectors           REL    CONST PUB UNTYP.       .intvec    0 
+__Vectors_End       REL    CONST PUB UNTYP.       .intvec    C0 
+__Vectors_Size      ABS    CONST PUB UNTYP.       .intvec    C0 
+__iar_program_start ABS    CONST EXT [000] UNTYP. __EXTERNS  Solved Extern 
+__lab0              REL    CONST UNTYP.           .text      1C 
+__lab1              REL    CONST UNTYP.           .text      20 
+__lab10             REL    CONST UNTYP.           .text      0 
+__lab11             REL    CONST UNTYP.           .text      0 
+__lab12             REL    CONST UNTYP.           .text      0 
+__lab13             REL    CONST UNTYP.           .text      0 
+__lab14             REL    CONST UNTYP.           .text      0 
+__lab15             REL    CONST UNTYP.           .text      0 
+__lab16             REL    CONST UNTYP.           .text      0 
+__lab17             REL    CONST UNTYP.           .text      0 
+__lab18             REL    CONST UNTYP.           .text      0 
+__lab19             REL    CONST UNTYP.           .text      0 
+__lab2              REL    CONST UNTYP.           .text      24 
+__lab20             REL    CONST UNTYP.           .text      0 
+__lab21             REL    CONST UNTYP.           .text      0 
+__lab22             REL    CONST UNTYP.           .text      0 
+__lab23             REL    CONST UNTYP.           .text      0 
+__lab24             REL    CONST UNTYP.           .text      0 
+__lab25             REL    CONST UNTYP.           .text      0 
+__lab26             REL    CONST UNTYP.           .text      0 
+__lab27             REL    CONST UNTYP.           .text      0 
+__lab28             REL    CONST UNTYP.           .text      0 
+__lab29             REL    CONST UNTYP.           .text      0 
+__lab3              REL    CONST UNTYP.           .text      28 
+__lab30             REL    CONST UNTYP.           .text      0 
+__lab31             REL    CONST UNTYP.           .text      0 
+__lab32             REL    CONST UNTYP.           .text      0 
+__lab33             REL    CONST UNTYP.           .text      0 
+__lab4              REL    CONST UNTYP.           .text      0 
+__lab5              REL    CONST UNTYP.           .text      0 
+__lab6              REL    CONST UNTYP.           .text      0 
+__lab7              REL    CONST UNTYP.           .text      0 
+__lab8              REL    CONST UNTYP.           .text      0 
+__lab9              REL    CONST UNTYP.           .text      0 
+__vector_table      REL    CONST PUB UNTYP.       .intvec    0 
+
+
+##############################
+#           CRC:0            #
+#        Errors:   0         #
+#        Warnings: 0         #
+#         Bytes: 296         #
+##############################
+
+
+
+

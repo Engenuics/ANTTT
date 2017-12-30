@@ -1,0 +1,587 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       26/Dec/2017  14:44:41
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\drivers\buttons.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EW2407.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\drivers\buttons.c -D NRF51 -lC
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\buttons.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\buttons.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\drivers\buttons.c
+      1          /***********************************************************************************************************************
+      2          File: buttons.c                                                                
+      3          
+      4          Description:
+      5          Button functions and state machine.  The application handles all debouncing and glitch filtering.
+      6          
+      7          ------------------------------------------------------------------------------------------------------------------------
+      8          API:
+      9          Types:
+     10          MPG1: The argument u32Button_ is either BUTTON0, BUTTON1, BUTTON2, or BUTTON3.  
+     11          MPG1: The argument u32Button_ is either BUTTON0 or BUTTON1.  
+     12          
+     13          Public:
+     14          bool IsButtonPressed(u32 u32Button_)
+     15          Returns TRUE if a particular button is currently pressed (and debounced).
+     16          
+     17          bool WasButtonPressed(u32 u32Button_)
+     18          Returns TRUE if a particular button was pressed since last time it was checked even if it is no longer pressed.
+     19          ButtonAcknowledge is typically called immediately after WasButtonPressed() returns TRUE to clear the button
+     20          pressed state.
+     21          
+     22          void ButtonAcknowledge(u32 u32Button_)
+     23          Clears the New Press state of a button -- generally always called after WasButtonPressed() returns TRUE.
+     24          
+     25          bool IsButtonHeld(u32 u32Button_, u32 u32ButtonHeldTime_)
+     26          Returns TRUE if a button has been held for u32ButtonHeldTime_ time in milliseconds.
+     27          
+     28          Protected:
+     29          void ButtonInitialize(void)
+     30          Configures the button system for the product including enabling button GPIO interrupts.  
+     31          
+     32          u32 GetButtonBitLocation(u8 u8Button_, ButtonPortType ePort_)
+     33          Returns the location of the button within its port (should be required only for interrupt service routines).  
+     34          
+     35          DISCLAIMER: THIS CODE IS PROVIDED WITHOUT ANY WARRANTY OR GUARANTEES.  USERS MAY
+     36          USE THIS CODE FOR DEVELOPMENT AND EXAMPLE PURPOSES ONLY.  ENGENUICS TECHNOLOGIES
+     37          INCORPORATED IS NOT RESPONSIBLE FOR ANY ERRORS, OMISSIONS, OR DAMAGES THAT COULD
+     38          RESULT FROM USING THIS FIRMWARE IN WHOLE OR IN PART.
+     39          
+     40          ***********************************************************************************************************************/
+     41          
+     42          #include "configuration.h"
+     43          
+     44          /***********************************************************************************************************************
+     45          Global variable definitions with scope across entire project.
+     46          All Global variable names shall start with "G_<type>Button"
+     47          ***********************************************************************************************************************/
+     48          /* New variables */
+     49          volatile bool G_abButtonDebounceActive[TOTAL_BUTTONS];           /* Flags for buttons being debounced */
+                                                        ^
+Error[Pe020]: identifier "TOTAL_BUTTONS" is undefined
+     50          volatile u32 G_au32ButtonDebounceTimeStart[TOTAL_BUTTONS];       /* Button debounce start time */
+     51          
+     52          /*--------------------------------------------------------------------------------------------------------------------*/
+     53          /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
+     54          extern volatile u32 G_u32SystemTime1ms;        /* From board-specific source file */
+     55          extern volatile u32 G_u32SystemTime1s;         /* From board-specific source file */
+     56          
+     57          extern volatile u32 G_u32SystemFlags;          /* From main.c */
+     58          extern volatile u32 G_u32ApplicationFlags;     /* From main.c */
+     59          
+     60          
+     61          /***********************************************************************************************************************
+     62          Global variable definitions with scope limited to this local application.
+     63          Variable names shall start with "Button_" and be declared as static.
+     64          ***********************************************************************************************************************/
+     65          static fnCode_type Button_pfnStateMachine;                  /* The Button application state machine function pointer */
+     66          
+     67          static ButtonStateType Button_aeCurrentState[TOTAL_BUTTONS];/* Current pressed state of button */
+                        ^
+Error[Pe020]: identifier "ButtonStateType" is undefined
+     68          static ButtonStateType Button_aeNewState[TOTAL_BUTTONS];    /* New (pending) pressed state of button */
+                        ^
+Error[Pe020]: identifier "ButtonStateType" is undefined
+     69          static u32 Button_au32HoldTimeStart[TOTAL_BUTTONS];         /* System 1ms time when a button press started */
+     70          static bool Button_abNewPress[TOTAL_BUTTONS];               /* Flags to indicate a button was pressed */    
+     71          
+     72          
+     73          /************ %BUTTON% EDIT BOARD-SPECIFIC GPIO DEFINITIONS BELOW ***************/
+     74          /* Add all of the GPIO pin names for the buttons in the system.  
+     75          The order of the definitions below must match the order of the definitions provided in configuration.h */ 
+     76          
+     77          #ifdef MPGL1
+     78          static const u32 Button_au32ButtonPins[TOTAL_BUTTONS] = 
+     79          {
+     80            PA_17_BUTTON0, PB_00_BUTTON1, PB_01_BUTTON2, PB_02_BUTTON3
+     81          };
+     82          
+     83          /* Control array for all buttons in system initialized for ButtonInitialize().  Array values correspond to ButtonConfigType fields: 
+     84               eActiveState       ePort                   */
+     85          static ButtonConfigType Buttons_asArray[TOTAL_BUTTONS] = 
+     86          {{BUTTON_ACTIVE_LOW, BUTTON_PORTA}, /* BUTTON0  */
+     87           {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON1  */
+     88           {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON2  */
+     89           {BUTTON_ACTIVE_LOW, BUTTON_PORTB}, /* BUTTON3  */
+     90          };   
+     91          #endif /* MPGL1 */
+     92          
+     93          #ifdef MPGL2
+     94          static const u32 Button_au32ButtonPins[TOTAL_BUTTONS] = 
+     95          {
+     96            PA_17_BUTTON0, PB_00_BUTTON1
+     97          };
+     98          
+     99          /* Control array for all buttons in system initialized for ButtonInitialize().  Array values correspond to ButtonConfigType fields: 
+    100               eActiveState       ePort                   */
+    101          static ButtonConfigType Buttons_asArray[TOTAL_BUTTONS] = 
+    102          {{BUTTON_ACTIVE_LOW, BUTTON_PORTA}, /* BUTTON0  */
+    103           {BUTTON_ACTIVE_LOW, BUTTON_PORTB} /* BUTTON1  */
+    104          };   
+    105          #endif /* MPGL2 */
+    106          
+    107          /************ EDIT BOARD-SPECIFIC GPIO DEFINITIONS ABOVE ***************/
+    108          
+    109          
+    110          /***********************************************************************************************************************
+    111          Function Definitions
+    112          ***********************************************************************************************************************/
+    113          /*--------------------------------------------------------------------------------------------------------------------*/
+    114          /* Public Functions */
+    115          /*--------------------------------------------------------------------------------------------------------------------*/
+    116          
+    117          /*----------------------------------------------------------------------------------------------------------------------
+    118          Function: IsButtonPressed
+    119          
+    120          Description:
+    121          Determine if a particular button is currently pressed at this moment in time.
+    122          The button must still be pressed at the time of this inquiry for the function
+    123          to return TRUE.
+    124          
+    125          Requires:
+    126            - u32Button_ is a valid button index
+    127            - Button_aeCurrentState[u32Button_] is a valid index
+    128           
+    129          Promises:
+    130            - Returns TRUE if Button_aeCurrentState[u32Button_] is pressed; otherwise returns FALSE
+    131          */
+    132          bool IsButtonPressed(u32 u32Button_)
+    133          {
+    134            if( Button_aeCurrentState[u32Button_] == PRESSED)
+                                                            ^
+Error[Pe020]: identifier "PRESSED" is undefined
+    135            {
+    136              return(TRUE);
+                            ^
+Error[Pe020]: identifier "TRUE" is undefined
+    137            }
+    138            else
+    139            {
+    140              return(FALSE);
+                            ^
+Error[Pe020]: identifier "FALSE" is undefined
+    141            }
+    142          
+    143          } /* end IsButtonPressed() */
+    144          
+    145          
+    146          /*----------------------------------------------------------------------------------------------------------------------
+    147          Function: WasButtonPressed
+    148          
+    149          Description:
+    150          Determines if a particular button was pressed since last time it was checked. 
+    151          The button may or may not still be pressed when this inquiry is made.  Mulitple
+    152          button presses are not tracked.  The user should call ButtonAcknowledge immediately
+    153          following this function to clear the state.
+    154          
+    155          Requires:
+    156            - u32 u32Button_ is a valid button index
+    157            - Button_aeCurrentState[u32Button_] is valid
+    158           
+    159          Promises:
+    160            - Returns TRUE if Button_abNewPress[u32Button_] is TRUE; other wise returns FALSE
+    161          */
+    162          bool WasButtonPressed(u32 u32Button_)
+    163          {
+    164            if( Button_abNewPress[u32Button_] == TRUE)
+                                                        ^
+Error[Pe020]: identifier "TRUE" is undefined
+    165            {
+    166              return(TRUE);
+    167            }
+    168            else
+    169            {
+    170              return(FALSE);
+                            ^
+Error[Pe020]: identifier "FALSE" is undefined
+    171            }
+    172          
+    173          } /* end WasButtonPressed() */
+    174          
+    175          
+    176          /*----------------------------------------------------------------------------------------------------------------------
+    177          Function: ButtonAcknowledge
+    178          
+    179          Description:
+    180          Clears the New Press state of a button.
+    181          
+    182          Requires:
+    183            - u32Button_ is a valid button index
+    184           
+    185          Promises:
+    186            - The flag at Button_abNewPress[u32Button_] is set to FALSE
+    187          */
+    188          void ButtonAcknowledge(u32 u32Button_)
+    189          {
+    190            Button_abNewPress[u32Button_] = FALSE;
+                                                   ^
+Error[Pe020]: identifier "FALSE" is undefined
+    191          
+    192          } /* end ButtonAcknowledge() */
+    193          
+    194          
+    195          /*----------------------------------------------------------------------------------------------------------------------
+    196          Function: IsButtonHeld
+    197          
+    198          Description:
+    199          Queries to see if a button has been held for a certain time.  The button
+    200          must still be pressed when this function is called if it is to return TRUE.
+    201          
+    202          Requires:
+    203            - u32Button_ is a valid button index
+    204            - u32ButtonHeldTime is a time in ms 
+    205           
+    206          Promises:
+    207            - Returns TRUE if eButton_ has been held longer than u32ButtonHeldTime_
+    208          */
+    209          bool IsButtonHeld(u32 u32Button_, u32 u32ButtonHeldTime_)
+    210          {
+    211           if( IsButtonPressed(u32Button_) && 
+    212               IsTimeUp(&Button_au32HoldTimeStart[u32Button_], u32ButtonHeldTime_ ) )
+    213           {
+    214             return(TRUE);
+                           ^
+Error[Pe020]: identifier "TRUE" is undefined
+    215           }
+    216           else
+    217           {
+    218             return(FALSE);
+                           ^
+Error[Pe020]: identifier "FALSE" is undefined
+    219           }
+    220          
+    221          } /* end IsButtonHeld() */
+    222          
+    223          
+    224          /*--------------------------------------------------------------------------------------------------------------------*/
+    225          /* Protected Functions */
+    226          /*--------------------------------------------------------------------------------------------------------------------*/
+    227          
+    228          /*----------------------------------------------------------------------------------------------------------------------
+    229          Function: ButtonInitialize
+    230          
+    231          Description:
+    232          Configures the button system for the product including enabling button GPIO interrupts.  
+    233          
+    234          Requires:
+    235            - GPIO configuration is already complete for all button inputs
+    236            - Button interrupt initializations and handler functions are ready
+    237           
+    238          Promises:
+    239            - G_abButtonDebounceActive, LGaeButtonPreviousState and Button_aeCurrentState 
+    240              are intialized
+    241            - GGstButtonTrackballPosition fields are all initialized to default values
+    242            - The button state machine is initialized to Idle
+    243          */
+    244          void ButtonInitialize(void)
+    245          {
+    246            u32 u32PortAInterruptMask = 0;
+    247            u32 u32PortBInterruptMask = 0;
+    248            static u8 au8ButtonStartupMsg[] = "Button task ready\n\r";
+    249            
+    250            /* Setup default data for all of the buttons in the system */
+    251            for(u8 i = 0; i < TOTAL_BUTTONS; i++)
+    252            {
+    253              G_abButtonDebounceActive[i] = FALSE;
+                                                   ^
+Error[Pe020]: identifier "FALSE" is undefined
+    254              Button_aeCurrentState[i]    = RELEASED;
+                                                   ^
+Error[Pe020]: identifier "RELEASED" is undefined
+    255              Button_aeNewState[i]        = RELEASED;
+    256            }
+    257            
+    258            /* Create masks based on any buttons in the system.  It's ok to have an empty mask. */
+    259            for(u8 i = 0; i < TOTAL_BUTTONS; i++)
+    260            {
+    261              if(Buttons_asArray[i].ePort == BUTTON_PORTA)
+                        ^
+Error[Pe020]: identifier "Buttons_asArray" is undefined
+
+      if(Buttons_asArray[i].ePort == BUTTON_PORTA)
+                                     ^
+"C:\Users\Vipin\Documents\GitHub\ANTTT\drivers\buttons.c",261  Error[Pe020]: 
+          identifier "BUTTON_PORTA" is undefined
+    262              {
+    263                u32PortAInterruptMask |= Button_au32ButtonPins[i];
+                                                ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    264              }
+    265              else if(Buttons_asArray[i].ePort == BUTTON_PORTB)
+                                                         ^
+Error[Pe020]: identifier "BUTTON_PORTB" is undefined
+    266              {
+    267                u32PortBInterruptMask |= Button_au32ButtonPins[i];
+                                                ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    268              }
+    269            }
+    270          
+    271            /* Enable PIO interrupts */
+    272            AT91C_BASE_PIOA->PIO_IER = u32PortAInterruptMask;
+                   ^
+Error[Pe020]: identifier "AT91C_BASE_PIOA" is undefined
+    273            AT91C_BASE_PIOB->PIO_IER = u32PortBInterruptMask;
+                   ^
+Error[Pe020]: identifier "AT91C_BASE_PIOB" is undefined
+    274            
+    275            /* Read the ISR register to clear all the current flags */
+    276            u32PortAInterruptMask = AT91C_BASE_PIOA->PIO_ISR;
+    277            u32PortBInterruptMask = AT91C_BASE_PIOB->PIO_ISR;
+    278          
+    279            /* Configure the NVIC to ensure the PIOA and PIOB interrupts are active */
+    280            NVIC_ClearPendingIRQ(IRQn_PIOA);
+                                        ^
+Error[Pe020]: identifier "IRQn_PIOA" is undefined
+    281            NVIC_ClearPendingIRQ(IRQn_PIOB);
+                                        ^
+Error[Pe020]: identifier "IRQn_PIOB" is undefined
+    282            NVIC_EnableIRQ(IRQn_PIOA);
+    283            NVIC_EnableIRQ(IRQn_PIOB);
+    284              
+    285            /* Init complete: set function pointer and application flag */
+    286            Button_pfnStateMachine = ButtonSM_Idle;
+                                            ^
+Error[Pe020]: identifier "ButtonSM_Idle" is undefined
+    287            G_u32ApplicationFlags |= _APPLICATION_FLAGS_BUTTON;
+                                            ^
+Error[Pe020]: identifier "_APPLICATION_FLAGS_BUTTON" is undefined
+    288            DebugPrintf(au8ButtonStartupMsg);
+                   ^
+Warning[Pe223]: function "DebugPrintf" declared implicitly
+    289          
+    290          } /* end ButtonInitialize() */
+    291          
+    292          
+    293          /*----------------------------------------------------------------------------------------------------------------------
+    294          Function ButtonRunActiveState()
+    295          
+    296          Description:
+    297          Selects and runs one iteration of the current state in the state machine.
+    298          All state machines have a TOTAL of 1ms to execute, so on average n state machines
+    299          may take 1ms / n to execute.
+    300          
+    301          Requires:
+    302            - State machine function pointer points at current state
+    303          
+    304          Promises:
+    305            - Calls the function to pointed by the state machine function pointer
+    306          */
+    307          void ButtonRunActiveState(void)
+    308          {
+    309            Button_pfnStateMachine();
+    310          
+    311          } /* end ButtonRunActiveState */
+    312          
+    313          
+    314          /*----------------------------------------------------------------------------------------------------------------------
+    315          Function: GetButtonBitLocation
+    316          
+    317          Description:
+    318          Returns the location of the button within its port.  
+    319          The GPIO interrupt requires access to this function.
+    320          
+    321          Requires:
+    322            - u8Button_ is a valid ButtonNumberType.
+    323            - ePort_ is the port where the button is located
+    324          
+    325          Promises:
+    326            - Returns a value that has a bit set in the corresponding position of u32Button_ on the button's port
+    327            - Returns 0 if no match
+    328          */
+    329          u32 GetButtonBitLocation(u8 u8Button_, ButtonPortType ePort_)
+                                                        ^
+Error[Pe020]: identifier "ButtonPortType" is undefined
+    330          {
+    331            /* Make sure the index is valid */
+    332            if(u8Button_ < TOTAL_BUTTONS) 
+    333            {
+    334              /* Index is valid so check that the button exists on the port */
+    335              if(Buttons_asArray[u8Button_].ePort == ePort_)
+                        ^
+Error[Pe020]: identifier "Buttons_asArray" is undefined
+    336              {
+    337                /* Return the button position if the index is the correct port */
+    338                return(Button_au32ButtonPins[u8Button_]);
+                              ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    339              }
+    340            }
+    341            
+    342            /* Otherwise return 0 */
+    343            return(0);
+    344            
+    345          } /* end GetButtonBitLocation() */
+    346          
+    347          
+    348          /*--------------------------------------------------------------------------------------------------------------------*/
+    349          /* Private functions */
+    350          /*--------------------------------------------------------------------------------------------------------------------*/
+    351          
+    352          
+    353          /***********************************************************************************************************************
+    354          State Machine Function Definitions
+    355          
+    356          The button state machine monitors button activity and manages debouncing and
+    357          maintaining the global button states.
+    358          ***********************************************************************************************************************/
+    359          
+    360          /*--------------------------------------------------------------------------------------------------------------------*/
+    361          /* Do nothing but wait for a debounce time to start */
+    362          static void ButtonSM_Idle(void)                
+    363          {
+    364            for(u8 i = 0; i < TOTAL_BUTTONS; i++)
+    365            {
+    366              if(G_abButtonDebounceActive[i])
+    367              {
+    368                Button_pfnStateMachine = ButtonSM_ButtonActive;
+                                                ^
+Error[Pe020]: identifier "ButtonSM_ButtonActive" is undefined
+    369              }
+    370            }
+    371            
+    372          } /* end ButtonSM_Idle(void) */
+    373          
+    374          
+    375          /*--------------------------------------------------------------------------------------------------------------------*/
+    376          static void ButtonSM_ButtonActive(void)         
+    377          {
+    378            u32 *pu32PortAddress;
+    379            u32 *pu32InterruptAddress;
+    380          
+    381            /* Start by resseting back to Idle in case no buttons are active */
+    382            Button_pfnStateMachine = ButtonSM_Idle;
+    383          
+    384            /* Check for buttons that are debouncing */
+    385            for(u8 i = 0; i < TOTAL_BUTTONS; i++)
+    386            {
+    387              /* Load address offsets for the current button */
+    388              pu32PortAddress = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR) + Buttons_asArray[i].ePort);
+                                                ^
+Error[Pe020]: identifier "AT91C_BASE_PIOA" is undefined
+
+      pu32PortAddress = (u32*)(&(AT91C_BASE_PIOA->PIO_PDSR) + Buttons_asArray[i].ePort);
+                                                              ^
+"C:\Users\Vipin\Documents\GitHub\ANTTT\drivers\buttons.c",388  Error[Pe020]: 
+          identifier "Buttons_asArray" is undefined
+    389              pu32InterruptAddress = (u32*)(&(AT91C_BASE_PIOA->PIO_IER) + Buttons_asArray[i].ePort);
+    390              
+    391              if( G_abButtonDebounceActive[i] )
+    392              {
+    393                /* Still have an active button */
+    394                Button_pfnStateMachine = ButtonSM_ButtonActive;
+    395                
+    396                if( IsTimeUp((u32*)&G_au32ButtonDebounceTimeStart[i], BUTTON_DEBOUNCE_TIME) )
+                                                                             ^
+Error[Pe020]: identifier "BUTTON_DEBOUNCE_TIME" is undefined
+    397                {
+    398                  /* Active low: get current state of button */
+    399                  if(Buttons_asArray[i].eActiveState == BUTTON_ACTIVE_LOW)
+                                                               ^
+Error[Pe020]: identifier "BUTTON_ACTIVE_LOW" is undefined
+    400                  {
+    401                    if( ~(*pu32PortAddress) & Button_au32ButtonPins[i] )
+                                                     ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    402                    {          
+    403                      Button_aeNewState[i] = PRESSED;
+                                                    ^
+Error[Pe020]: identifier "PRESSED" is undefined
+    404                    }
+    405                    else
+    406                    {
+    407                      Button_aeNewState[i] = RELEASED;
+                                                    ^
+Error[Pe020]: identifier "RELEASED" is undefined
+    408                    }
+    409                  }
+    410                  /* Active high */
+    411                  else
+    412                  {
+    413                    if( *pu32PortAddress & Button_au32ButtonPins[i] )
+                                                  ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    414                    {          
+    415                      Button_aeNewState[i] = PRESSED;
+                                                    ^
+Error[Pe020]: identifier "PRESSED" is undefined
+    416                    }
+    417                    else
+    418                    {
+    419                      Button_aeNewState[i] = RELEASED;
+                                                    ^
+Error[Pe020]: identifier "RELEASED" is undefined
+    420                    }
+    421                  }
+    422                  
+    423                  /* Update if the button state has changed */
+    424                  if( Button_aeNewState[i] != Button_aeCurrentState[i] )
+    425                  {
+    426                    Button_aeCurrentState[i] = Button_aeNewState[i];
+    427                    if(Button_aeCurrentState[i] == PRESSED)
+                                                          ^
+Error[Pe020]: identifier "PRESSED" is undefined
+    428                    {
+    429                      Button_abNewPress[i] = TRUE;
+                                                    ^
+Error[Pe020]: identifier "TRUE" is undefined
+    430                      Button_au32HoldTimeStart[i] = G_u32SystemTime1ms;
+    431                    }
+    432                  }
+    433          
+    434                  /* Regardless of a good press or not, clear the debounce active flag and re-enable the interrupts */
+    435                  G_abButtonDebounceActive[i] = FALSE;
+                                                       ^
+Error[Pe020]: identifier "FALSE" is undefined
+    436                  *pu32InterruptAddress |= Button_au32ButtonPins[i];
+                                                  ^
+Error[Pe020]: identifier "Button_au32ButtonPins" is undefined
+    437                  
+    438                } /* end if( IsTimeUp...) */
+    439              } /* end if(G_abButtonDebounceActive[index]) */
+    440            } /* end for i */
+    441            
+    442          } /* end ButtonSM_ButtonActive() */
+    443          
+    444          
+    445          
+    446          /*--------------------------------------------------------------------------------------------------------------------*/
+    447          /* End of File */
+    448          /*--------------------------------------------------------------------------------------------------------------------*/
+
+Errors: 42
+Warnings: 1

@@ -1,0 +1,160 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:39
+# Copyright 1999-2017 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\ant_integration.c
+#    Command line =  
+#        -f C:\Users\Vipin\AppData\Local\Temp\EW80A2.tmp
+#        (C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\ant_integration.c -D NRF51
+#        -lC C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
+#        --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering
+#        --no_scheduling --debug --endian=little --cpu=Cortex-M0 -e --fpu=None
+#        --dlib_config "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\INC\c\DLib_Config_Normal.h" -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\bsp\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\application\ -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\s310\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\ble_services\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\ble\device_manager\
+#        -I
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\nordic_sdk6_1_0\Include\app_common\
+#        -I C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\..\drivers\ -On -I
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        8.0\arm\CMSIS\Include\")
+#    Locale       =  C
+#    List file    =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List\ant_integration.lst
+#    Object file  =  
+#        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj\ant_integration.o
+#
+###############################################################################
+
+C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\ant_integration.c
+      1          /**********************************************************************************************************************
+      2          File: ant_integration.c                                                                
+      3          
+      4          Description:
+      5          This is a ant_integration .c file new source code
+      6          **********************************************************************************************************************/
+      7          
+      8          #include "configuration.h"
+      9          
+     10          /***********************************************************************************************************************
+     11          Global variable definitions with scope across entire project.
+     12          All Global variable names shall start with "G_"
+     13          ***********************************************************************************************************************/
+     14          /* New variables */
+
+   \                                 In section .bss, align 4
+     15          volatile u32 G_u32ANTIntegrationFlags;                 /* Global state flags */
+   \                     G_u32ANTIntegrationFlags:
+   \   00000000                      DS8 4
+     16          
+     17          
+     18          /*--------------------------------------------------------------------------------------------------------------------*/
+     19          /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
+     20          extern volatile u32 G_u32SystemFlags;                  /* From main.c */
+     21          
+     22          extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
+     23          extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
+     24          
+     25          
+     26          /***********************************************************************************************************************
+     27          Global variable definitions with scope limited to this local application.
+     28          Variable names shall start with "SocInt_" and be declared as static.
+     29          ***********************************************************************************************************************/
+     30          static u32 ANTInt_u32Timeout;                      /* Timeout counter used across states */
+                            ^
+Warning[Pe177]: variable "ANTInt_u32Timeout" was declared but never referenced
+     31          
+     32          
+     33          /*--------------------------------------------------------------------------------------------------------------------*/
+     34          /* Private Function Declarations.                                                                                                   */
+     35          /*--------------------------------------------------------------------------------------------------------------------*/
+     36          
+     37          /**********************************************************************************************************************
+     38          Function Definitions
+     39          **********************************************************************************************************************/
+     40          /*--------------------------------------------------------------------------------------------------------------------*/
+     41          /* Public functions                                                                                                   */
+     42          /*--------------------------------------------------------------------------------------------------------------------*/
+     43          
+     44          /*--------------------------------------------------------------------------------------------------------------------*/
+     45          /* Protected functions                                                                                                */
+     46          /*--------------------------------------------------------------------------------------------------------------------*/
+
+   \                                 In section .text, align 2, keep-with-next
+     47          bool ANTIntegrationInitialize(void)
+     48          {
+   \                     ANTIntegrationInitialize: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+     49            return sd_ant_stack_reset() == NRF_SUCCESS;
+   \   00000002   0xDFC0             SVC      0xC0
+   \   00000004   0x2800             CMP      R0,#+0
+   \   00000006   0xD101             BNE      ??ANTIntegrationInitialize_0
+   \   00000008   0x2001             MOVS     R0,#+1
+   \   0000000A   0xE000             B        ??ANTIntegrationInitialize_1
+   \                     ??ANTIntegrationInitialize_0: (+1)
+   \   0000000C   0x2000             MOVS     R0,#+0
+   \                     ??ANTIntegrationInitialize_1: (+1)
+   \   0000000E   0xB2C0             UXTB     R0,R0
+   \   00000010   0xBD02             POP      {R1,PC}          ;; return
+     50          }
+     51          
+     52          /**
+     53          *   Handle the Stack Event to determine if ANT message. If 
+     54          *   ANT Message, then set event.                       
+     55          */
+
+   \                                 In section .text, align 2, keep-with-next
+     56          void ANTIntegrationHandler()
+     57          {
+     58              
+     59          }
+   \                     ANTIntegrationHandler: (+1)
+   \   00000000   0x4770             BX       LR               ;; return
+     60          
+     61          
+     62          
+     63          /*--------------------------------------------------------------------------------------------------------------------*/
+     64          /* End of File                                                                                                        */
+     65          /*--------------------------------------------------------------------------------------------------------------------*/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   ANTIntegrationHandler
+       8   ANTIntegrationInitialize
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       2  ANTIntegrationHandler
+      18  ANTIntegrationInitialize
+       4  G_u32ANTIntegrationFlags
+
+ 
+  4 bytes in section .bss
+ 20 bytes in section .text
+ 
+ 20 bytes of CODE memory
+  4 bytes of DATA memory
+
+Errors: none
+Warnings: 1
