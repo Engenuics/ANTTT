@@ -175,8 +175,7 @@ void LedOff(LedNumberType eLED_)
   }
 
   /* Always set the LED back to LED_NORMAL_MODE mode */
-	Leds_asLedArray[(u8)eLED_].eMode = LED_NORMAL_MODE;
-  
+  Leds_asLedArray[(u8)eLED_].eMode = LED_NORMAL_MODE;
 } /* end LedOff() */
 
 

@@ -46,6 +46,7 @@ Includes
 #include "nrf_assert.h"
 #include "nrf_delay.h"
 #include "nrf_error.h"
+#include "nrf_gpio.h"
 #include "nrf_gpiote.h"
 #include "nrf_soc.h"
 #include "nrf_sdm.h"
@@ -85,7 +86,9 @@ Includes
 #include "anttt-ehdw-04.h"
 
 /* Driver header files */
+#include "buttons.h"
 #include "leds_anttt.h" 
+
 
 /* Application header files */
 #include "anttt.h"

@@ -12,18 +12,18 @@ MPG1: The argument u32Button_ is either BUTTON0 or BUTTON1.
 
 Public:
 bool IsButtonPressed(u32 u32Button_)
-Returns TRUE if a particular button is currently pressed (and debounced).
+Returns true if a particular button is currently pressed (and debounced).
 
 bool WasButtonPressed(u32 u32Button_)
-Returns TRUE if a particular button was pressed since last time it was checked even if it is no longer pressed.
-ButtonAcknowledge is typically called immediately after WasButtonPressed() returns TRUE to clear the button
+Returns true if a particular button was pressed since last time it was checked even if it is no longer pressed.
+ButtonAcknowledge is typically called immediately after WasButtonPressed() returns true to clear the button
 pressed state.
 
 void ButtonAcknowledge(u32 u32Button_)
-Clears the New Press state of a button -- generally always called after WasButtonPressed() returns TRUE.
+Clears the New Press state of a button -- generally always called after WasButtonPressed() returns true.
 
 bool IsButtonHeld(u32 u32Button_, u32 u32ButtonHeldTime_)
-Returns TRUE if a button has been held for u32ButtonHeldTime_ time in milliseconds.
+Returns true if a button has been held for u32ButtonHeldTime_ time in milliseconds.
 
 Protected:
 void ButtonInitialize(void)
@@ -68,7 +68,7 @@ static ButtonStateType Button_aeCurrentState[TOTAL_BUTTONS];/* Current pressed s
 static ButtonStateType Button_aeNewState[TOTAL_BUTTONS];    /* New (pending) pressed state of button */
 static u32 Button_au32HoldTimeStart[TOTAL_BUTTONS];         /* System 1ms time when a button press started */
 static bool Button_abNewPress[TOTAL_BUTTONS];               /* Flags to indicate a button was pressed */    
-
+static u8 u8ActiveCol;                                      /* Current Active Button Column */                                                                                    
 
 
 /***********************************************************************************************************************
@@ -84,24 +84,24 @@ Function: IsButtonPressed
 Description:
 Determine if a particular button is currently pressed at this moment in time.
 The button must still be pressed at the time of this inquiry for the function
-to return TRUE.
+to return true.
 
 Requires:
   - u32Button_ is a valid button index
   - Button_aeCurrentState[u32Button_] is a valid index
  
 Promises:
-  - Returns TRUE if Button_aeCurrentState[u32Button_] is pressed; otherwise returns FALSE
+  - Returns true if Button_aeCurrentState[u32Button_] is pressed; otherwise returns false
 */
 bool IsButtonPressed(u32 u32Button_)
 {
   if( Button_aeCurrentState[u32Button_] == PRESSED)
   {
-    return(TRUE);
+    return(true);
   }
   else
   {
-    return(FALSE);
+    return(false);
   }
 
 } /* end IsButtonPressed() */
@@ -121,17 +121,17 @@ Requires:
   - Button_aeCurrentState[u32Button_] is valid
  
 Promises:
-  - Returns TRUE if Button_abNewPress[u32Button_] is TRUE; other wise returns FALSE
+  - Returns true if Button_abNewPress[u32Button_] is true; other wise returns false
 */
 bool WasButtonPressed(u32 u32Button_)
 {
-  if( Button_abNewPress[u32Button_] == TRUE)
+  if( Button_abNewPress[u32Button_] == true)
   {
-    return(TRUE);
+    return(true);
   }
   else
   {
-    return(FALSE);
+    return(false);
   }
 
 } /* end WasButtonPressed() */
@@ -147,11 +147,11 @@ Requires:
   - u32Button_ is a valid button index
  
 Promises:
-  - The flag at Button_abNewPress[u32Button_] is set to FALSE
+  - The flag at Button_abNewPress[u32Button_] is set to false
 */
 void ButtonAcknowledge(u32 u32Button_)
 {
-  Button_abNewPress[u32Button_] = FALSE;
+  Button_abNewPress[u32Button_] = false;
 
 } /* end ButtonAcknowledge() */
 
@@ -161,25 +161,25 @@ Function: IsButtonHeld
 
 Description:
 Queries to see if a button has been held for a certain time.  The button
-must still be pressed when this function is called if it is to return TRUE.
+must still be pressed when this function is called if it is to return true.
 
 Requires:
   - u32Button_ is a valid button index
   - u32ButtonHeldTime is a time in ms 
  
 Promises:
-  - Returns TRUE if eButton_ has been held longer than u32ButtonHeldTime_
+  - Returns true if eButton_ has been held longer than u32ButtonHeldTime_
 */
 bool IsButtonHeld(u32 u32Button_, u32 u32ButtonHeldTime_)
 {
  if( IsButtonPressed(u32Button_) && 
      IsTimeUp(&Button_au32HoldTimeStart[u32Button_], u32ButtonHeldTime_ ) )
  {
-   return(TRUE);
+   return(true);
  }
  else
  {
-   return(FALSE);
+   return(false);
  }
 
 } /* end IsButtonHeld() */
@@ -207,19 +207,18 @@ Promises:
 */
 void ButtonInitialize(void)
 {
-  u32 u32PortAInterruptMask = 0;
-  u32 u32PortBInterruptMask = 0;
+  u8ActiveCol = 0;      // Set initial active col.
   
   /* Setup default data for all of the buttons in the system */
   for(u8 i = 0; i < TOTAL_BUTTONS; i++)
   {
-    G_abButtonDebounceActive[i] = FALSE;
+    G_abButtonDebounceActive[i] = false;
     Button_aeCurrentState[i]    = RELEASED;
     Button_aeNewState[i]        = RELEASED;
   }
   
   // Initialize BUTTON_COLS to initial state.
-  nrf_gpio_pin_clr(BUTTON_COL1_PIN);    // Enabled Column (ACTIVE LOW)
+  nrf_gpio_pin_set(BUTTON_COL1_PIN);    // Disabled Column (ACTIVE LOW)
   nrf_gpio_pin_set(BUTTON_COL2_PIN);    // Disabled Column
   nrf_gpio_pin_set(BUTTON_COL3_PIN);    // Disabled Column
   
@@ -229,10 +228,8 @@ void ButtonInitialize(void)
   nrf_gpiote_event_config(BUTTON_ROW3_GPIOTE_CHANNEL, BUTTON_ROW3_PIN, NRF_GPIOTE_POLARITY_TOGGLE);
   NRF_GPIOTE->INTENSET = (GPIOTE_INTENSET_IN0_Msk | GPIOTE_INTENSET_IN1_Msk | GPIOTE_INTENSET_IN2_Msk);  
   
-   
   /* Init complete: set function pointer and application flag */
   Button_pfnStateMachine = ButtonSM_Idle;
-  G_u32ApplicationFlags |= _APPLICATION_FLAGS_BUTTON;
  } /* end ButtonInitialize() */
 
 
@@ -259,16 +256,7 @@ void ButtonRunActiveState(void)
 
 u8 Button_get_active_column(void)
 {
-   // Check the col that is active and return its corresponding index (0-2)
-   // Only one col can be active at a time (active_low)
-   if (nrf_gpio_pin_read(BUTTON_COL1_PIN) == 0)
-      return 0;
-   else if (nrf_gpio_pin_read(BUTTON_COL2_PIN) == 0)
-      return 1;
-   else  if (nrf_gpio_pin_read(BUTTON_COL3_PIN) == 0)
-      return 2;
-
-   return 0xFF;
+   return u8ActiveCol;
 }
 
 
@@ -279,15 +267,36 @@ static void Button_rotate_columns(void)
 {
    if (G_u32SystemTime1ms % BUTTON_COLUMN_SWITCH_TIME_MS)
    {
-      nrf_gpio_pin_toggle(BUTTON_COL1_PIN);
-      nrf_gpio_pin_toggle(BUTTON_COL2_PIN);
-      nrf_gpio_pin_toggle(BUTTON_COL3_PIN);
+     u8ActiveCol++;
+     if (u8ActiveCol >= 3)
+       u8ActiveCol = 0;
+     
+     switch (u8ActiveCol)
+     {
+        case 0:
+          nrf_gpio_pin_clear(BUTTON_COL1_PIN);
+          nrf_gpio_pin_set(BUTTON_COL2_PIN);
+          nrf_gpio_pin_set(BUTTON_COL3_PIN);
+          break;
+        case 1:
+          nrf_gpio_pin_clear(BUTTON_COL2_PIN);
+          nrf_gpio_pin_set(BUTTON_COL1_PIN);
+          nrf_gpio_pin_set(BUTTON_COL3_PIN);
+          break;
+        case 2:
+          nrf_gpio_pin_clear(BUTTON_COL3_PIN);
+          nrf_gpio_pin_set(BUTTON_COL1_PIN);
+          nrf_gpio_pin_set(BUTTON_COL2_PIN);
+          break;
+        default:
+          break;
+     }
    }
 }
 
 static bool Button_is_still_pressed(u8 button)
 {
-   row = (button - Button_get_active_column()) / 3;   // Row corresponding 
+   u8 row = (button - Button_get_active_column()) / 3;   // Row corresponding 
 
    // Map Row Index to Pin and check if pin is low (active low)
    if (row == 0)
@@ -312,15 +321,25 @@ maintaining the global button states.
 /* Do nothing but wait for a debounce time to start */
 static void ButtonSM_Idle(void)                
 {
+  bool is_any_button_debouncing = false;
+  
   for(u8 i = 0; i < TOTAL_BUTTONS; i++)
   {
     if(G_abButtonDebounceActive[i])
     {
+      is_any_button_debouncing = true;
       Button_pfnStateMachine = ButtonSM_ButtonActive;
     }
   }
-
-  button_rotate_columns();
+   
+  // Check that no button is debouncing.
+  if (!is_any_button_debouncing)
+  {
+     u8 status;
+     SystemEnterCriticalSection(&status);
+     Button_rotate_columns();
+     SystemExitCriticalSection(status);  
+  }
 } /* end ButtonSM_Idle(void) */
 
 
@@ -348,7 +367,6 @@ static void ButtonSM_ButtonActive(void)
          {
             Button_aeNewState[i] = RELEASED;
          }
-        }
         
         /* Update if the button state has changed */
         if( Button_aeNewState[i] != Button_aeCurrentState[i] )
@@ -356,13 +374,13 @@ static void ButtonSM_ButtonActive(void)
           Button_aeCurrentState[i] = Button_aeNewState[i];
           if(Button_aeCurrentState[i] == PRESSED)
           {
-            Button_abNewPress[i] = TRUE;
+            Button_abNewPress[i] = true;
             Button_au32HoldTimeStart[i] = G_u32SystemTime1ms;
           }
         }
 
         /* Regardless of a good press or not, clear the debounce active flag and re-enable the interrupts */
-        G_abButtonDebounceActive[i] = FALSE;
+        G_abButtonDebounceActive[i] = false;
         NRF_GPIOTE->INTENSET = (GPIOTE_INTENSET_IN0_Msk | GPIOTE_INTENSET_IN1_Msk | GPIOTE_INTENSET_IN2_Msk);  
       } /* end if( IsTimeUp...) */
     } /* end if(G_abButtonDebounceActive[index]) */

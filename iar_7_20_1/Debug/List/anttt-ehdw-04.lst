@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:39
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       31/Dec/2017  12:56:25
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
 #    Endian       =  little
 #    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\anttt-ehdw-04.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EW80A1.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWB792.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\anttt-ehdw-04.c -D NRF51
 #        -lC C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
@@ -429,7 +429,7 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\anttt-ehdw-04.c
     208          */
 
    \                                 In section .text, align 2, keep-with-next
-    209          u32 SysTickSetup(void)
+    209          void SysTickSetup(void)
     210          {
     211            /* Configure the RTC to give a 1ms tick */
     212            NRF_RTC1->TASKS_STOP = 1;
@@ -460,9 +460,6 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\anttt-ehdw-04.c
    \   00000020   0x....             LDR      R1,??DataTable4_45  ;; 0x40011000
    \   00000022   0x6008             STR      R0,[R1, #+0]
     220          } /* end SysTickSetup() */
-                 ^
-Warning[Pe940]: missing return statement at end of non-void function
-          "SysTickSetup"
    \   00000024   0x4770             BX       LR               ;; return
     221          
     222          
@@ -488,6 +485,55 @@ Warning[Pe940]: missing return statement at end of non-void function
    \   00000000   0xDF3D             SVC      0x3D
     239          } /* end SystemSleep(void) */
    \   00000002   0x4770             BX       LR               ;; return
+    240          
+    241          
+
+   \                                 In section .text, align 2, keep-with-next
+    242          bool SystemEnterCriticalSection(u8* nested_status)
+    243          {
+   \                     SystemEnterCriticalSection: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0x0001             MOVS     R1,R0
+    244            sd_nvic_critical_region_enter(nested_status);
+   \   00000004   0x0008             MOVS     R0,R1
+   \   00000006   0xDF2B             SVC      0x2B
+    245            
+    246            return (nested_status == 0);
+   \   00000008   0x2900             CMP      R1,#+0
+   \   0000000A   0xD101             BNE      ??SystemEnterCriticalSection_0
+   \   0000000C   0x2001             MOVS     R0,#+1
+   \   0000000E   0xE000             B        ??SystemEnterCriticalSection_1
+   \                     ??SystemEnterCriticalSection_0: (+1)
+   \   00000010   0x2000             MOVS     R0,#+0
+   \                     ??SystemEnterCriticalSection_1: (+1)
+   \   00000012   0xB2C0             UXTB     R0,R0
+   \   00000014   0xBD02             POP      {R1,PC}          ;; return
+    247          }
+    248          
+
+   \                                 In section .text, align 2, keep-with-next
+    249          bool SystemExitCriticalSection(u8 nested_status)
+    250          {
+   \                     SystemExitCriticalSection: (+1)
+   \   00000000   0xB580             PUSH     {R7,LR}
+   \   00000002   0x0001             MOVS     R1,R0
+    251            sd_nvic_critical_region_exit(nested_status);
+   \   00000004   0x0008             MOVS     R0,R1
+   \   00000006   0xB2C0             UXTB     R0,R0
+   \   00000008   0xDF2C             SVC      0x2C
+    252            
+    253            return (nested_status == 0);
+   \   0000000A   0xB2C9             UXTB     R1,R1
+   \   0000000C   0x2900             CMP      R1,#+0
+   \   0000000E   0xD101             BNE      ??SystemExitCriticalSection_0
+   \   00000010   0x2001             MOVS     R0,#+1
+   \   00000012   0xE000             B        ??SystemExitCriticalSection_1
+   \                     ??SystemExitCriticalSection_0: (+1)
+   \   00000014   0x2000             MOVS     R0,#+0
+   \                     ??SystemExitCriticalSection_1: (+1)
+   \   00000016   0xB2C0             UXTB     R0,R0
+   \   00000018   0xBD02             POP      {R1,PC}          ;; return
+    254          }
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable4:
@@ -672,13 +718,14 @@ Warning[Pe940]: missing return statement at end of non-void function
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable4_45:
    \   00000000   0x40011000         DC32     0x40011000
-    240          
-    241          /*--------------------------------------------------------------------------------------------------------------------*/
-    242          /* End of File */
-    243          /*--------------------------------------------------------------------------------------------------------------------*/
-    244          
-    245          
-    246          
+    255          
+    256          
+    257          /*--------------------------------------------------------------------------------------------------------------------*/
+    258          /* End of File */
+    259          /*--------------------------------------------------------------------------------------------------------------------*/
+    260          
+    261          
+    262          
 
    Maximum stack usage in bytes:
 
@@ -689,6 +736,8 @@ Warning[Pe940]: missing return statement at end of non-void function
        0   InterruptSetup
        0   PowerSetup
        0   SysTickSetup
+       8   SystemEnterCriticalSection
+       8   SystemExitCriticalSection
        0   SystemSleep
        0   WatchDogSetup
 
@@ -750,15 +799,17 @@ Warning[Pe940]: missing return statement at end of non-void function
        2  InterruptSetup
       14  PowerSetup
       38  SysTickSetup
+      22  SystemEnterCriticalSection
+      26  SystemExitCriticalSection
        4  SystemSleep
        2  WatchDogSetup
 
  
    8 bytes in section .bss
- 526 bytes in section .text
+ 574 bytes in section .text
  
- 526 bytes of CODE memory
+ 574 bytes of CODE memory
    8 bytes of DATA memory
 
 Errors: none
-Warnings: 1
+Warnings: none

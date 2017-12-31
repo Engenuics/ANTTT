@@ -28,7 +28,7 @@ extern volatile u32 G_u32SystemFlags;                  /* From main.c */
 
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
-extern volatile bool G_abButtonDebounceActive;
+extern volatile bool G_abButtonDebounceActive[TOTAL_BUTTONS];
 extern volatile u32 G_au32ButtonDebounceTimeStart[TOTAL_BUTTONS];
 
 /***********************************************************************************************************************
@@ -56,6 +56,14 @@ Promises:
 */
 bool InterruptsInitialize(void)
 {
+#define SD_PRESENT 1
+#ifndef SD_PRESENT  
+  NVIC_ClearPendingIRQ(RTC1_IRQn);
+  NVIC_EnableIRQ(RTC1_IRQn);
+  
+  NVIC_ClearPendingIRQ(GPIOTE_IRQn);
+  NVIC_EnableIRQ(GPIOTE_IRQn);
+#else
   u32 result = NRF_SUCCESS;
   
   // Must enable the SoftDevice Interrupt first.
@@ -69,8 +77,11 @@ bool InterruptsInitialize(void)
   // Enable the GPIOTE Peripheral.
   result |= sd_nvic_SetPriority(GPIOTE_IRQn, NRF_APP_PRIORITY_LOW);
   result |= sd_nvic_EnableIRQ(GPIOTE_IRQn);
-  
+
   return (result == NRF_SUCCESS);
+#endif
+  
+
 } /* end InterruptsInitialize() */
 
 
@@ -84,7 +95,6 @@ void HardFault_Handler(u32 u32ProgramCounter_, u32 u32LinkRegister_)
   (void)u32LinkRegister_;
 
    while(1); // loop for debugging
-   NVIC_SystemReset();
 }
 
 
@@ -150,20 +160,17 @@ void GPIOTE_IRQHandler(void)
       // Check if Interrupt occured on this channel.
       if (NRF_GPIOTE->EVENTS_IN[channel] == 1)
       {
-         button_index = (channel * 2 + channel) + Button_get_active_column();
+         u8 button_index = (channel * 2 + channel) + Button_get_active_column();
          
          // Clear Channel Interrupt and Set Button Debounce Flags on buttons.
          // SW_ROWx + Active COLx corresponds to the Index of the button being pressed (0-8).
          NRF_GPIOTE->EVENTS_IN[channel] = 0;   // Clear Channel Event.
-         G_abButtonDebounceActive[button_index] = TRUE;
+         G_abButtonDebounceActive[button_index] = true;
          G_au32ButtonDebounceTimeStart[button_index] = G_u32SystemTime1ms;
          return;
       }
    }
 }
-
-
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File                                                                                                        */
 /*--------------------------------------------------------------------------------------------------------------------*/

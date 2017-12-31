@@ -71,6 +71,7 @@ void main(void)
   
   /* Driver initialization */
   LedInitialize();
+  ButtonInitialize();
   //AntInitialize();
   ANTIntegrationInitialize();
   BLEIntegrationInitialize();
@@ -90,12 +91,11 @@ void main(void)
     
     /* State Machines */
     ANTT_SM();
-    
-    
+    ButtonRunActiveState();
+   
     /* System sleep*/
     SystemSleep();
   } /* end while(1) main super loop */
-  
 } /* end main() */
 
 
@@ -117,7 +117,8 @@ Promises:
 */
 void callback_bleperipheral_engenuics_data_rx(u8* data, u8 len)
 {
-  
+  // Forward handling to ANTTT module.
+  AntttHandleIncomingMessage(data, len);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

@@ -206,7 +206,7 @@ Requires:
 Promises:
   - RTC1 is active and providing a 1ms interrupt.
 */
-u32 SysTickSetup(void)
+void SysTickSetup(void)
 {
   /* Configure the RTC to give a 1ms tick */
   NRF_RTC1->TASKS_STOP = 1;
@@ -237,6 +237,22 @@ void SystemSleep(void)
 {    
     sd_app_evt_wait();
 } /* end SystemSleep(void) */
+
+
+bool SystemEnterCriticalSection(u8* nested_status)
+{
+  sd_nvic_critical_region_enter(nested_status);
+  
+  return (nested_status == 0);
+}
+
+bool SystemExitCriticalSection(u8 nested_status)
+{
+  sd_nvic_critical_region_exit(nested_status);
+  
+  return (nested_status == 0);
+}
+
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File */

@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:43
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       31/Dec/2017  12:56:29
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
 #    Endian       =  little
 #    Source file  =  C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EW954A.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWCA58.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c -D NRF51 -lC
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
@@ -119,8 +119,12 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
    \                     main: (+1)
    \   00000000   0xB538             PUSH     {R3-R5,LR}
      47            u32 u32Counter = 0;
+                       ^
+Warning[Pe177]: variable "u32Counter" was declared but never referenced
    \   00000002   0x2400             MOVS     R4,#+0
      48            u32 u32M3PeriodCounter = 0;
+                       ^
+Warning[Pe177]: variable "u32M3PeriodCounter" was declared but never referenced
    \   00000004   0x2500             MOVS     R5,#+0
      49            
      50            G_u32SystemFlags |= _SYSTEM_INITIALIZING;
@@ -168,61 +172,51 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c
      72            /* Driver initialization */
      73            LedInitialize();
    \   00000036   0x.... 0x....      BL       LedInitialize
-     74            //AntInitialize();
-     75            ANTIntegrationInitialize();
-   \   0000003A   0x.... 0x....      BL       ANTIntegrationInitialize
-     76            BLEIntegrationInitialize();
-   \   0000003E   0x.... 0x....      BL       BLEIntegrationInitialize
-     77            bleperipheralInitialize();
-   \   00000042   0x.... 0x....      BL       bleperipheralInitialize
-     78            
-     79            /* Application initialization */
-     80            AntttInitialize();
-   \   00000046   0x.... 0x....      BL       AntttInitialize
-     81            
-     82            /* Exit initialization */
-     83            G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
-   \   0000004A   0x....             LDR      R0,??DataTable0
-   \   0000004C   0x6800             LDR      R0,[R0, #+0]
-   \   0000004E   0x0040             LSLS     R0,R0,#+1        ;; ZeroExtS R0,R0,#+1,#+1
-   \   00000050   0x0840             LSRS     R0,R0,#+1
-   \   00000052   0x....             LDR      R1,??DataTable0
-   \   00000054   0x6008             STR      R0,[R1, #+0]
-     84            
-     85            /* Main loop */  
-     86            while(1)
-     87            {
-     88              SocIntegrationHandler();
-                     ^
-Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
-
-    u32 u32Counter = 0;
-        ^
-"C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c",47  Warning[Pe177]: 
-          variable "u32Counter" was declared but never referenced
-
-    u32 u32M3PeriodCounter = 0;
-        ^
-"C:\Users\Vipin\Documents\GitHub\ANTTT\application\main.c",48  Warning[Pe177]: 
-          variable "u32M3PeriodCounter" was declared but never referenced
+     74            ButtonInitialize();
+   \   0000003A   0x.... 0x....      BL       ButtonInitialize
+     75            //AntInitialize();
+     76            ANTIntegrationInitialize();
+   \   0000003E   0x.... 0x....      BL       ANTIntegrationInitialize
+     77            BLEIntegrationInitialize();
+   \   00000042   0x.... 0x....      BL       BLEIntegrationInitialize
+     78            bleperipheralInitialize();
+   \   00000046   0x.... 0x....      BL       bleperipheralInitialize
+     79            
+     80            /* Application initialization */
+     81            AntttInitialize();
+   \   0000004A   0x.... 0x....      BL       AntttInitialize
+     82            
+     83            /* Exit initialization */
+     84            G_u32SystemFlags &= ~_SYSTEM_INITIALIZING;
+   \   0000004E   0x....             LDR      R0,??DataTable0
+   \   00000050   0x6800             LDR      R0,[R0, #+0]
+   \   00000052   0x0040             LSLS     R0,R0,#+1        ;; ZeroExtS R0,R0,#+1,#+1
+   \   00000054   0x0840             LSRS     R0,R0,#+1
+   \   00000056   0x....             LDR      R1,??DataTable0
+   \   00000058   0x6008             STR      R0,[R1, #+0]
+     85            
+     86            /* Main loop */  
+     87            while(1)
+     88            {
+     89              SocIntegrationHandler();
    \                     ??main_2: (+1)
-   \   00000056   0x.... 0x....      BL       SocIntegrationHandler
-     89              LedUpdate();
-   \   0000005A   0x.... 0x....      BL       LedUpdate
-     90              
-     91              /* State Machines */
-     92              ANTT_SM();
-   \   0000005E   0x....             LDR      R0,??DataTable0_1
-   \   00000060   0x6800             LDR      R0,[R0, #+0]
-   \   00000062   0x4780             BLX      R0
-     93              
-     94              
-     95              /* System sleep*/
-     96              SystemSleep();
-   \   00000064   0x.... 0x....      BL       SystemSleep
-   \   00000068   0xE7F5             B        ??main_2
-     97            } /* end while(1) main super loop */
-     98            
+   \   0000005A   0x.... 0x....      BL       SocIntegrationHandler
+     90              LedUpdate();
+   \   0000005E   0x.... 0x....      BL       LedUpdate
+     91              
+     92              /* State Machines */
+     93              ANTT_SM();
+   \   00000062   0x....             LDR      R0,??DataTable0_1
+   \   00000064   0x6800             LDR      R0,[R0, #+0]
+   \   00000066   0x4780             BLX      R0
+     94              ButtonRunActiveState();
+   \   00000068   0x.... 0x....      BL       ButtonRunActiveState
+     95             
+     96              /* System sleep*/
+     97              SystemSleep();
+   \   0000006C   0x.... 0x....      BL       SystemSleep
+   \   00000070   0xE7F3             B        ??main_2
+     98            } /* end while(1) main super loop */
      99          } /* end main() */
     100          
     101          
@@ -246,10 +240,18 @@ Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
    \                                 In section .text, align 2, keep-with-next
     118          void callback_bleperipheral_engenuics_data_rx(u8* data, u8 len)
     119          {
-    120            
-    121          }
    \                     callback_bleperipheral_engenuics_data_rx: (+1)
-   \   00000000   0x4770             BX       LR               ;; return
+   \   00000000   0xB538             PUSH     {R3-R5,LR}
+   \   00000002   0x0005             MOVS     R5,R0
+   \   00000004   0x000C             MOVS     R4,R1
+    120            // Forward handling to ANTTT module.
+    121            AntttHandleIncomingMessage(data, len);
+   \   00000006   0x0021             MOVS     R1,R4
+   \   00000008   0xB2C9             UXTB     R1,R1
+   \   0000000A   0x0028             MOVS     R0,R5
+   \   0000000C   0x.... 0x....      BL       AntttHandleIncomingMessage
+    122          }
+   \   00000010   0xBD31             POP      {R0,R4,R5,PC}    ;; return
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable0:
@@ -258,21 +260,24 @@ Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable0_1:
    \   00000000   0x........         DC32     ANTT_SM
-    122          
-    123          /*--------------------------------------------------------------------------------------------------------------------*/
-    124          /* End of File */
-    125          /*--------------------------------------------------------------------------------------------------------------------*/
+    123          
+    124          /*--------------------------------------------------------------------------------------------------------------------*/
+    125          /* End of File */
+    126          /*--------------------------------------------------------------------------------------------------------------------*/
 
    Maximum stack usage in bytes:
 
    .cstack Function
    ------- --------
-       0   callback_bleperipheral_engenuics_data_rx
+      16   callback_bleperipheral_engenuics_data_rx
+        16   -> AntttHandleIncomingMessage
       16   main
         16   -- Indirect call
         16   -> ANTIntegrationInitialize
         16   -> AntttInitialize
         16   -> BLEIntegrationInitialize
+        16   -> ButtonInitialize
+        16   -> ButtonRunActiveState
         16   -> ClockSetup
         16   -> GpioSetup
         16   -> InterruptsInitialize
@@ -295,16 +300,16 @@ Warning[Pe223]: function "SocIntegrationHandler" declared implicitly
        4  G_u32SystemFlags
        4  Main_u32ErrorCode
       28  Main_u8TestMessage
-       2  callback_bleperipheral_engenuics_data_rx
-     106  main
+      18  callback_bleperipheral_engenuics_data_rx
+     114  main
 
  
    8 bytes in section .bss
   28 bytes in section .data
- 116 bytes in section .text
+ 140 bytes in section .text
  
- 116 bytes of CODE memory
+ 140 bytes of CODE memory
   36 bytes of DATA memory
 
 Errors: none
-Warnings: 3
+Warnings: 2

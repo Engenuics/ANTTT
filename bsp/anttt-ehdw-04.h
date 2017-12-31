@@ -38,8 +38,10 @@ void PowerSetup(void);
 void GpioSetup(void);
 void ClockSetup(void);
 void InterruptSetup(void);
-u32 SysTickSetup(void);
+void SysTickSetup(void);
 void SystemSleep(void);
+bool SystemEnterCriticalSection(u8* nested_status);
+bool SystemExitCriticalSection(u8 nested_status);
 
 
 /***********************************************************************************************************************

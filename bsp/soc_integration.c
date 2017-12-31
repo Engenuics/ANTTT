@@ -115,7 +115,6 @@ Promises:
 void softdevice_assert_callback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName)
 {
    while (1);
-   NVIC_SystemReset();
 }
 
 

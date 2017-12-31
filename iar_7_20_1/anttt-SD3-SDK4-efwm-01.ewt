@@ -2369,6 +2369,9 @@
                 <name>$PROJ_DIR$\..\bsp\bleperipheral.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\drivers\buttons.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\bsp\interrupts.c</name>
             </file>
             <file>

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       28/Dec/2017  14:47:43
+# IAR ANSI C/C++ Compiler V8.11.2.13589/W32 for ARM       31/Dec/2017  12:56:30
 # Copyright 1999-2017 IAR Systems AB.
 #
 #    Cpu mode     =  thumb
@@ -8,7 +8,7 @@
 #    Source file  =  
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\soc_integration.c
 #    Command line =  
-#        -f C:\Users\Vipin\AppData\Local\Temp\EW9655.tmp
+#        -f C:\Users\Vipin\AppData\Local\Temp\EWCD27.tmp
 #        (C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\soc_integration.c -D NRF51
 #        -lC C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\List -o
 #        C:\Users\Vipin\Documents\GitHub\ANTTT\iar_7_20_1\Debug\Obj --no_cse
@@ -76,6 +76,8 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\soc_integration.c
      27          Variable names shall start with "SocInt_" and be declared as static.
      28          ***********************************************************************************************************************/
      29          static u32 SocInt_u32Timeout;                      /* Timeout counter used across states */
+                            ^
+Warning[Pe177]: variable "SocInt_u32Timeout" was declared but never referenced
      30          
      31          
      32          /*--------------------------------------------------------------------------------------------------------------------*/
@@ -206,15 +208,7 @@ C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\soc_integration.c
     117             while (1);
    \                     ??softdevice_assert_callback_0: (+1)
    \   00000002   0xE7FE             B        ??softdevice_assert_callback_0
-    118             NVIC_SystemReset();
-                    ^
-Warning[Pe111]: statement is unreachable
-
-  static u32 SocInt_u32Timeout;                      /* Timeout counter used across states */
-             ^
-"C:\Users\Vipin\Documents\GitHub\ANTTT\bsp\soc_integration.c",29  Warning[Pe177]: 
-          variable "SocInt_u32Timeout" was declared but never referenced
-    119          }
+    118          }
 
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable1:
@@ -227,12 +221,12 @@ Warning[Pe111]: statement is unreachable
    \                                 In section .text, align 4, keep-with-next
    \                     ??DataTable1_2:
    \   00000000   0xFFFEFFFF         DC32     0xfffeffff
+    119          
     120          
     121          
-    122          
-    123          /*--------------------------------------------------------------------------------------------------------------------*/
-    124          /* End of File                                                                                                        */
-    125          /*--------------------------------------------------------------------------------------------------------------------*/
+    122          /*--------------------------------------------------------------------------------------------------------------------*/
+    123          /* End of File                                                                                                        */
+    124          /*--------------------------------------------------------------------------------------------------------------------*/
 
    Maximum stack usage in bytes:
 
@@ -265,4 +259,4 @@ Warning[Pe111]: statement is unreachable
   4 bytes of DATA memory
 
 Errors: none
-Warnings: 2
+Warnings: 1
