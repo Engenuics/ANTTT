@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <fileChecksum>3275720082</fileChecksum>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\..\bsp\anttt-ehdw-04.h</file>
+      <file>$PROJ_DIR$\..\bsp\ant_integration.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_error.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\anttt-ehdw-04.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\bleperipheral.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\utilities.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\anttt-ehdw-04.o</file>
+      <file>$PROJ_DIR$\Debug\Exe\anttt-SD3-SDK6_1.out</file>
+      <file>$PROJ_DIR$\Debug\Obj\ant_integration.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdbool.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\soc_integration.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\interrupts.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_integration.pbi</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf51_deprecated.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\iar_startup_nrf51.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\system_nrf51422.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Defaults.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\bleperipheral.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\anttt-SD3-SDK6_1.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\system_nrf51422.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\bleperipheral_engenuics.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\soc_integration.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ysizet.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\leds_anttt.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\buttons.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product_string.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\ycheck.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdlib.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\utilities.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Threads.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\leds_anttt.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_integration.o</file>
+      <file>$PROJ_DIR$\Debug\List\iar_startup_nrf51.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\ant_integration.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\buttons.o</file>
+      <file>$TOOLKIT_DIR$\inc\c\stdint.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_advdata.o</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\compiler_abstraction.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf51_bitfields.h</file>
+      <file>$PROJ_DIR$\Debug\List\leds_anttt.lst</file>
+      <file>$PROJ_DIR$\Debug\List\ble_integration.lst</file>
+      <file>$PROJ_DIR$\Debug\List\utilities.lst</file>
+      <file>$PROJ_DIR$\Debug\Exe\anttt-SD3-SDK6_1.hex</file>
+      <file>$PROJ_DIR$\Debug\List\ant_integration.lst</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_error_sdm.h</file>
+      <file>$PROJ_DIR$\Debug\List\main.lst</file>
+      <file>$PROJ_DIR$\Debug\List\bleperipheral_engenuics.lst</file>
+      <file>$PROJ_DIR$\Debug\List\buttons.lst</file>
+      <file>$PROJ_DIR$\..\bsp\nRF51422_QFAA.icf</file>
+      <file>$PROJ_DIR$\Debug\List\soc_integration.lst</file>
+      <file>$PROJ_DIR$\Debug\List\system_nrf51422.lst</file>
+      <file>$PROJ_DIR$\Debug\List\anttt-SD3-SDK6_1.log</file>
+      <file>$TOOLKIT_DIR$\lib\shb_l.a</file>
+      <file>$PROJ_DIR$\Debug\List\ble_advdata_parser.lst</file>
+      <file>$PROJ_DIR$\Debug\List\anttt-ehdw-04.lst</file>
+      <file>$PROJ_DIR$\Debug\List\ble_advdata.lst</file>
+      <file>$PROJ_DIR$\Debug\List\interrupts.lst</file>
+      <file>$TOOLKIT_DIR$\lib\dl6M_tln.a</file>
+      <file>$PROJ_DIR$\Debug\List\bleperipheral.lst</file>
+      <file>$TOOLKIT_DIR$\lib\rt6M_tl.a</file>
+      <file>$PROJ_DIR$\Debug\List\anttt-SD3-SDK6_1.map</file>
+      <file>$TOOLKIT_DIR$\lib\m6M_tl.a</file>
+      <file>$PROJ_DIR$\Debug\List\anttt.lst</file>
+      <file>$PROJ_DIR$\Debug\Obj\bleperipheral_engenuics.pbi</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_gatt.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.o</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_error_soc.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\cmsis_iar.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_l2cap.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\anttt.o</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_svc.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\ble\ble_services\ble_srv_common.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_err.h</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmFunc.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\anttt.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\c\intrinsics.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_gattc.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_ranges.h</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cmInstr.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata.c</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\iar_startup_nrf51.s</file>
+      <file>$PROJ_DIR$\..\application\anttt.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\system_nrf51422.c</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata_parser.c</file>
+      <file>$PROJ_DIR$\..\application\main.h</file>
+      <file>$PROJ_DIR$\..\application\typedefs.h</file>
+      <file>$PROJ_DIR$\..\application\bleperipheral_engenuics.h</file>
+      <file>$PROJ_DIR$\..\application\anttt.c</file>
+      <file>$PROJ_DIR$\..\application\bleperipheral_engenuics.c</file>
+      <file>$PROJ_DIR$\..\application\main.c</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\interrupts.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_advdata_parser.pbi</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf_gpio.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf_gpiote.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_sdm.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\nrf_soc.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf_delay.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_gap.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\ble\ble_advdata_parser.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\ble\ble_advdata.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nordic_common.h</file>
+      <file>$PROJ_DIR$\..\bsp\ble_integration.h</file>
+      <file>$TOOLKIT_DIR$\inc\c\DLib_Product.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_types.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ble_gatts.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf_assert.h</file>
+      <file>$PROJ_DIR$\..\bsp\buttons.h</file>
+      <file>$PROJ_DIR$\..\bsp\bleperipheral.h</file>
+      <file>$PROJ_DIR$\..\bsp\anttt-ehdw-04.c</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ant_parameters.h</file>
+      <file>$PROJ_DIR$\..\bsp\interrupts.c</file>
+      <file>$PROJ_DIR$\..\bsp\bleperipheral.c</file>
+      <file>$PROJ_DIR$\..\bsp\ble_integration.c</file>
+      <file>$PROJ_DIR$\..\bsp\buttons.c</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ant_error.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\nrf51.h</file>
+      <file>$PROJ_DIR$\..\bsp\utilities.c</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\s310\ant_interface.h</file>
+      <file>$PROJ_DIR$\..\bsp\soc_integration.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_advdata.pbi</file>
+      <file>$PROJ_DIR$\..\bsp\leds_anttt.c</file>
+      <file>$PROJ_DIR$\..\bsp\utilities.h</file>
+      <file>$PROJ_DIR$\..\bsp\soc_integration.h</file>
+      <file>$PROJ_DIR$\..\bsp\interrupts.h</file>
+      <file>$PROJ_DIR$\..\bsp\ant_integration.c</file>
+      <file>$PROJ_DIR$\..\bsp\leds_anttt.h</file>
+      <file>$PROJ_DIR$\..\bsp\configuration.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\app_common\app_util.h</file>
+      <file>$PROJ_DIR$\..\nordic_sdk6_1_0\Include\system_nrf51.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ble_advdata_parser.o</file>
+      <file>$TOOLKIT_DIR$\CMSIS\Include\core_cm0.h</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\anttt-SD3-SDK6_1.out</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 64 55</file>
+        </tool>
+        <tool>
+          <name>OBJCOPY</name>
+          <file> 46</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 52 36 6 73 39 136 34 18 21 37 15 12 33 69 11 16 30 56 63 65 61</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>ILINK</name>
+          <file> 7 64 55</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 59 39</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 126</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 105 38 28 9 17 94 109 32 31 10 23 24 27 103 81 110 102 74 72 76 2 68 80 111 134 41 107 75</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 105 38 28 9 17 94 109 32 31 10 23 24 27 103 81 110 102 74 72 76 2 68 80 111 134 41 107 75</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\nordic_sdk6_1_0\iar_startup_nrf51.s</name>
+      <outputs>
+        <tool>
+          <name>AARM</name>
+          <file> 15 35</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\nordic_sdk6_1_0\system_nrf51422.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 54 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 20</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 38 28 9 17 94 109 32 31 10 106 122 137 82 71 79 77 135 42 14 41</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 38 28 9 17 94 109 32 31 10 106 122 137 82 71 79 77 135 42 14 41</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\nordic_sdk6_1_0\ble_advdata_parser.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 57 136</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 96</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 104 105 38 28 9 17 94 109 32 31 10 23 24 27 103 81 110 102 74 72 76 2 68 80 111 134 41</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 104 105 38 28 9 17 94 109 32 31 10 23 24 27 103 81 110 102 74 72 76 2 68 80 111 134 41</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\application\anttt.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 66 73</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 78</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\application\bleperipheral_engenuics.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 50 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 67</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\application\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 49 69</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 40</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\anttt-ehdw-04.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 58 6</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\interrupts.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 60 12</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 95</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\bleperipheral.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 62 18</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\ble_integration.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 44 34</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\buttons.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 51 37</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\utilities.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 45 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\soc_integration.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 53 11</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\leds_anttt.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 43 33</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 25</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\bsp\ant_integration.c</name>
+      <outputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 47 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCARM</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 133 29 28 9 17 94 109 32 31 24 23 27 10 38 107 106 122 137 82 71 79 77 135 42 14 41 112 101 2 97 98 100 74 70 99 48 124 116 121 129 1 108 114 103 81 110 102 72 76 68 80 111 105 134 75 90 89 130 88 128 0 113 132 85</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>ILINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

@@ -40,6 +40,8 @@ void ClockSetup(void);
 void InterruptSetup(void);
 void SysTickSetup(void);
 void SystemSleep(void);
+bool SystemEnterCriticalSection(u8* nested_status);
+bool SystemExitCriticalSection(u8 nested_status);
 
 
 /***********************************************************************************************************************
@@ -56,18 +58,17 @@ $$$$$ PWM setup values
 /***********************************************************************************************************************
 @@@@@ Clock, Systick and Power Control setup values
 ***********************************************************************************************************************/
-#define FOSC                    __SYSTEM_CLOCK    /* Crystal speed from system_nrf51.c */
-#define OSC_STARTUP_TIMOUT      (u32)1000000      /* Timeout for oscillator to start up */
+#define FOSC                 __SYSTEM_CLOCK    /* Crystal speed from system_nrf51.c */
+#define OSC_STARTUP_TIMOUT   (u32)1000000      /* Timeout for oscillator to start up */
   
 /* Timer 1
 To get roughly a 1ms tick, set the prescale register value to 0 which results in a prescale value of 1.
 Then we can count up to 33 to get a 1.0071ms tick.  That gives 993 for the value to count to for the 1 second tick. */
 
-#define LFCLK_FREQ               (u32)32768
-#define HFCLK_FREQ               (u32)16000000
+#define LFCLK_FREQ           (u32)32768
+#define HFCLK_FREQ           (u32)16000000
 
-#define RTC_COMPARE_PERIOD       (u32)33
-#define RTC_TICK_PER_SECOND      (u32)993
+#define RTC_PRESCALE_INIT    (u32)5         /* 2^5 = 32, 32768 / 32 = 1024Hz = 0.0009765625s period ~= 1ms */
 
 /* Watch Dog Values */
 
@@ -75,7 +76,7 @@ Then we can count up to 33 to get a 1.0071ms tick.  That gives 993 for the value
 The built-in timer will provide the system tick
 It is clocked from HFCLK.  To get the desired 1ms tick use a compare period of 0.001 / (1/HFCLK) or HFCLK/1000.
 */
-#define TIMER_COUNT_1MS        (u32)(HFCLK_FREQ / 1000)
+#define TIMER_COUNT_1MS      (u32)(HFCLK_FREQ / 1000)
 
 
 /***********************************************************************************************************************

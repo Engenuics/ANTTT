@@ -18,7 +18,6 @@ volatile u32 G_u32SocIntegrationFlags;                 /* Global state flags */
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Existing variables (defined in other files -- should all contain the "extern" keyword) */
 extern volatile u32 G_u32SystemFlags;                  /* From main.c */
-
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
 
@@ -27,13 +26,13 @@ extern volatile u32 G_u32SystemTime1s;                 /* From board-specific so
 Global variable definitions with scope limited to this local application.
 Variable names shall start with "SocInt_" and be declared as static.
 ***********************************************************************************************************************/
-static u32 SocInt_u32Timeout;                      /* Timeout counter used across states */
+//static u32 SocInt_u32Timeout;                      /* Timeout counter used across states */
+
 
 
 /**********************************************************************************************************************
 Function Definitions
 **********************************************************************************************************************/
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -43,43 +42,78 @@ Function Definitions
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-/*--------------------------------------------------------------------------------------------------------------------
-Interrupt handler: SD_EVT_IRQHandler
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationInitialize
 
 Description:
-Processes soft device events.
+Initializes the SoftDevice to use the Protocol Stacks. Enables the SD_EVT_IRQ to allow forwarding of Protocol Interrupts to the
+application.
 
 Requires:
-  -
+  - Called once during initialization.
 
 Promises:
-  - 
+  - Returns TRUE if SoftDevice enabled successfully.
+  - Returns FALSE if SoftDevice enabling failed.
 */
-void SD_EVT_IRQHandler(void)
+bool SocIntegrationInitialize(void)
 {
-   u32 u32Event;
+  uint32_t result = NRF_SUCCESS;
+  
+  result |= sd_softdevice_enable(NRF_CLOCK_LFCLKSRC_SYNTH_250_PPM, SocSoftdeviceAssertCallback);
+  return result == NRF_SUCCESS;
+}
 
-  /* Read out all current SOC events */
-  while (sd_ant_event_get(&u32Event) != NRF_ERROR_NOT_FOUND)
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationHandler
+
+Description:
+This is the global event checker for Protocol Events. It is called continuously from main(). It checks if the 
+_SYSTEM_PROTOCOL_EVENT is set. If so, it calls the dispatchers for the protocol event handlers.
+
+Requires:
+  - SoftDevice is enabled
+  - BLE and ANT have been initialized
+  - Application is running
+
+Promises:
+  - Proper dispatching of Protocol events to its handlers
+  - Clears the _SYSTEM_PROTOCOL_EVENT system flag
+*/
+void SocIntegrationHandler(void)
+{
+  // Check if pending event.
+  if (G_u32SystemFlags & _SYSTEM_PROTOCOL_EVENT)
   {
-    /* Flag if there are any ANT events */
-    G_u32SystemFlags |= _SYSTEM_ANT_EVENT; 
+    // Clear pending event and process protocol events.
+    G_u32SystemFlags &= ~_SYSTEM_PROTOCOL_EVENT;
+    ANTIntegrationHandler();
+    BLEIntegrationHandler();
   }
 }
-
-/**
- * @brief Handler for softdevice asserts
- */
-void softdevice_assert_callback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName)
-{
-   UNUSED_PARAMETER(ulPC);
-   assert_nrf_callback(usLineNum, pucFileName);
-}
-
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------------------------------------------------
+Function: SocIntegrationHandler
+
+Description:
+Assertion handler from the Softdevice.
+
+Requires:
+  - None
+
+Promises:
+  - Halts the system.
+  - Provides the PC counter, Line Num and the FileName in the SoftDevice Code that caused the assertion.
+*/
+void SocSoftdeviceAssertCallback(uint32_t ulPC, uint16_t usLineNum, const uint8_t *pucFileName)
+{
+   while (1);
+}
 
 
 

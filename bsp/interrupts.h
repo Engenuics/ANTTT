@@ -72,7 +72,14 @@ Function Declarations
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
-void InterruptsInitialize(void);
+bool InterruptsInitialize(void);
+
+void HardFault_Handler(u32 u32ProgramCounter_, u32 u32LinkRegister_);
+void TIMER1_IRQHandler(void);
+void RTC1_IRQHandler(void);
+
+void SD_EVT_IRQHandler(void);
+void GPIOTE_IRQHandler(void);
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-File: leds_nRF51.c                                                                
+File: leds_anttt.c                                                                
 
 Description:
 LED driver that provides on, off, toggle, blink and PWM functionality.
@@ -9,43 +9,17 @@ regular 1ms calls to LedUpdate().
 
 ------------------------------------------------------------------------------------------------------------------------
 API:
-LedNumberType: BLUE, GREEN, YELLOW, RED
-
-LedRateType: LED_0_5HZ, LED_1HZ, LED_2HZ, LED_4HZ, LED_8HZ, 
-             LED_PWM_0, LED_PWM_5, ..., LED_PWM_100
-*Note that PWM values in LedRateType are continuous, thus stepping a variable of LedRateType by one will select the next 
-PWM level. However, decrementing past LED_PWM_0 or incrementing past LED_PWM_100 is undefined.
-
 
 Public:
 void LedOn(LedNumberType eLED_)
-Turn the specified LED on. LED response is immediate.
-e.g. LedOn(BLUE);
-
 void LedOff(LedNumberType eLED_)
-Turn the specified LED off. LED response is immediate.
-e.g. LedOff(BLUE);
-
 void LedToggle(LedNumberType eLED_)
-Toggle the specified LED.  LED response is immediate.
-e.g. LedToggle(BLUE);
-
 void LedPWM(LedNumberType eLED_, LedRateType ePwmRate_)
-Sets up an LED for PWM mode.  PWM mode requries the main loop to be running at 1ms period.
-e.g. LedPWM(BLUE, LED_PWM_5);
-
 void LedBlink(LedNumberType eLED_, LedRateType eBlinkRate_)
-Sets an LED to BLINK mode.  BLINK mode requries the main loop to be running at 1ms period.
-e.g. LedBlink(BLUE, LED_1HZ);
 
 Protected:
 void LedInitialize(void)
-Test all LEDs and initialize to OFF state.
 
-DISCLAIMER: THIS CODE IS PROVIDED WITHOUT ANY WARRANTY OR GUARANTEES.  USERS MAY
-USE THIS CODE FOR DEVELOPMENT AND EXAMPLE PURPOSES ONLY.  ENGENUICS TECHNOLOGIES
-INCORPORATED IS NOT RESPONSIBLE FOR ANY ERRORS, OMISSIONS, OR DAMAGES THAT COULD
-RESULT FROM USING THIS FIRMWARE IN WHOLE OR IN PART.
 ***********************************************************************************************************************/
 
 #include "configuration.h"
@@ -175,7 +149,7 @@ void LedOff(LedNumberType eLED_)
   }
 
   /* Always set the LED back to LED_NORMAL_MODE mode */
-	Leds_asLedArray[(u8)eLED_].eMode = LED_NORMAL_MODE;
+  Leds_asLedArray[(u8)eLED_].eMode = LED_NORMAL_MODE;
   
 } /* end LedOff() */
 
@@ -270,14 +244,13 @@ Promises:
 */
 void LedInitialize(void)
 {
-  u32 u32Timer;
   LedNumberType aeLedSequenceHome[] = {HOME1, HOME2, HOME3, HOME6, HOME9, HOME8, HOME7, HOME4};
   LedNumberType aeLedSequenceAway[] = {AWAY1, AWAY4, AWAY7, AWAY8, AWAY9, AWAY6, AWAY3, AWAY2};
   
   /* All status lights on */
-  LedOn(STATUS_RED);
-  LedOn(STATUS_YLW);
-  LedOn(STATUS_GRN);
+  //LedOn(STATUS_RED);
+  //LedOn(STATUS_YLW);
+  //LedOn(STATUS_GRN);
 
 #if 0 /* Picture mode */
   LedOn(HOME1);
@@ -295,21 +268,19 @@ void LedInitialize(void)
   LedOff(HOME5);
   LedOn(AWAY5);
   
-  while (1)
+  
+  /* Sequentially light up the LEDs (blocking is allowed during init)*/
+  for(u8 i = 0; i < 8; i++)
   {
-    /* Sequentially light up the LEDs */
-    for(u8 i = 0; i < 8; i++)
-    {
-      LedToggle(HOME5);
-      LedToggle(AWAY5);
-      LedOn(aeLedSequenceHome[i]);
-      LedOn(aeLedSequenceAway[i]);
-      for(u32 j = 0; j < 200000; j++);
-      LedOff(aeLedSequenceHome[i]);
-      LedOff(aeLedSequenceAway[i]);
-
-    }
-
+    LedToggle(HOME5);
+    LedToggle(AWAY5);
+    LedOn(aeLedSequenceHome[i]);
+    LedOn(aeLedSequenceAway[i]);
+    
+    for(u32 j = 0; j < 200000; j++);
+    
+    LedOff(aeLedSequenceHome[i]);
+    LedOff(aeLedSequenceAway[i]);
   }
 
 #if 0
@@ -324,35 +295,6 @@ void LedInitialize(void)
   /* Pause for show */
   for(u32 i = 0; i < 2000000; i++);
 
-#if 0
-  /* Turn all LEDs on full, then fade them out over a few seconds */
-  for(u8 i = 20; i > 0; i--)
-  {
-    
-    /* Spend 40ms in each level of intensity */
-    for(u16 j = 40; j > 0; j--)
-    {
-      u32Timer = G_u32SystemTime1ms;
-      while( !IsTimeUp(&u32Timer, 1) );
-      LedUpdate();
-    }
-    /* Pause for a bit on the first iteration to show the LEDs on for little while */
-    if(i == 20)
-    {
-      while( !IsTimeUp(&u32Timer, 1500) );
-    }
-    
-    /* Set the LED intensity for the next iteration */
-    for(u8 j = 0; j < TOTAL_LEDS; j++)
-    {
-      Leds_asLedArray[j].eRate = (LedRateType)(i - 1);
-    }
-  }
-
-  /* Final update to set last state, hold for a short period */
-  LedUpdate();
-  while( !IsTimeUp(&u32Timer, 200) );
-#endif
   
 } /* end LedInitialize() */
 
@@ -361,17 +303,17 @@ void LedInitialize(void)
 /* Private functions */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-/*----------------------------------------------------------------------------------------------------------------------
-Function: LedUpdate
+/*!----------------------------------------------------------------------------------------------------------------------
+@fn void LedUpdate(void)
 
-Description:
-Update all LEDs for the current cycle.
+@brief Update all LEDs for the current cycle.
 
 Requires:
- - G_u32SystemTime1ms is counting
+- G_u32SystemTime1ms is counting
 
 Promises:
-   - All LEDs updated based on their counters
+- All LEDs updated based on their counters
+
 */
 void LedUpdate(void)
 {
@@ -431,7 +373,10 @@ void LedUpdate(void)
       }
     }
   } /* end for */
+  
 } /* end LedUpdate() */
+
+
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
